@@ -1,0 +1,36 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="AppThemeLightActionbarDark" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="customIconText">@drawable/ic_action_edit_halo_dark</item>
+        <item name="customIconVoice">@drawable/ic_action_mic_halo_dark</item>
+        <item name="customIconCamera">@drawable/ic_action_camera_halo_dark</item>
+        <item name="customIconSettings">@drawable/ic_action_settings_holo_dark</item>
+    </style>
+
+    <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light">
+        <item name="customIconText">@drawable/ic_action_edit_halo_light</item>
+        <item name="customIconVoice">@drawable/ic_action_mic_halo_light</item>
+        <item name="customIconCamera">@drawable/ic_action_camera_halo_light</item>
+        <item name="customIconSettings">@drawable/ic_action_settings_holo_light</item>
+    </style>
+
+    <style name="AppThemeDark" parent="@android:style/Theme.Holo">
+        <item name="customIconText">@drawable/ic_action_edit_halo_dark</item>
+        <item name="customIconVoice">@drawable/ic_action_mic_halo_dark</item>
+        <item name="customIconCamera">@drawable/ic_action_camera_halo_dark</item>
+        <item name="customIconSettings">@drawable/ic_action_settings_holo_dark</item>
+    </style>
+
+    <!-- Style of the pager bar-->
+    <style name="Pager">
+        <item name="android:textColor">#ffee1d24</item>
+        <item name="android:background">#ff000000</item>
+    </style>
+
+
+</resources>

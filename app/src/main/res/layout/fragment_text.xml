@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical" >
+
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="80sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingBottom="10dp"
+        android:paddingRight="5dp">
+
+        <ImageButton
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:background="@drawable/round_button"
+            android:text="edit"
+            android:src="?attr/customIconText"
+            android:textColor="#fff"
+            android:layout_gravity="right"
+            android:clickable="true"
+            android:layout_margin="5dp" />
+
+        <ImageButton
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:background="@drawable/round_button"
+            android:text="voice"
+            android:src="?attr/customIconVoice"
+            android:textColor="#fff"
+            android:layout_gravity="right"
+            android:clickable="true"
+            android:layout_margin="5dp" />
+
+        <ImageButton
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:background="@drawable/round_button"
+            android:text="camera"
+            android:src="?attr/customIconCamera"
+            android:textColor="#fff"
+            android:layout_gravity="right"
+            android:clickable="true"
+            android:layout_margin="5dp" />
+
+        </LinearLayout>
+
+</RelativeLayout>

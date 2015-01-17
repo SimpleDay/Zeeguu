@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="customAttrsText">
+        <attr name="customIconText" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="customAttrsVoice">
+        <attr name="customIconVoice" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="customAttrsCamera">
+        <attr name="customIconCamera" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="customAttrsSetting">
+        <attr name="customIconSettings" format="reference" />
+    </declare-styleable>
+
+</resources>

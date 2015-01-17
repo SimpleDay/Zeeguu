@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <color name="transparent">#00000000</color>
+    <color name="tab_highlight">#ff9ecfbf</color>
+
+    <!-- sliding menu colors -->
+    <color name="sliding_menu_line">#ffe6001d</color>
+    <color name="sliding_menu_divider">#41938f94</color>
+    <color name="sliding_menu_background">#32c6c7be</color>
+
+    <!-- page colors -->
+    <color name="view_pager_background_color">@android:color/white</color>
+
+
+    <!-- round buttons -->
+    <color name="round_button_start">#D61515</color>
+    <color name="round_button_end">#D61515</color>
+    <color name="round_button_pressed_start">#ffc4001a</color>
+    <color name="round_button_pressed_end">#ffc4001a</color>
+    <color name="round_button_shadow">#437e7276</color>
+
+</resources>
