@@ -10,6 +10,7 @@
         <item name="customIconVoice">@drawable/ic_action_mic_halo_dark</item>
         <item name="customIconCamera">@drawable/ic_action_camera_halo_dark</item>
         <item name="customIconSettings">@drawable/ic_action_settings_holo_dark</item>
+        <item name="customIconTranslate">@drawable/ic_action_translate_holo_dark</item>
     </style>
 
     <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light">
@@ -17,6 +18,7 @@
         <item name="customIconVoice">@drawable/ic_action_mic_halo_light</item>
         <item name="customIconCamera">@drawable/ic_action_camera_halo_light</item>
         <item name="customIconSettings">@drawable/ic_action_settings_holo_light</item>
+        <item name="customIconTranslate">@drawable/ic_action_translate_holo_light</item>
     </style>
 
     <style name="AppThemeDark" parent="@android:style/Theme.Holo">
@@ -24,6 +26,8 @@
         <item name="customIconVoice">@drawable/ic_action_mic_halo_dark</item>
         <item name="customIconCamera">@drawable/ic_action_camera_halo_dark</item>
         <item name="customIconSettings">@drawable/ic_action_settings_holo_dark</item>
+        <item name="customIconTranslate">@drawable/ic_action_translate_holo_dark</item>
+
     </style>
 
     <!-- Style of the pager bar-->

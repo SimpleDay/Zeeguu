@@ -114,6 +114,7 @@ class SlidingTabStrip extends LinearLayout {
         invalidate();
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         final int height = getHeight();

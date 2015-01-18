@@ -1,7 +1,7 @@
 package pascalgiehl_unibe.zeeguu.Search_Fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +9,10 @@ import android.view.ViewGroup;
 import pascalgiehl_unibe.zeeguu.R;
 
 /**
+ * Zeeguu Application
  * Created by Pascal on 12/01/15.
  */
-public class Fragment_Settings extends Fragment {
+public class Fragment_Settings extends PreferenceFragment {
 
     public Fragment_Settings() {
     }

@@ -11,7 +11,7 @@
     <color name="sliding_menu_background">#32c6c7be</color>
 
     <!-- page colors -->
-    <color name="view_pager_background_color">@android:color/white</color>
+    <color name="view_pager_background_color">#32a2a39b</color>
 
 
     <!-- round buttons -->
@@ -20,5 +20,16 @@
     <color name="round_button_pressed_start">#ffc4001a</color>
     <color name="round_button_pressed_end">#ffc4001a</color>
     <color name="round_button_shadow">#437e7276</color>
+
+    <!-- text search tab -->
+    <color name="translation_button_background">#ffff1a0e</color>
+    <color name="translation_native_language_textfield">#fffaf8f7</color>
+    <color name="translation_other_language_textfield">#fffaf8f7</color>
+
+    <!-- wordlist tab -->
+    <color name="wordlist_header">#ffff1a0e</color>
+    <color name="wordlist_header_text_color">#ffffff</color>
+    <color name="wordlist_text_color">#000000</color>
+
 
 </resources>

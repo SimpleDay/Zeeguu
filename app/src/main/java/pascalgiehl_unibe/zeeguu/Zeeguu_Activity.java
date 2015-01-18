@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import pascalgiehl_unibe.zeeguu.Search_Fragments.Fragment_Text;
 import pascalgiehl_unibe.zeeguu.Sliding_menu.SlidingFragment;
 
 public class Zeeguu_Activity extends FragmentActivity {
@@ -22,8 +23,8 @@ public class Zeeguu_Activity extends FragmentActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SlidingFragment fragment = new SlidingFragment();
         transaction.replace(R.id.fragment_menu, fragment);
+        transaction.replace(R.id.viewpager, new Fragment_Text());
         transaction.commit();
-
     }
 
     @Override

@@ -1,63 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_text_layout"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical" >
 
-    <TextView
-        android:id="@+id/item_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="80sp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+
+    <GridLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <FrameLayout
+            android:id="@+id/text_native_translation"
+            android:layout_width="fill_parent"
+            android:layout_height="236dp"
+            android:layout_below="@+id/text_search_title"
+            android:layout_alignRight="@+id/round_button_layout"
+            android:layout_alignEnd="@+id/text_language_translation" >
 
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:paddingBottom="10dp"
-        android:paddingRight="5dp">
+            <EditText
+                android:layout_width="341dp"
+                android:layout_height="184dp"
+                android:id="@+id/text_native_translation_user_entered"
+                android:background="@color/translation_native_language_textfield"
+                android:layout_gravity="center" />
 
-        <ImageButton
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:background="@drawable/round_button"
-            android:text="edit"
-            android:src="?attr/customIconText"
-            android:textColor="#fff"
-            android:layout_gravity="right"
-            android:clickable="true"
-            android:layout_margin="5dp" />
+        </FrameLayout>
 
-        <ImageButton
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:background="@drawable/round_button"
-            android:text="voice"
-            android:src="?attr/customIconVoice"
-            android:textColor="#fff"
-            android:layout_gravity="right"
-            android:clickable="true"
-            android:layout_margin="5dp" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="54dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_row="2"
+            android:layout_column="0">
 
-        <ImageButton
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:background="@drawable/round_button"
-            android:text="camera"
-            android:src="?attr/customIconCamera"
-            android:textColor="#fff"
-            android:layout_gravity="right"
-            android:clickable="true"
-            android:layout_margin="5dp" />
+            <ImageButton
+                android:layout_width="55dp"
+                android:layout_height="45dp"
+                android:src="?attr/customIconTranslate"
+                android:id="@+id/translate_button"
+                android:background="@drawable/rounded_button"
+                android:layout_marginRight="37dp"
+                android:layout_marginEnd="37dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/round_button_layout"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingRight="5dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+
+                <ImageButton
+                    android:layout_width="55dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/rounded_button"
+                    android:text="edit"
+                    android:src="?attr/customIconText"
+                    android:textColor="#fff"
+                    android:layout_gravity="right"
+                    android:clickable="true"
+                    android:layout_margin="5dp" />
+
+                <ImageButton
+                    android:layout_width="55dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/rounded_button"
+                    android:text="voice"
+                    android:src="?attr/customIconVoice"
+                    android:textColor="#fff"
+                    android:layout_gravity="right"
+                    android:clickable="true"
+                    android:layout_margin="5dp" />
+
+                <ImageButton
+                    android:layout_width="55dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/rounded_button"
+                    android:text="camera"
+                    android:src="?attr/customIconCamera"
+                    android:textColor="#fff"
+                    android:layout_gravity="right"
+                    android:clickable="true"
+                    android:layout_margin="5dp" />
+
+                </LinearLayout>
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_gravity="center"
+            android:layout_row="6"
+            android:layout_column="0" >
+
+            <EditText
+                android:layout_width="344dp"
+                android:layout_height="208dp"
+                android:background="@color/translation_other_language_textfield"
+                android:id="@+id/text_language_translated"
+                android:layout_gravity="center"
+                android:editable="false" />
+
+        </FrameLayout>
+
+    </GridLayout>
+
 
 </RelativeLayout>

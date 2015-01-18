@@ -17,4 +17,8 @@
         <attr name="customIconSettings" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="customAttrsTranslate">
+        <attr name="customIconTranslate" format="reference" />
+    </declare-styleable>
+
 </resources>
