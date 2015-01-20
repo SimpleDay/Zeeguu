@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="category_login"
+        android:title="@string/category_login_settings">
+
+        <EditTextPreference
+            android:inputType="text"
+            android:key="@string/email"
+            android:summary="@string/email_info"
+            android:title="@string/email" />
+
+        <EditTextPreference
+            android:inputType="textPassword"
+            android:key="@string/password"
+            android:summary="@string/password_info"
+            android:title="@string/password" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="category_main_settings"
+        android:title="@string/category_main_settings">
+
+        <ListPreference
+            android:key="zeeguu_language"
+            android:title="@string/zeeguu_language"
+            android:dialogTitle="@string/zeeguu_language_dialog"
+            android:entries="@array/choosable_languages"
+            android:entryValues="@array/choosable_languages_keys"
+            android:defaultValue="@string/default_language" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="category_app_settings"
+        android:title="@string/category_app_settings">
+
+        <ListPreference
+            android:key="language"
+            android:title="@string/app_language"
+            android:dialogTitle="@string/app_language_dialog"
+            android:entries="@array/choosable_languages"
+            android:entryValues="@array/choosable_languages_keys"
+            android:defaultValue="@string/default_language" />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

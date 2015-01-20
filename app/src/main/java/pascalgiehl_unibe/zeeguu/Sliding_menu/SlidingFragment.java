@@ -20,13 +20,13 @@ public class SlidingFragment extends Fragment {
     /**
      * This class represents a tab for the sliding menu
      */
-    static class PagerItemTab {
+    static class PagerFragmentTab {
         private final CharSequence title;
         private final int indicatorColor;
         private final int dividerColor;
         private final Fragment fragment;
 
-        PagerItemTab(CharSequence title, int indicatorColor, int dividerColor, Fragment fragment) {
+        PagerFragmentTab(CharSequence title, int indicatorColor, int dividerColor, Fragment fragment) {
             this.title = title;
             this.indicatorColor = indicatorColor; //possible to give every indicator a separate color
             this.dividerColor = dividerColor;
@@ -65,7 +65,8 @@ public class SlidingFragment extends Fragment {
 
     private SlidingTabLayout slidingTabLayout;
     private ViewPager viewPager;
-    private List<PagerItemTab> tabs = new ArrayList<>();
+    private List<PagerFragmentTab> tabs = new ArrayList<>();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,14 +75,14 @@ public class SlidingFragment extends Fragment {
         /**
          * Add tabs to the sliding menu
          */
-        tabs.add(new PagerItemTab(
+        tabs.add(new PagerFragmentTab(
                 getString(R.string.search_menu), // Title
                 getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 getResources().getColor(R.color.sliding_menu_divider), // Divider color
                 new Fragment_Text() //fragment which the tab represents
         ));
 
-        tabs.add(new PagerItemTab(
+        tabs.add(new PagerFragmentTab(
                 getString(R.string.wordlist_menu), // Title
                 getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 getResources().getColor(R.color.sliding_menu_divider), // Divider color
@@ -89,6 +90,17 @@ public class SlidingFragment extends Fragment {
         ));
 
 
+    }
+
+    public Fragment getActiveFragment() {
+        return tabs.get(viewPager.getCurrentItem()).getFragment();
+    }
+
+    public ArrayList<Fragment> getAllFragments() {
+        ArrayList<Fragment> fragments = new ArrayList<>();
+        for(PagerFragmentTab p : tabs)
+            fragments.add(p.getFragment());
+        return fragments;
     }
 
 

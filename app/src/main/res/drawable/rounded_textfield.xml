@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:state_pressed="true" >
+        <layer-list>
+            <item android:left="5dp" android:top="5dp">
+                <shape xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:shape="rectangle">
+                    <corners android:radius="12dp" />
+                    <solid android:color="@color/translation_language_textfield_shadow" />
+                </shape>
+            </item>
+            <item android:bottom="2dp" android:left="2dp">
+                <shape xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:shape="rectangle">
+                    <corners
+                        android:radius="12dp" />
+                    <solid
+                        android:color="@color/translation_language_textfield" />
+                    <padding
+                        android:left="0dp"
+                        android:top="0dp"
+                        android:right="0dp"
+                        android:bottom="0dp" />
+                    <size
+                        android:width="100dp"
+                        android:height="80dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <item android:state_pressed="false">
+        <layer-list>
+            <item android:left="5dp" android:top="5dp">
+                <shape xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:shape="rectangle">
+                    <corners android:radius="12dp" />
+                    <solid android:color="@color/translation_language_textfield_shadow" />
+                </shape>
+            </item>
+            <item android:bottom="2dp" android:left="2dp">
+                <shape xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:shape="rectangle">
+                <corners
+                    android:radius="12dp" />
+                <solid
+                    android:color="@color/translation_language_textfield" />
+                <padding
+                    android:left="0dp"
+                    android:top="0dp"
+                    android:right="0dp"
+                    android:bottom="0dp" />
+                <size
+                    android:width="100dp"
+                    android:height="80dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+</selector>

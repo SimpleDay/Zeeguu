@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import pascalgiehl_unibe.zeeguu.ConnectionManager;
 import pascalgiehl_unibe.zeeguu.R;
 
 /**
@@ -28,14 +29,18 @@ public class Fragment_Wordlist extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        //getWordlist from server
+        ConnectionManager connectionManager = ConnectionManager.getConnectionManager(this.getActivity());
+        connectionManager.getAllWords();
+
         //create listview for wordlist and customize it
         ListView resultList = (ListView) view.findViewById(R.id.wordlist_listview);
 
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         list.add("hello"); list.add("hello2"); list.add("hello3");
-        ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this.getActivity(), R.layout.listview_item, list);
+        ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this.getActivity(), R.layout.listview_item, list);
 
-        View header = (View) this.getActivity().getLayoutInflater().inflate(R.layout.listview_header, null);
+        View header = this.getActivity().getLayoutInflater().inflate(R.layout.listview_header, null);
         resultList.addHeaderView(header);
         resultList.setAdapter(listAdapter);
     }

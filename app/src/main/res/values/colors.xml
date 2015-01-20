@@ -23,13 +23,17 @@
 
     <!-- text search tab -->
     <color name="translation_button_background">#ffff1a0e</color>
-    <color name="translation_native_language_textfield">#fffaf8f7</color>
-    <color name="translation_other_language_textfield">#fffaf8f7</color>
+    <color name="translation_language_textfield">#fffaf8f7</color>
+    <color name="translation_language_textfield_shadow">#ffdbd9d8</color>
 
     <!-- wordlist tab -->
     <color name="wordlist_header">#ffff1a0e</color>
     <color name="wordlist_header_text_color">#ffffff</color>
     <color name="wordlist_text_color">#000000</color>
+
+    <!-- sign in tab -->
+    <color name="dialog_sign_in_header">#ffff1a0e</color>
+
 
 
 </resources>
