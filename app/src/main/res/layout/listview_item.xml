@@ -1,16 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center_vertical"
-    android:layout_alignParentTop="true"
-    android:layout_alignParentBottom="true"
-    android:textStyle="bold"
-    android:textSize="20dp"
-    android:textColor="@color/wordlist_text_color"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp" />
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
 
 
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/wordlist_native_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:padding="10dp"
+            android:textColor="@color/wordlist_text_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/wordlist_other_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:padding="10dp"
+            android:textColor="@color/wordlist_text_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/wordlist_context"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:paddingLeft="5dp"
+        android:textColor="@color/wordlist_text_color"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+
+</LinearLayout>

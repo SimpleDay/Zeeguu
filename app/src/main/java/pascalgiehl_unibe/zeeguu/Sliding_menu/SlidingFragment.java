@@ -15,6 +15,7 @@ import java.util.List;
 import pascalgiehl_unibe.zeeguu.R;
 import pascalgiehl_unibe.zeeguu.Search_Fragments.Fragment_Text;
 import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.Fragment_Wordlist;
+import pascalgiehl_unibe.zeeguu.ZeeguuFragment;
 
 public class SlidingFragment extends Fragment {
     /**
@@ -24,20 +25,20 @@ public class SlidingFragment extends Fragment {
         private final CharSequence title;
         private final int indicatorColor;
         private final int dividerColor;
-        private final Fragment fragment;
+        private final ZeeguuFragment fragment;
 
-        PagerFragmentTab(CharSequence title, int indicatorColor, int dividerColor, Fragment fragment) {
+        PagerFragmentTab(CharSequence title, int indicatorColor, int dividerColor, ZeeguuFragment fragment) {
             this.title = title;
             this.indicatorColor = indicatorColor; //possible to give every indicator a separate color
             this.dividerColor = dividerColor;
             this.fragment = fragment;
         }
 
-        /**
+         /**
          * @return the fragment which the tab represents
          */
-        Fragment getFragment() {
-            return fragment;
+         ZeeguuFragment getFragment() {
+             return fragment;
         }
 
         /**
@@ -61,7 +62,6 @@ public class SlidingFragment extends Fragment {
             return dividerColor;
         }
     }
-
 
     private SlidingTabLayout slidingTabLayout;
     private ViewPager viewPager;
@@ -95,14 +95,6 @@ public class SlidingFragment extends Fragment {
     public Fragment getActiveFragment() {
         return tabs.get(viewPager.getCurrentItem()).getFragment();
     }
-
-    public ArrayList<Fragment> getAllFragments() {
-        ArrayList<Fragment> fragments = new ArrayList<>();
-        for(PagerFragmentTab p : tabs)
-            fragments.add(p.getFragment());
-        return fragments;
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -148,7 +140,7 @@ public class SlidingFragment extends Fragment {
          * @return fragment for tab i
          */
         @Override
-        public Fragment getItem(int i) {
+        public ZeeguuFragment getItem(int i) {
             return tabs.get(i).getFragment();
         }
 

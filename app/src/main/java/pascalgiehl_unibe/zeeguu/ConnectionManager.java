@@ -11,9 +11,13 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,10 +25,10 @@ import pascalgiehl_unibe.zeeguu.Volley.Request;
 import pascalgiehl_unibe.zeeguu.Volley.RequestQueue;
 import pascalgiehl_unibe.zeeguu.Volley.Response;
 import pascalgiehl_unibe.zeeguu.Volley.VolleyError;
-import pascalgiehl_unibe.zeeguu.Volley.VolleyLog;
-import pascalgiehl_unibe.zeeguu.Volley.toolbox.JsonObjectRequest;
+import pascalgiehl_unibe.zeeguu.Volley.toolbox.JsonArrayRequest;
 import pascalgiehl_unibe.zeeguu.Volley.toolbox.StringRequest;
 import pascalgiehl_unibe.zeeguu.Volley.toolbox.Volley;
+import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.TranslatedWord;
 
 public class ConnectionManager extends Application {
 
@@ -47,6 +51,8 @@ public class ConnectionManager extends Application {
 
     private static ConnectionManager instance;
     private static Activity activity;
+
+    private static ArrayList<TranslatedWord> tmpList;
 
     public ConnectionManager(Activity activity) {
         super();
@@ -72,7 +78,7 @@ public class ConnectionManager extends Application {
     }
 
     public static ConnectionManager getConnectionManager(Activity activity) {
-        if(instance == null)
+        if (instance == null)
             return new ConnectionManager(activity);
 
         return instance;
@@ -124,9 +130,11 @@ public class ConnectionManager extends Application {
         if (!userHasLoginInfo())
             return;
 
-        pDialog = new ProgressDialog(activity);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+        if(pDialog == null) {
+            pDialog = new ProgressDialog(activity);
+            pDialog.setMessage("Loading...");
+            pDialog.show();
+        }
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 url_session_ID, new Response.Listener<String>() {
@@ -138,15 +146,15 @@ public class ConnectionManager extends Application {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("Session_ID", response.toString());
                 editor.commit();
-                pDialog.hide();
+                pDialog.dismiss();
 
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                pDialog.hide();
+                Log.d(TAG, "Error: " + error.getMessage());
+                pDialog.dismiss();
             }
         }) {
 
@@ -162,34 +170,60 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_SessionID_Req);
     }
 
-    public void getAllWords() {
+    public void getAllWords(ArrayList<TranslatedWord> list) {
 
         if (!userHasSessionId())
             return;
 
-        String url_session_ID = url + "user_words?session=" + session_id;
-        pDialog = new ProgressDialog(activity);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+        String url_session_ID = url + "contribs_by_day/with_context?session=" + session_id;
+        tmpList = list;
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                url_session_ID, null, new Response.Listener<JSONObject>() {
+        if(pDialog == null) {
+            pDialog = new ProgressDialog(activity);
+            pDialog.setMessage("Loading...");
+            pDialog.show();
+        }
+
+        JsonArrayRequest request = new JsonArrayRequest(url_session_ID, new Response.Listener<JSONArray>() {
 
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(JSONArray response) {
                 Log.d(TAG, response.toString());
-                pDialog.hide();
+
+                try {
+                    for (int j = 0; j < response.length(); j++) {
+                        JSONObject dates = response.getJSONObject(j);
+                        JSONArray contribs = dates.getJSONArray("contribs");
+                        for(int i = 0; i < contribs.length(); i++) {
+                            JSONObject translation = contribs.getJSONObject(i);
+                            String nativeWord = translation.getString("from");
+                            String translatedWord = translation.getString("to");
+                            String context = translation.getString("context");
+                            tmpList.add(new TranslatedWord(nativeWord, translatedWord, context));
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(activity,
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+
+                pDialog.dismiss();
             }
         }, new Response.ErrorListener() {
-
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                pDialog.hide();
+                Log.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                pDialog.dismiss();
             }
         });
 
-        this.addToRequestQueue(jsonObjReq, tag_wordlist_Req);
+
+        this.addToRequestQueue(request, tag_wordlist_Req);
     }
 
     /*

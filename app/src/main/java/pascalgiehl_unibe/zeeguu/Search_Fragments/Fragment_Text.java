@@ -5,10 +5,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -16,11 +16,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import pascalgiehl_unibe.zeeguu.R;
+import pascalgiehl_unibe.zeeguu.ZeeguuFragment;
 
 /**
  * Created by Pascal on 12/01/15.
  */
-public class Fragment_Text extends Fragment {
+public class Fragment_Text extends ZeeguuFragment {
     private static final int RESULT_SPEECH = 1;
     private EditText native_language_text;
 
@@ -86,5 +87,11 @@ public class Fragment_Text extends Fragment {
 
         }
     }
+
+    @Override
+    public void actualizeFragment() {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
 
 }

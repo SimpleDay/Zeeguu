@@ -255,6 +255,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private class InternalViewPagerListener implements ViewPager.OnPageChangeListener {
         private int mScrollState;
+        private SlidingFragment.ZeeguuFragmentPagerAdapter adapter =
+                (SlidingFragment.ZeeguuFragmentPagerAdapter) mViewPager.getAdapter();
+
+
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -276,6 +280,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
                         positionOffsetPixels);
             }
 
+            //Modified to call the actualize fct in the fragments
+            adapter.getItem(position).actualizeFragment();
 
         }
 
@@ -303,12 +309,16 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     private class TabClickListener implements View.OnClickListener {
+        private SlidingFragment.ZeeguuFragmentPagerAdapter adapter =
+                (SlidingFragment.ZeeguuFragmentPagerAdapter) mViewPager.getAdapter();
+
         @Override
         public void onClick(View v) {
             for (int i = 0; i < mTabStrip.getChildCount(); i++) {
                 if (v == mTabStrip.getChildAt(i)) {
                     mViewPager.setCurrentItem(i);
-
+                    //Modified to call the actualize fct in the fragments
+                    adapter.getItem(i).actualizeFragment();
                     return;
                 }
             }
