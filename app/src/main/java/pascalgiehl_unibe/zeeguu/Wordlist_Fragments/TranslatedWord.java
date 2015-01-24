@@ -1,12 +1,18 @@
 package pascalgiehl_unibe.zeeguu.Wordlist_Fragments;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+
 import java.util.Locale;
+
+import pascalgiehl_unibe.zeeguu.R;
 
 /**
  * Zeeguu Application
  * Created by Pascal on 22/01/15.
  */
-public class TranslatedWord {
+public class TranslatedWord implements Item {
     private String nativeWord;
     private String translation;
 
@@ -73,4 +79,41 @@ public class TranslatedWord {
         this.context = context;
     }
 
+    @Override
+    public int getViewType() {
+        return WordlistAdapter.RowType.LIST_ITEM.ordinal();
+    }
+
+    @Override
+    public View getView(LayoutInflater inflater, View convertView) {
+        final ViewHolder holder;
+        if (convertView == null)
+        {
+            convertView = inflater.inflate(R.layout.listview_item, null);
+            holder = new ViewHolder();
+
+            holder.native_language = (TextView) convertView.findViewById(R.id.wordlist_native_language);
+            holder.other_language = (TextView) convertView.findViewById(R.id.wordlist_other_language);
+            holder.context = (TextView) convertView.findViewById(R.id.wordlist_context);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        holder.native_language.setText(getNativeWord());
+        holder.other_language.setText(getTranslation());
+        holder.context.setText(getContext());
+
+        return convertView;
+    }
+
+
+    static class ViewHolder {
+        TextView native_language;
+        TextView other_language;
+        TextView context;
+    }
+
 }
+

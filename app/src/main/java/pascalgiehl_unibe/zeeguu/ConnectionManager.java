@@ -28,6 +28,8 @@ import pascalgiehl_unibe.zeeguu.Volley.VolleyError;
 import pascalgiehl_unibe.zeeguu.Volley.toolbox.JsonArrayRequest;
 import pascalgiehl_unibe.zeeguu.Volley.toolbox.StringRequest;
 import pascalgiehl_unibe.zeeguu.Volley.toolbox.Volley;
+import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.Header;
+import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.Item;
 import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.TranslatedWord;
 
 public class ConnectionManager extends Application {
@@ -52,7 +54,7 @@ public class ConnectionManager extends Application {
     private static ConnectionManager instance;
     private static Activity activity;
 
-    private static ArrayList<TranslatedWord> tmpList;
+    private static ArrayList<Item> tmpList;
 
     public ConnectionManager(Activity activity) {
         super();
@@ -170,7 +172,7 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_SessionID_Req);
     }
 
-    public void getAllWords(ArrayList<TranslatedWord> list) {
+    public void getAllWords(ArrayList<Item> list) {
 
         if (!userHasSessionId())
             return;
@@ -193,6 +195,7 @@ public class ConnectionManager extends Application {
                 try {
                     for (int j = 0; j < response.length(); j++) {
                         JSONObject dates = response.getJSONObject(j);
+                        tmpList.add(new Header(dates.getString("date")));
                         JSONArray contribs = dates.getJSONArray("contribs");
                         for(int i = 0; i < contribs.length(); i++) {
                             JSONObject translation = contribs.getJSONObject(i);

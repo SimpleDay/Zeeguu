@@ -21,4 +21,8 @@
         <attr name="customIconTranslate" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="customAttrsClock">
+        <attr name="customIconClock" format="reference" />
+    </declare-styleable>
+
 </resources>

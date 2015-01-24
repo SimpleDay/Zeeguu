@@ -1,72 +1,42 @@
 package pascalgiehl_unibe.zeeguu.Wordlist_Fragments;
 
-/**
- * Zeeguu Application
- * Created by Pascal on 22/01/15.
- */
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import pascalgiehl_unibe.zeeguu.R;
+/**
+ * Zeeguu Application
+ * Created by Pascal on 24/01/15.
+ */
+public class WordlistAdapter extends ArrayAdapter<Item> {
+    private LayoutInflater inflater;
 
-
-public class WordlistAdapter extends BaseAdapter {
-    // private Context mContext;
-    private LayoutInflater mInflater;
-    private ArrayList<TranslatedWord> list;
-
-
-    public WordlistAdapter(Context c, ArrayList<TranslatedWord> list) {
-        mInflater = LayoutInflater.from(c);
-        // mContext = c;
-        this.list = list;
+    public enum RowType {
+        LIST_ITEM, HEADER_ITEM
     }
 
-    public int getCount() {
-        return list.size();
+    public WordlistAdapter(Context context, List<Item> items) {
+        super(context, 0, items);
+        inflater = LayoutInflater.from(context);
     }
 
-    public Object getItem(int position) {
-        return list.get(position);
+    @Override
+    public int getViewTypeCount() {
+        return RowType.values().length;
+
     }
 
-    public long getItemId(int position) {
-        return position;
+    @Override
+    public int getItemViewType(int position) {
+        return getItem(position).getViewType();
     }
 
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
-        final ViewHolder holder;
-        if (convertView == null)
-        {
-            convertView = mInflater.inflate(R.layout.listview_item, null);
-            holder = new ViewHolder();
-
-            holder.native_language = (TextView) convertView.findViewById(R.id.wordlist_native_language);
-            holder.other_language = (TextView) convertView.findViewById(R.id.wordlist_other_language);
-            holder.context = (TextView) convertView.findViewById(R.id.wordlist_context);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.native_language.setText(list.get(position).getNativeWord());
-        holder.other_language.setText(list.get(position).getTranslation());
-        holder.context.setText(list.get(position).getContext());
-
-        return convertView;
-    }
-
-    static class ViewHolder {
-        TextView native_language;
-        TextView other_language;
-        TextView context;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        return getItem(position).getView(inflater, convertView);
     }
 }

@@ -29,7 +29,7 @@ public class Fragment_Wordlist extends ZeeguuFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         //getWordlist from server
-        ArrayList<TranslatedWord> list = new ArrayList<>();
+        ArrayList<Item> list = new ArrayList<>();
 
         ConnectionManager connectionManager = ConnectionManager.getConnectionManager(this.getActivity());
         connectionManager.getAllWords(list);
@@ -37,9 +37,7 @@ public class Fragment_Wordlist extends ZeeguuFragment {
         //create listview for wordlist and customize it
         WordlistAdapter adapter = new WordlistAdapter(this.getActivity(), list);
 
-        View header = this.getActivity().getLayoutInflater().inflate(R.layout.listview_header, null);
         ListView resultList = (ListView) view.findViewById(R.id.wordlist_listview);
-        resultList.addHeaderView(header);
         resultList.setAdapter(adapter);
     }
 
