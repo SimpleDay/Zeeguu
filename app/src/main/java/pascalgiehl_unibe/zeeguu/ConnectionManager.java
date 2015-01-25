@@ -13,6 +13,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.Volley.Request;
+import com.google.Volley.RequestQueue;
+import com.google.Volley.Response;
+import com.google.Volley.VolleyError;
+import com.google.Volley.toolbox.JsonArrayRequest;
+import com.google.Volley.toolbox.StringRequest;
+import com.google.Volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,13 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.Volley.Request;
-import com.google.Volley.RequestQueue;
-import com.google.Volley.Response;
-import com.google.Volley.VolleyError;
-import com.google.Volley.toolbox.JsonArrayRequest;
-import com.google.Volley.toolbox.StringRequest;
-import com.google.Volley.toolbox.Volley;
 import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.Header;
 import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.Item;
 import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.TranslatedWord;
@@ -68,9 +69,9 @@ public class ConnectionManager extends Application {
         session_id = settings.getString("Session_ID", "").toString();
 
         //ToDo: Delete after debugging
-        //email = "p.giehl@gmx.ch";
-        //pw = "Micky";
-        //session_id = "1467847111";
+        email = "p.giehl@gmx.ch";
+        pw = "Micky";
+        session_id = "1467847111";
 
         instance = this;
     }

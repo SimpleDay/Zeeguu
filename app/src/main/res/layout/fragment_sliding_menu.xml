@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <pascalgiehl_unibe.zeeguu.Sliding_menu.SlidingTabLayout
+    <com.google.SlidingTab.SlidingTabLayout
         android:id="@+id/sliding_tabs"
         android:background="@color/sliding_menu_background"
         android:layout_width="match_parent"

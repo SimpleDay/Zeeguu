@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu.Sliding_menu;
+package com.google.SlidingTab;
 
 
 /*

@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu.Sliding_menu;
+package com.google.SlidingTab;
 
 
 /*
@@ -29,6 +29,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
+
+import pascalgiehl_unibe.zeeguu.Sliding_menu.ZeeguuFragmentPagerAdapter;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
@@ -255,8 +257,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private class InternalViewPagerListener implements ViewPager.OnPageChangeListener {
         private int mScrollState;
-        private SlidingFragment.ZeeguuFragmentPagerAdapter adapter =
-                (SlidingFragment.ZeeguuFragmentPagerAdapter) mViewPager.getAdapter();
+        private ZeeguuFragmentPagerAdapter adapter =
+                (ZeeguuFragmentPagerAdapter) mViewPager.getAdapter();
 
 
 
@@ -309,8 +311,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     private class TabClickListener implements View.OnClickListener {
-        private SlidingFragment.ZeeguuFragmentPagerAdapter adapter =
-                (SlidingFragment.ZeeguuFragmentPagerAdapter) mViewPager.getAdapter();
+        private ZeeguuFragmentPagerAdapter adapter =
+                (ZeeguuFragmentPagerAdapter) mViewPager.getAdapter();
 
         @Override
         public void onClick(View v) {
