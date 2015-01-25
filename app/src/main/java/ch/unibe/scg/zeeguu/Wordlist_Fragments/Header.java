@@ -1,10 +1,10 @@
-package pascalgiehl_unibe.zeeguu.Wordlist_Fragments;
+package ch.unibe.scg.zeeguu.Wordlist_Fragments;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import pascalgiehl_unibe.zeeguu.R;
+import ch.unibe.scg.zeeguu.R;
 
 /**
  * Zeeguu Application

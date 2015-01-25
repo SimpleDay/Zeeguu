@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu.Core;
+package ch.unibe.scg.zeeguu.Core;
 
 /**
  * Zeeguu Application
@@ -29,9 +29,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.Header;
-import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.Item;
-import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.TranslatedWord;
+import ch.unibe.scg.zeeguu.Wordlist_Fragments.Header;
+import ch.unibe.scg.zeeguu.Wordlist_Fragments.Item;
+import ch.unibe.scg.zeeguu.Wordlist_Fragments.TranslatedWord;
 
 public class ConnectionManager extends Application {
 
@@ -134,11 +134,7 @@ public class ConnectionManager extends Application {
         if (!userHasLoginInfo())
             return;
 
-        if(pDialog == null) {
-            pDialog = new ProgressDialog(activity);
-            pDialog.setMessage("Loading...");
-            pDialog.show();
-        }
+        createLoadingDialog();
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 url_session_ID, new Response.Listener<String>() {
@@ -150,7 +146,7 @@ public class ConnectionManager extends Application {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("Session_ID", response.toString());
                 editor.commit();
-                pDialog.dismiss();
+                dismissDialog();
 
                 getUserLanguage(); //ask for the language when session ID arrived
 
@@ -160,7 +156,7 @@ public class ConnectionManager extends Application {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Error: " + error.getMessage());
-                pDialog.dismiss();
+                dismissDialog();
             }
         }) {
 
@@ -177,18 +173,13 @@ public class ConnectionManager extends Application {
     }
 
     public void getAllWords(ArrayList<Item> list) {
-
         if (!userHasSessionId())
             return;
 
         String url_session_ID = url + "contribs_by_day/with_context?session=" + session_id;
         tmpList = list;
 
-        if(pDialog == null) {
-            pDialog = new ProgressDialog(activity);
-            pDialog.setMessage("Loading...");
-            pDialog.show();
-        }
+        createLoadingDialog();
 
         JsonArrayRequest request = new JsonArrayRequest(url_session_ID, new Response.Listener<JSONArray>() {
 
@@ -216,8 +207,7 @@ public class ConnectionManager extends Application {
                             "Error: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
                 }
-
-                pDialog.dismiss();
+                    dismissDialog();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -225,7 +215,7 @@ public class ConnectionManager extends Application {
                 Log.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
-                pDialog.dismiss();
+                dismissDialog();
             }
         });
 
@@ -239,11 +229,7 @@ public class ConnectionManager extends Application {
         if (!userHasSessionId())
             return;
 
-        if(pDialog == null) {
-            pDialog = new ProgressDialog(activity);
-            pDialog.setMessage("Loading...");
-            pDialog.show();
-        }
+        createLoadingDialog();
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 url_learned_language, new Response.Listener<String>() {
@@ -255,7 +241,7 @@ public class ConnectionManager extends Application {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("zeeguu_language", response.toString());
                 editor.commit();
-                pDialog.dismiss();
+                dismissDialog();
 
             }
         }, new Response.ErrorListener() {
@@ -263,11 +249,24 @@ public class ConnectionManager extends Application {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Error: " + error.getMessage());
-                pDialog.dismiss();
+                dismissDialog();
             }
         });
 
         this.addToRequestQueue(strReq, tag_language_Req);
+    }
+
+    private void createLoadingDialog() {
+        if(pDialog == null) {
+            pDialog = new ProgressDialog(activity);
+            pDialog.setMessage("Loading...");
+            pDialog.show();
+        }
+    }
+
+    private void dismissDialog() {
+        if(pDialog != null)
+            pDialog.dismiss();
     }
 
     /*

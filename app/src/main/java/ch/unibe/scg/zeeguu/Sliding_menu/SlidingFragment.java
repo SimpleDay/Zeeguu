@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu.Sliding_menu;
+package ch.unibe.scg.zeeguu.Sliding_menu;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import pascalgiehl_unibe.zeeguu.R;
+import ch.unibe.scg.zeeguu.R;
 import com.google.SlidingTab.SlidingTabLayout;
 
 public class SlidingFragment extends Fragment {

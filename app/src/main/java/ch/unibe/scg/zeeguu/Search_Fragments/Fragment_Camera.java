@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu.Search_Fragments;
+package ch.unibe.scg.zeeguu.Search_Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,14 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import pascalgiehl_unibe.zeeguu.R;
+import ch.unibe.scg.zeeguu.R;
 
 /**
  * Created by Pascal on 12/01/15.
  */
-public class Fragment_Voice extends Fragment {
+public class Fragment_Camera extends Fragment {
 
-    public Fragment_Voice() {
+    public Fragment_Camera() {
     }
 
     @Override

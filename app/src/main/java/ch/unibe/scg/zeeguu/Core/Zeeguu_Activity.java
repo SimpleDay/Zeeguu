@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu.Core;
+package ch.unibe.scg.zeeguu.Core;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,10 +13,10 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import pascalgiehl_unibe.zeeguu.R;
-import pascalgiehl_unibe.zeeguu.Search_Fragments.Fragment_Text;
-import pascalgiehl_unibe.zeeguu.Settings.SettingsActivity;
-import pascalgiehl_unibe.zeeguu.Sliding_menu.SlidingFragment;
+import ch.unibe.scg.zeeguu.R;
+import ch.unibe.scg.zeeguu.Search_Fragments.Fragment_Text;
+import ch.unibe.scg.zeeguu.Settings.SettingsActivity;
+import ch.unibe.scg.zeeguu.Sliding_menu.SlidingFragment;
 
 public class Zeeguu_Activity extends FragmentActivity {
     //TODO: horizontal mode (if phone is rotated by 90 degree, it starts some connections..)

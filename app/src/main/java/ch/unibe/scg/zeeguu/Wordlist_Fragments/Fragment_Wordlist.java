@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu.Wordlist_Fragments;
+package ch.unibe.scg.zeeguu.Wordlist_Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,9 +8,9 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import pascalgiehl_unibe.zeeguu.Core.ConnectionManager;
-import pascalgiehl_unibe.zeeguu.R;
-import pascalgiehl_unibe.zeeguu.Core.ZeeguuFragment;
+import ch.unibe.scg.zeeguu.Core.ConnectionManager;
+import ch.unibe.scg.zeeguu.R;
+import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 
 /**
  * Created by Pascal on 12/01/15.

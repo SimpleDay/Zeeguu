@@ -1,9 +1,9 @@
-package pascalgiehl_unibe.zeeguu.Settings;
+package ch.unibe.scg.zeeguu.Settings;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
-import pascalgiehl_unibe.zeeguu.R;
+import ch.unibe.scg.zeeguu.R;
 
 /**
  * Zeeguu Application

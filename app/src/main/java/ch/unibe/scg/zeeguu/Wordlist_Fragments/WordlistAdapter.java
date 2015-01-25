@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu.Wordlist_Fragments;
+package ch.unibe.scg.zeeguu.Wordlist_Fragments;
 
 import android.content.Context;
 import android.view.LayoutInflater;

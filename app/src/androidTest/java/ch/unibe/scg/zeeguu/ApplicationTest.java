@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu;
+package ch.unibe.scg.zeeguu;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

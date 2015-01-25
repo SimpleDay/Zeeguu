@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu.Settings;
+package ch.unibe.scg.zeeguu.Settings;
 
 import android.app.Activity;
 import android.os.Bundle;

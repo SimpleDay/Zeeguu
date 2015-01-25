@@ -30,7 +30,7 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
-import pascalgiehl_unibe.zeeguu.Sliding_menu.ZeeguuFragmentPagerAdapter;
+import ch.unibe.scg.zeeguu.Sliding_menu.ZeeguuFragmentPagerAdapter;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
