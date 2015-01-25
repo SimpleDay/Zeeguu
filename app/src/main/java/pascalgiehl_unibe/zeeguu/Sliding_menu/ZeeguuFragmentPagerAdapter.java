@@ -10,7 +10,7 @@ import java.util.List;
 import pascalgiehl_unibe.zeeguu.R;
 import pascalgiehl_unibe.zeeguu.Search_Fragments.Fragment_Text;
 import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.Fragment_Wordlist;
-import pascalgiehl_unibe.zeeguu.ZeeguuFragment;
+import pascalgiehl_unibe.zeeguu.Core.ZeeguuFragment;
 
 /**
  * Zeeguu Application

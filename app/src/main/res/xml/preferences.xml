@@ -6,14 +6,14 @@
         android:title="@string/category_login_settings">
 
         <EditTextPreference
-            android:inputType="text"
-            android:key="@string/email"
+            android:inputType="textEmailAddress"
+            android:key="email"
             android:summary="@string/email_info"
             android:title="@string/email" />
 
         <EditTextPreference
             android:inputType="textPassword"
-            android:key="@string/password"
+            android:key="password"
             android:summary="@string/password_info"
             android:title="@string/password" />
     </PreferenceCategory>

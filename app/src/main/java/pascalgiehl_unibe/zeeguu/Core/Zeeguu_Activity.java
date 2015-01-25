@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu;
+package pascalgiehl_unibe.zeeguu.Core;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import pascalgiehl_unibe.zeeguu.R;
 import pascalgiehl_unibe.zeeguu.Search_Fragments.Fragment_Text;
 import pascalgiehl_unibe.zeeguu.Settings.SettingsActivity;
 import pascalgiehl_unibe.zeeguu.Sliding_menu.SlidingFragment;
@@ -64,9 +65,11 @@ public class Zeeguu_Activity extends FragmentActivity {
 
                         SharedPreferences settings = getSharedPreferences("UserInfo", 0);
                         SharedPreferences.Editor editor = settings.edit();
-                        editor.putString("Username", email.getText().toString());
-                        editor.putString("Password", pw.getText().toString());
+                        editor.putString("email", email.getText().toString());
+                        editor.putString("password", pw.getText().toString());
                         editor.commit();
+
+                        connectionManager.getSessionID();
                     }
                 })
                 .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {

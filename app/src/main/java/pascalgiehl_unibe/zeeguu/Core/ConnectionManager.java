@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu;
+package pascalgiehl_unibe.zeeguu.Core;
 
 /**
  * Zeeguu Application

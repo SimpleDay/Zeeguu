@@ -8,9 +8,9 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import pascalgiehl_unibe.zeeguu.ConnectionManager;
+import pascalgiehl_unibe.zeeguu.Core.ConnectionManager;
 import pascalgiehl_unibe.zeeguu.R;
-import pascalgiehl_unibe.zeeguu.ZeeguuFragment;
+import pascalgiehl_unibe.zeeguu.Core.ZeeguuFragment;
 
 /**
  * Created by Pascal on 12/01/15.

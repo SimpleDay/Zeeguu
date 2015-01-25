@@ -1,6 +1,6 @@
 package pascalgiehl_unibe.zeeguu.Sliding_menu;
 
-import pascalgiehl_unibe.zeeguu.ZeeguuFragment;
+import pascalgiehl_unibe.zeeguu.Core.ZeeguuFragment;
 
 /**
  * Zeeguu Application

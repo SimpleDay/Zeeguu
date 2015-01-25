@@ -1,4 +1,4 @@
-package pascalgiehl_unibe.zeeguu;
+package pascalgiehl_unibe.zeeguu.Core;
 
 import android.app.Activity;
 import android.content.Context;
