@@ -21,13 +21,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import pascalgiehl_unibe.zeeguu.Volley.Request;
-import pascalgiehl_unibe.zeeguu.Volley.RequestQueue;
-import pascalgiehl_unibe.zeeguu.Volley.Response;
-import pascalgiehl_unibe.zeeguu.Volley.VolleyError;
-import pascalgiehl_unibe.zeeguu.Volley.toolbox.JsonArrayRequest;
-import pascalgiehl_unibe.zeeguu.Volley.toolbox.StringRequest;
-import pascalgiehl_unibe.zeeguu.Volley.toolbox.Volley;
+import com.google.Volley.Request;
+import com.google.Volley.RequestQueue;
+import com.google.Volley.Response;
+import com.google.Volley.VolleyError;
+import com.google.Volley.toolbox.JsonArrayRequest;
+import com.google.Volley.toolbox.StringRequest;
+import com.google.Volley.toolbox.Volley;
 import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.Header;
 import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.Item;
 import pascalgiehl_unibe.zeeguu.Wordlist_Fragments.TranslatedWord;
@@ -44,6 +44,7 @@ public class ConnectionManager extends Application {
     //TAGS
     private static final String tag_wordlist_Req = "tag_wordlist_id";
     private static final String tag_SessionID_Req = "tag_session_id";
+    private static final String tag_language_Req = "tag_language_id";
     private static final String TAG = "tag_logging";
 
     //user login information
@@ -67,9 +68,9 @@ public class ConnectionManager extends Application {
         session_id = settings.getString("Session_ID", "").toString();
 
         //ToDo: Delete after debugging
-        email = "p.giehl@gmx.ch";
-        pw = "Micky";
-        session_id = "1467847111";
+        //email = "p.giehl@gmx.ch";
+        //pw = "Micky";
+        //session_id = "1467847111";
 
         instance = this;
     }
@@ -150,6 +151,8 @@ public class ConnectionManager extends Application {
                 editor.commit();
                 pDialog.dismiss();
 
+                getUserLanguage(); //ask for the language when session ID arrived
+
             }
         }, new Response.ErrorListener() {
 
@@ -227,6 +230,43 @@ public class ConnectionManager extends Application {
 
 
         this.addToRequestQueue(request, tag_wordlist_Req);
+    }
+
+    public void getUserLanguage(){
+        String url_learned_language = url + "learned_language?session=" + session_id;
+
+        if (!userHasSessionId())
+            return;
+
+        if(pDialog == null) {
+            pDialog = new ProgressDialog(activity);
+            pDialog.setMessage("Loading...");
+            pDialog.show();
+        }
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                url_learned_language, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, response.toString());
+                //Save language
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("zeeguu_language", response.toString());
+                editor.commit();
+                pDialog.dismiss();
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Error: " + error.getMessage());
+                pDialog.dismiss();
+            }
+        });
+
+        this.addToRequestQueue(strReq, tag_language_Req);
     }
 
     /*
