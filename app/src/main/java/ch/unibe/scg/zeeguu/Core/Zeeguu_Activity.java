@@ -1,16 +1,11 @@
 package ch.unibe.scg.zeeguu.Core;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import ch.unibe.scg.zeeguu.R;
@@ -29,6 +24,10 @@ public class Zeeguu_Activity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zeeguu);
 
+        //TODO: implement changable Design of app
+        //SharedPreferences settings = getSharedPreferences("ch.unibe.scg.zeeguu_preferences", 0);
+        //String theme = settings.getString("zeeguu_design", "").toString();
+
         //Customize Actionbar
         //getActionBar().setDisplayShowTitleEnabled(false); // hides action bar title
 
@@ -40,45 +39,7 @@ public class Zeeguu_Activity extends FragmentActivity {
         transaction.commit();
 
         connectionManager = ConnectionManager.getConnectionManager(this);
-
-
-        if (!connectionManager.userHasLoginInfo())
-            getLoginInformation();
-
-        if (!connectionManager.userHasSessionId())
-            connectionManager.getSessionID();
-
         //TODO: Language change affects whole app
-    }
-
-
-    private void getLoginInformation() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        builder.setView(inflater.inflate(R.layout.dialog_sign_in, null))
-                .setPositiveButton(R.string.button_sign_in, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        EditText email = (EditText) findViewById(R.id.dialog_email);
-                        EditText pw = (EditText) findViewById(R.id.dialog_password);
-
-                        SharedPreferences settings = getSharedPreferences("UserInfo", 0);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString("email", email.getText().toString());
-                        editor.putString("password", pw.getText().toString());
-                        editor.commit();
-
-                        connectionManager.getSessionID();
-                    }
-                })
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        builder.create().show();
     }
 
     @Override

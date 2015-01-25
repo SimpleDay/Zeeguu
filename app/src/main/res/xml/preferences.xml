@@ -7,16 +7,24 @@
 
         <EditTextPreference
             android:inputType="textEmailAddress"
-            android:key="email"
+            android:key="@string/preference_email"
             android:summary="@string/email_info"
             android:title="@string/email" />
 
         <EditTextPreference
             android:inputType="textPassword"
-            android:key="password"
+            android:key="@string/preference_password"
             android:summary="@string/password_info"
             android:title="@string/password" />
+
+        <EditTextPreference
+            android:key="@string/preference_user_session_id"
+            android:selectable="false"
+            android:title="@string/user_session_id"
+            android:summary="@string/unknown"/>
+
     </PreferenceCategory>
+
 
     <PreferenceCategory
         android:key="category_main_settings"
@@ -28,6 +36,14 @@
             android:dialogTitle="@string/zeeguu_language_dialog"
             android:entries="@array/choosable_languages"
             android:entryValues="@array/choosable_languages_keys"
+            android:defaultValue="@string/default_language" />
+
+        <ListPreference
+            android:key="zeeguu_design"
+            android:title="@string/zeeguu_design"
+            android:dialogTitle="@string/zeeguu_design_dialog"
+            android:entries="@array/choosable_themes"
+            android:entryValues="@array/choosable_themes_keys"
             android:defaultValue="@string/default_language" />
 
     </PreferenceCategory>

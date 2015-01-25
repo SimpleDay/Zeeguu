@@ -35,7 +35,7 @@
     <string name="category_app_settings">App Settings</string>
     <string name="app_language">App Language</string>
     <string name="app_language_dialog">Change the language of the app</string>
-    <string name="default_language">english</string>
+    <string name="default_language">en</string>
 
 
     <!-- choosable languages  -->
@@ -49,8 +49,34 @@
         <item>fr</item>
     </string-array>
 
+    <string name="zeeguu_design">Design</string>
+    <string name="zeeguu_design_dialog">Change the design of the app</string>
+    <string name="default_theme">AppThemeDark</string>
+
+    <string-array name="choosable_themes">
+        <item>Light</item>
+        <item>Light/Dark</item>
+        <item>Dark</item>
+    </string-array>
+
+    <string-array name="choosable_themes_keys">
+        <item>AppThemeLight</item>
+        <item>AppThemeLightActionbarDark</item>
+        <item>AppThemeDark</item>
+    </string-array>
+
+
+
     <!-- error messages  -->
     <string name="mic_search_not_supported">Ops! Your device does not support Speech to Text</string>
+
+
+    <!-- preference tags  -->
+    <string name="preference_email">EMAIL</string>
+    <string name="preference_password">PASSWORD</string>
+    <string name="user_session_id">Used session ID</string>
+    <string name="preference_user_session_id">SESSIONID</string>
+    <string name="unknown">Unknown</string>
 
 
 </resources>

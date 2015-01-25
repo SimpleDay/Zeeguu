@@ -6,11 +6,15 @@ package ch.unibe.scg.zeeguu.Core;
  */
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.Volley.Request;
@@ -29,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.Header;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.Item;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.TranslatedWord;
@@ -40,9 +45,11 @@ public class ConnectionManager extends Application {
 
     private RequestQueue mRequestQueue;
     private ProgressDialog pDialog;
+    private AlertDialog aDialog;
     private SharedPreferences settings;
 
     //TAGS
+    private static final boolean debugOn = true;
     private static final String tag_wordlist_Req = "tag_wordlist_id";
     private static final String tag_SessionID_Req = "tag_session_id";
     private static final String tag_language_Req = "tag_language_id";
@@ -56,22 +63,29 @@ public class ConnectionManager extends Application {
     private static ConnectionManager instance;
     private static Activity activity;
 
-    private static ArrayList<Item> tmpList;
+    private static ArrayList<Item> wordList;
 
     public ConnectionManager(Activity activity) {
         super();
         this.activity = activity;
+        this.wordList = new ArrayList<>();
 
-        //try to get the login information
-        settings = activity.getSharedPreferences("UserInfo", 0);
-        email = settings.getString("Username", "").toString();
-        pw = settings.getString("Password", "").toString();
-        session_id = settings.getString("Session_ID", "").toString();
+        //try to get the login information //TODO: use default shared preferences
+        settings = activity.getSharedPreferences("ch.unibe.scg.zeeguu_preferences", 0);
+        email = settings.getString(activity.getString(R.string.preference_email), "").toString();
+        pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
+        session_id = settings.getString(activity.getString(R.string.preference_user_session_id), "").toString();
 
         //ToDo: Delete after debugging
-        email = "p.giehl@gmx.ch";
-        pw = "Micky";
-        session_id = "1467847111";
+        //email = "p.giehl@gmx.ch";
+        //pw = "Micky";
+        //session_id = "1467847111";
+
+        if (!userHasLoginInfo())
+            getLoginInformation();
+        else if (!userHasSessionId())
+            getSessionIdFromServer();
+
 
         instance = this;
     }
@@ -86,6 +100,38 @@ public class ConnectionManager extends Application {
             return new ConnectionManager(activity);
 
         return instance;
+    }
+
+    private void getLoginInformation() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        LayoutInflater inflater = activity.getLayoutInflater();
+
+        builder.setView(inflater.inflate(R.layout.dialog_sign_in, null))
+                .setPositiveButton(R.string.button_sign_in, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
+                        EditText editTextpw = (EditText) aDialog.findViewById(R.id.dialog_password);
+
+                        email = editTextEmail.getText().toString();
+                        pw = editTextpw.getText().toString();
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(activity.getString(R.string.preference_email), email);
+                        editor.putString(activity.getString(R.string.preference_password), pw);
+                        editor.commit();
+
+                        getSessionIdFromServer();
+                    }
+                })
+                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        aDialog = builder.create();
+        aDialog.show();
     }
 
     public boolean userHasSessionId() {
@@ -128,7 +174,7 @@ public class ConnectionManager extends Application {
         }
     }
 
-    public void getSessionID() {
+    public void getSessionIdFromServer() {
         String url_session_ID = url + "session/" + email;
 
         if (!userHasLoginInfo())
@@ -141,21 +187,25 @@ public class ConnectionManager extends Application {
 
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, response.toString());
+                session_id = response.toString();
+                logging(TAG, session_id);
+
                 //Save session ID
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString("Session_ID", response.toString());
+                editor.putString(activity.getString(R.string.preference_user_session_id), session_id);
                 editor.commit();
                 dismissDialog();
 
-                getUserLanguage(); //ask for the language when session ID arrived
+                getAllWordsFromServer();
+                getUserLanguageFromServer(); //ask for the language when session ID arrived
 
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Error: " + error.getMessage());
+                //TODO: Message when used wrong name, pw
+                logging(TAG, error.toString());
                 dismissDialog();
             }
         }) {
@@ -172,49 +222,43 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_SessionID_Req);
     }
 
-    public void getAllWords(ArrayList<Item> list) {
-        if (!userHasSessionId())
-            return;
+    public void getAllWordsFromServer() {
+        if (!userHasSessionId()) return;
 
         String url_session_ID = url + "contribs_by_day/with_context?session=" + session_id;
-        tmpList = list;
-
         createLoadingDialog();
 
         JsonArrayRequest request = new JsonArrayRequest(url_session_ID, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
-                Log.d(TAG, response.toString());
+                logging(TAG, response.toString());
 
                 try {
                     for (int j = 0; j < response.length(); j++) {
                         JSONObject dates = response.getJSONObject(j);
-                        tmpList.add(new Header(dates.getString("date")));
+                        wordList.add(new Header(dates.getString("date")));
                         JSONArray contribs = dates.getJSONArray("contribs");
                         for(int i = 0; i < contribs.length(); i++) {
                             JSONObject translation = contribs.getJSONObject(i);
                             String nativeWord = translation.getString("from");
                             String translatedWord = translation.getString("to");
                             String context = translation.getString("context");
-                            tmpList.add(new TranslatedWord(nativeWord, translatedWord, context));
+                            wordList.add(new TranslatedWord(nativeWord, translatedWord, context));
                         }
                     }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(activity,
-                            "Error: " + e.getMessage(),
-                            Toast.LENGTH_LONG).show();
+                } catch (JSONException error) {
+                    logging(TAG, error.toString());
+                    if(debugOn)
+                        Toast.makeText(activity,"Error: " + error.toString(), Toast.LENGTH_LONG).show();
                 }
                     dismissDialog();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                logging(TAG, error.toString());
                 dismissDialog();
             }
         });
@@ -223,7 +267,7 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(request, tag_wordlist_Req);
     }
 
-    public void getUserLanguage(){
+    public void getUserLanguageFromServer(){
         String url_learned_language = url + "learned_language?session=" + session_id;
 
         if (!userHasSessionId())
@@ -236,7 +280,7 @@ public class ConnectionManager extends Application {
 
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, response.toString());
+                logging(TAG, response.toString());
                 //Save language
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("zeeguu_language", response.toString());
@@ -248,7 +292,7 @@ public class ConnectionManager extends Application {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Error: " + error.getMessage());
+                logging(TAG, error.toString());
                 dismissDialog();
             }
         });
@@ -256,6 +300,16 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_language_Req);
     }
 
+    public String getSessionId() { return session_id; }
+
+    public static ArrayList<Item> getWordList() {
+        return wordList;
+    }
+
+    private void logging(String tag, String message) {
+        if(debugOn)
+            Log.d(TAG, message);
+    }
     private void createLoadingDialog() {
         if(pDialog == null) {
             pDialog = new ProgressDialog(activity);
@@ -268,6 +322,8 @@ public class ConnectionManager extends Application {
         if(pDialog != null)
             pDialog.dismiss();
     }
+
+
 
     /*
     public ConnectionManager() {
