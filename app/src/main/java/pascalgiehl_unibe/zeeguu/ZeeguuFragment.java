@@ -10,6 +10,8 @@ import android.view.inputmethod.InputMethodManager;
  * Created by Pascal on 22/01/15.
  */
 public abstract class ZeeguuFragment extends Fragment {
+    protected int RESULT_SPEECH = 1;
+
     public ZeeguuFragment() {
         super();
     }

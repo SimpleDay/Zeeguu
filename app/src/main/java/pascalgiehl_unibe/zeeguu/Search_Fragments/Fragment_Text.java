@@ -22,7 +22,6 @@ import pascalgiehl_unibe.zeeguu.ZeeguuFragment;
  * Created by Pascal on 12/01/15.
  */
 public class Fragment_Text extends ZeeguuFragment {
-    private static final int RESULT_SPEECH = 1;
     private EditText native_language_text;
 
     public Fragment_Text() {
@@ -75,16 +74,10 @@ public class Fragment_Text extends ZeeguuFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //TODO: Solve it with a selector, not hardcoded
-        switch (1) {
-            case RESULT_SPEECH: {
-                if (resultCode == Activity.RESULT_OK && null != data) {
-                    ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    native_language_text.setText(text.get(0));
-                }
-                break;
-            }
 
+        if (resultCode == Activity.RESULT_OK && null != data) {
+            ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            native_language_text.setText(text.get(0));
         }
     }
 
