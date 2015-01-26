@@ -11,6 +11,7 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -70,8 +71,9 @@ public class ConnectionManager extends Application {
         this.activity = activity;
         this.wordList = new ArrayList<>();
 
-        //try to get the login information //TODO: use default shared preferences
-        settings = activity.getSharedPreferences("ch.unibe.scg.zeeguu_preferences", 0);
+        //try to get the login information
+        settings = PreferenceManager.getDefaultSharedPreferences(activity);
+        //settings = activity.getSharedPreferences("ch.unibe.scg.zeeguu_preferences", 0);
         email = settings.getString(activity.getString(R.string.preference_email), "").toString();
         pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
         session_id = settings.getString(activity.getString(R.string.preference_user_session_id), "").toString();
@@ -245,6 +247,7 @@ public class ConnectionManager extends Application {
                             String translatedWord = translation.getString("to");
                             String context = translation.getString("context");
                             wordList.add(new TranslatedWord(nativeWord, translatedWord, context));
+                            //TODO: words filter that it doesn't add every start the same words
                         }
                     }
 

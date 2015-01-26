@@ -49,7 +49,7 @@
         <item>fr</item>
     </string-array>
 
-    <string name="zeeguu_design">Design</string>
+    <string name="zeeguu_design">Zeeguu Design</string>
     <string name="zeeguu_design_dialog">Change the design of the app</string>
     <string name="default_theme">AppThemeDark</string>
 
