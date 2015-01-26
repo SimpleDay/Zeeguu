@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import ch.unibe.scg.zeeguu.Core.ConnectionManager;
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguu.R;
@@ -29,9 +31,10 @@ public class Fragment_Wordlist extends ZeeguuFragment {
         //getWordlist from server
         ConnectionManager connectionManager = ConnectionManager.getConnectionManager(this.getActivity());
         connectionManager.getAllWordsFromServer();
+        ArrayList<Item> list = connectionManager.getWordList();
 
         //create listview for wordlist and customize it
-        WordlistAdapter adapter = new WordlistAdapter(this.getActivity(), connectionManager.getWordList());
+        WordlistAdapter adapter = new WordlistAdapter(this.getActivity(), list);
 
         ListView resultList = (ListView) view.findViewById(R.id.wordlist_listview);
         resultList.setAdapter(adapter);

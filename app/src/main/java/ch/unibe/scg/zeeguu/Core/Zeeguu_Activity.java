@@ -16,8 +16,6 @@ import ch.unibe.scg.zeeguu.Settings.SettingsActivity;
 import ch.unibe.scg.zeeguu.Sliding_menu.SlidingFragment;
 
 public class Zeeguu_Activity extends FragmentActivity {
-    //TODO: horizontal mode (if phone is rotated by 90 degree, it starts some connections..)
-
     private ConnectionManager connectionManager;
     private SlidingFragment fragment;
 
@@ -136,5 +134,4 @@ public class Zeeguu_Activity extends FragmentActivity {
         if(actualizeView)
             recreate();
     }
-
 }

@@ -65,6 +65,7 @@ public class ConnectionManager extends Application {
     private static Activity activity;
 
     private static ArrayList<Item> wordList;
+    private static EditText translationEditText;
 
     public ConnectionManager(Activity activity) {
         super();
@@ -235,7 +236,8 @@ public class ConnectionManager extends Application {
             @Override
             public void onResponse(JSONArray response) {
                 logging(TAG, response.toString());
-
+                wordList.clear();
+                //ToDo: optimization that not everytime the whole list is sent
                 try {
                     for (int j = 0; j < response.length(); j++) {
                         JSONObject dates = response.getJSONObject(j);
@@ -247,7 +249,6 @@ public class ConnectionManager extends Application {
                             String translatedWord = translation.getString("to");
                             String context = translation.getString("context");
                             wordList.add(new TranslatedWord(nativeWord, translatedWord, context));
-                            //TODO: words filter that it doesn't add every start the same words
                         }
                     }
 
@@ -305,6 +306,38 @@ public class ConnectionManager extends Application {
 
     public String getSessionId() { return session_id; }
 
+    public void getTranslation(String text, String fromLanguageCode, String toLanguageCode, EditText translationView) {
+        //more words can be translated in parallel, but no special characters
+        if (!userHasLoginInfo())
+            return;
+
+        text = text.replaceAll("\\s+", "%20");
+        String url_translation = url + "goslate_from_to/" + text + "/" +
+                fromLanguageCode + "/" + toLanguageCode + "?session=" + session_id;
+
+        translationEditText = translationView;
+        createLoadingDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.GET,
+                url_translation, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                translationEditText.setText(response.toString());
+            }
+
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                logging(TAG, error.toString());
+                dismissDialog();
+            }
+        });
+
+        this.addToRequestQueue(strReq, tag_SessionID_Req);
+    }
+
     public static ArrayList<Item> getWordList() {
         return wordList;
     }
@@ -313,6 +346,7 @@ public class ConnectionManager extends Application {
         if(debugOn)
             Log.d(TAG, message);
     }
+
     private void createLoadingDialog() {
         if(pDialog == null) {
             pDialog = new ProgressDialog(activity);

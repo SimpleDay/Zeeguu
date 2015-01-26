@@ -16,90 +16,84 @@
 
         <EditText
             android:id="@+id/text_native_translation_user_entered"
-            android:inputType="text"
             android:layout_width="319dp"
             android:layout_height="201dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:background="@drawable/rounded_textfield"
             android:gravity="top"
+            android:inputType="text"
             android:maxLines="10"
-            android:padding="10dp"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:padding="10dp" />
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:id="@+id/imageView"
-            android:src="@drawable/flag_german"
-            android:layout_gravity="right|bottom"
             android:layout_alignBottom="@+id/text_native_translation_user_entered"
-            android:layout_alignRight="@+id/text_native_translation_user_entered"
             android:layout_alignEnd="@+id/text_native_translation_user_entered"
+            android:layout_alignRight="@+id/text_native_translation_user_entered"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="12dp"
             android:layout_marginRight="15dp"
-            android:layout_marginBottom="12dp" />
+            android:src="@drawable/flag_german" />
 
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="fill_parent"
         android:layout_height="54dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:id="@+id/relativeLayout"
-        android:layout_below="@+id/text_native_translation"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/text_native_translation"
+        android:layout_gravity="center_horizontal|bottom">
+
+
+        <ImageButton
+            android:id="@+id/microphone_search_button"
+            android:layout_width="55dp"
+            android:layout_height="45dp"
+            android:layout_gravity="left"
+            android:background="@drawable/rounded_button"
+            android:clickable="true"
+            android:src="?attr/customIconVoice"
+            android:text="voice"
+            android:layout_marginLeft="35dp"
+            android:layout_alignBottom="@+id/camera_search_button"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="35dp" />
+
+        <ImageButton
+            android:id="@+id/camera_search_button"
+            android:layout_width="55dp"
+            android:layout_height="45dp"
+            android:layout_gravity="left"
+            android:background="@drawable/rounded_button"
+            android:clickable="true"
+            android:src="?attr/customIconCamera"
+            android:text="camera"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="44dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/microphone_search_button"
+            android:layout_toEndOf="@+id/microphone_search_button" />
 
         <ImageButton
             android:id="@+id/translate_button"
             android:layout_width="55dp"
             android:layout_height="45dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="37dp"
-            android:layout_marginRight="30dp"
             android:background="@drawable/rounded_button"
-            android:src="?attr/customIconTranslate" />
-
-        <LinearLayout
-            android:id="@+id/round_button_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:gravity="right"
+            android:src="?attr/customIconTranslate"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginStart="33dp"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingRight="5dp">
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="false"
+            android:layout_marginRight="40dp"
+            android:layout_marginEnd="40dp" />
 
-            <ImageButton
-                android:id="@+id/microphone_search_button"
-                android:layout_width="55dp"
-                android:layout_height="45dp"
-                android:layout_gravity="right"
-                android:layout_margin="5dp"
-                android:background="@drawable/rounded_button"
-                android:clickable="true"
-                android:src="?attr/customIconVoice"
-                android:text="voice"
-                android:textColor="#fff" />
-
-            <ImageButton
-                android:id="@+id/camera_search_button"
-                android:layout_width="55dp"
-                android:layout_height="45dp"
-                android:layout_gravity="right"
-                android:layout_margin="5dp"
-                android:background="@drawable/rounded_button"
-                android:clickable="true"
-                android:src="?attr/customIconCamera"
-                android:text="camera"
-                android:textColor="#fff" />
-
-        </LinearLayout>
 
     </RelativeLayout>
 
@@ -107,35 +101,36 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="210dp"
-        android:layout_gravity="center"
-        android:layout_below="@+id/relativeLayout"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_gravity="center">
 
         <EditText
             android:id="@+id/text_translated"
             android:layout_width="319dp"
             android:layout_height="201dp"
-            android:layout_gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:background="@drawable/rounded_textfield"
             android:editable="false"
+            android:gravity="top"
+            android:inputType="text"
             android:maxLines="10"
-            android:padding="15dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:padding="15dp" />
 
         <ImageView
+            android:id="@+id/flag_translate_to"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:id="@+id/flag_translate_to"
-            android:src="@drawable/flag_uk"
-            android:layout_gravity="center_vertical"
             android:layout_alignBottom="@+id/text_translated"
-            android:layout_alignRight="@+id/text_translated"
             android:layout_alignEnd="@+id/text_translated"
+            android:layout_alignRight="@+id/text_translated"
+            android:layout_marginBottom="12dp"
             android:layout_marginRight="15dp"
-            android:layout_marginBottom="12dp" />
+            android:gravity="top"
+            android:maxLines="10"
+            android:src="@drawable/flag_uk" />
     </RelativeLayout>
-
 
 </RelativeLayout>
