@@ -36,7 +36,7 @@
                 android:padding="10dp" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/flag_translate_from"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_alignParentBottom="true"

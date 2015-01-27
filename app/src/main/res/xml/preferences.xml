@@ -31,33 +31,43 @@
         android:title="@string/category_main_settings">
 
         <ListPreference
-            android:key="zeeguu_language"
-            android:title="@string/zeeguu_language"
-            android:dialogTitle="@string/zeeguu_language_dialog"
+            android:key="learning_language"
+            android:title="@string/learning_language"
+            android:dialogTitle="@string/learning_language_dialog"
             android:entries="@array/choosable_languages"
             android:entryValues="@array/choosable_languages_keys"
             android:defaultValue="@string/default_language" />
 
         <ListPreference
-            android:key="zeeguu_design"
-            android:title="@string/zeeguu_design"
-            android:dialogTitle="@string/zeeguu_design_dialog"
-            android:entries="@array/choosable_themes"
-            android:entryValues="@array/choosable_themes_keys"
+            android:key="native_language"
+            android:title="@string/native_language"
+            android:dialogTitle="@string/native_language_dialog"
+            android:entries="@array/choosable_languages"
+            android:entryValues="@array/choosable_languages_keys"
             android:defaultValue="@string/default_language" />
 
+
     </PreferenceCategory>
+
 
     <PreferenceCategory
         android:key="category_app_settings"
         android:title="@string/category_app_settings">
 
         <ListPreference
-            android:key="language"
+            android:key="app_language"
             android:title="@string/app_language"
             android:dialogTitle="@string/app_language_dialog"
             android:entries="@array/choosable_languages"
             android:entryValues="@array/choosable_languages_keys"
+            android:defaultValue="@string/default_language" />
+
+        <ListPreference
+            android:key="app_design"
+            android:title="@string/app_design"
+            android:dialogTitle="@string/app_design_dialog"
+            android:entries="@array/choosable_themes"
+            android:entryValues="@array/choosable_themes_keys"
             android:defaultValue="@string/default_language" />
 
     </PreferenceCategory>

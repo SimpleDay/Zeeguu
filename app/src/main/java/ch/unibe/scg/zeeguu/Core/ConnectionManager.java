@@ -60,6 +60,8 @@ public class ConnectionManager extends Application {
     private String email;
     private String pw;
     private String session_id;
+    private String native_language;
+    private String learning_language;
 
     private static ConnectionManager instance;
     private static Activity activity;
@@ -72,12 +74,10 @@ public class ConnectionManager extends Application {
         this.activity = activity;
         this.wordList = new ArrayList<>();
 
-        //try to get the login information
+        //try to get the users information
         settings = PreferenceManager.getDefaultSharedPreferences(activity);
+        updateUserInformation();
         //settings = activity.getSharedPreferences("ch.unibe.scg.zeeguu_preferences", 0);
-        email = settings.getString(activity.getString(R.string.preference_email), "").toString();
-        pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
-        session_id = settings.getString(activity.getString(R.string.preference_user_session_id), "").toString();
 
         //ToDo: Delete after debugging
         //email = "p.giehl@gmx.ch";
@@ -91,6 +91,14 @@ public class ConnectionManager extends Application {
 
 
         instance = this;
+    }
+
+    public void updateUserInformation() {
+        email = settings.getString(activity.getString(R.string.preference_email), "").toString();
+        pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
+        session_id = settings.getString(activity.getString(R.string.preference_user_session_id), "").toString();
+        native_language = settings.getString("native_language", "").toString();
+        learning_language = settings.getString("learning_language", "").toString();
     }
 
     @Override
@@ -272,14 +280,14 @@ public class ConnectionManager extends Application {
     }
 
     public void getUserLanguageFromServer(){
-        String url_learned_language = url + "learned_language?session=" + session_id;
-
         if (!userHasSessionId())
             return;
 
+        String url_learned_language = url + "learned_language?session=" + session_id;
+
         createLoadingDialog();
 
-        StringRequest strReq = new StringRequest(Request.Method.POST,
+        StringRequest strReq = new StringRequest(Request.Method.GET,
                 url_learned_language, new Response.Listener<String>() {
 
             @Override
@@ -287,7 +295,7 @@ public class ConnectionManager extends Application {
                 logging(TAG, response.toString());
                 //Save language
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString("zeeguu_language", response.toString());
+                editor.putString("learning_language", response.toString());
                 editor.commit();
                 dismissDialog();
 
@@ -304,16 +312,54 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_language_Req);
     }
 
+    public void setUserLanguageOnServer(){
+        if (!userHasSessionId())
+            return;
+
+        final String set_language = settings.getString("learning_language", "").toString();
+        String url_learn_language = url + "learned_language/" + set_language + "?session=" + session_id;
+
+        createLoadingDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                url_learn_language, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                logging(TAG, response.toString());
+                //Save language
+                if(response.toString().equals("OK"))
+                    learning_language = set_language;
+                else
+                    Toast.makeText(getApplicationContext(), R.string.change_learning_language_not_possible,
+                            Toast.LENGTH_LONG).show();
+
+                dismissDialog();
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //TODO: Catch error if no internet connection!!!
+                logging(TAG, error.toString());
+                dismissDialog();
+            }
+        });
+
+        this.addToRequestQueue(strReq, tag_language_Req);
+    }
+
     public String getSessionId() { return session_id; }
 
-    public void getTranslation(String text, String fromLanguageCode, String toLanguageCode, EditText translationView) {
+    public void getTranslation(String text, EditText translationView) {
         //more words can be translated in parallel, but no special characters
         if (!userHasLoginInfo())
             return;
 
         text = text.replaceAll("\\s+", "%20");
         String url_translation = url + "goslate_from_to/" + text + "/" +
-                fromLanguageCode + "/" + toLanguageCode + "?session=" + session_id;
+                native_language + "/" + learning_language + "?session=" + session_id;
 
         translationEditText = translationView;
         createLoadingDialog();
@@ -340,6 +386,22 @@ public class ConnectionManager extends Application {
 
     public static ArrayList<Item> getWordList() {
         return wordList;
+    }
+
+    public String getNative_language() {
+        return native_language;
+    }
+
+    public void setNative_language(String native_language) {
+        this.native_language = native_language;
+    }
+
+    public String getLearning_language() {
+        return learning_language;
+    }
+
+    public void setLearning_language(String learning_language) {
+        this.learning_language = learning_language;
     }
 
     private void logging(String tag, String message) {

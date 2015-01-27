@@ -16,6 +16,8 @@ import ch.unibe.scg.zeeguu.R;
  * Created by Pascal on 12/01/15.
  */
 public class Fragment_Wordlist extends ZeeguuFragment {
+    private ArrayList<Item> list;
+    private WordlistAdapter adapter;
 
     public Fragment_Wordlist() {
     }
@@ -31,10 +33,10 @@ public class Fragment_Wordlist extends ZeeguuFragment {
         //getWordlist from server
         ConnectionManager connectionManager = ConnectionManager.getConnectionManager(this.getActivity());
         connectionManager.getAllWordsFromServer();
-        ArrayList<Item> list = connectionManager.getWordList();
+        list = connectionManager.getWordList();
 
         //create listview for wordlist and customize it
-        WordlistAdapter adapter = new WordlistAdapter(this.getActivity(), list);
+        adapter = new WordlistAdapter(this.getActivity(), list);
 
         ListView resultList = (ListView) view.findViewById(R.id.wordlist_listview);
         resultList.setAdapter(adapter);
@@ -45,6 +47,7 @@ public class Fragment_Wordlist extends ZeeguuFragment {
     @Override
     public void actualizeFragment() {
         closeKeyboard();
+        adapter.notifyDataSetChanged();
     }
 
 }

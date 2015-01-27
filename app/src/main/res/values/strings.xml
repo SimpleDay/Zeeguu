@@ -27,9 +27,12 @@
     <string name="password_info">Please enter your password here</string>
     <string name="email_info">Please enter your email here</string>
 
-    <string name="category_main_settings">Zeeguu Settings</string>
-    <string name="zeeguu_language">Zeeguu Language</string>
-    <string name="zeeguu_language_dialog">Change the language you want to learn</string>
+    <string name="category_main_settings">Zeeguu Account Settings</string>
+    <string name="learning_language">Language to learn</string>
+    <string name="learning_language_dialog">Change the language you want to learn</string>
+
+    <string name="native_language">native Language</string>
+    <string name="native_language_dialog">Change your native language</string>
 
 
     <string name="category_app_settings">App Settings</string>
@@ -46,11 +49,11 @@
 
     <string-array name="choosable_languages_keys">
         <item>en</item>
-        <item>fr</item>
+        <item>de</item>
     </string-array>
 
-    <string name="zeeguu_design">Zeeguu Design</string>
-    <string name="zeeguu_design_dialog">Change the design of the app</string>
+    <string name="app_design">Zeeguu Design</string>
+    <string name="app_design_dialog">Change the design of the app</string>
     <string name="default_theme">AppThemeDark</string>
 
     <string-array name="choosable_themes">
@@ -69,6 +72,7 @@
 
     <!-- error messages  -->
     <string name="mic_search_not_supported">Ops! Your device does not support Speech to Text</string>
+    <string name="change_learning_language_not_possible">Ops! There occurred an error, we could not change your learning language. Do you have connection to the internet?</string>
 
 
     <!-- preference tags  -->

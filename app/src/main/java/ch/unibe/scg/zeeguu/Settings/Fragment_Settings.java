@@ -15,6 +15,8 @@ import ch.unibe.scg.zeeguu.R;
  */
 public class Fragment_Settings extends PreferenceFragment {
     private PreferenceListener listener;
+    private SharedPreferences settings;
+    private ConnectionManager connectionManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,24 +25,28 @@ public class Fragment_Settings extends PreferenceFragment {
 
         //add change listener
         listener = new PreferenceListener();
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(listener);
+        settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        settings.registerOnSharedPreferenceChangeListener(listener);
+        connectionManager = ConnectionManager.getConnectionManager(this.getActivity());
 
         //add Session ID to info box
         Preference session_id_preference = findPreference(this.getString(R.string.preference_user_session_id));
-        String session_id = getSessionId();
+        String session_id = connectionManager.getSessionId();
         session_id_preference.setSummary(session_id);
-    }
-
-    private String getSessionId() {
-        return ConnectionManager.getConnectionManager(this.getActivity()).getSessionId();
     }
 
     private class PreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if(key.equals("zeeguu_design"))
+            if(key.equals("app_design"))
                 getActivity().setResult(1); //used to refresh view
+            else if(key.equals("learning_language"))
+                connectionManager.setUserLanguageOnServer();
+            else
+                connectionManager.updateUserInformation();
+
+
         }
     }
 }

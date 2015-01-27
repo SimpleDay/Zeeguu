@@ -7,8 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ch.unibe.scg.zeeguu.R;
 import com.google.SlidingTab.SlidingTabLayout;
+
+import ch.unibe.scg.zeeguu.R;
 
 public class SlidingFragment extends Fragment {
     private SlidingTabLayout slidingTabLayout;

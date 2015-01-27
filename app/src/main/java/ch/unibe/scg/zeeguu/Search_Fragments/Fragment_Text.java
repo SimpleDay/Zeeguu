@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ public class Fragment_Text extends ZeeguuFragment {
     private EditText to_language_text;
     private ConnectionManager connectionManager;
 
+    //flags
+    private ImageView flag_translate_from;
+    private ImageView flag_translate_to;
+
     public Fragment_Text() {}
 
     @Override
@@ -34,10 +39,15 @@ public class Fragment_Text extends ZeeguuFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text, container, false);
 
+        //initialize class variables
         native_language_text = (EditText) view.findViewById(R.id.text_native_translation_user_entered);
         to_language_text = (EditText) view.findViewById(R.id.text_translated);
         connectionManager = ConnectionManager.getConnectionManager(getActivity());
 
+        flag_translate_from = (ImageView) view.findViewById(R.id.flag_translate_from);
+        flag_translate_to = (ImageView) view.findViewById(R.id.flag_translate_to);
+
+        //set listeners
         ImageButton button_mic = (ImageButton) view.findViewById(R.id.microphone_search_button);
         button_mic.setOnClickListener(new voiceRecognitionListener());
 
@@ -47,7 +57,31 @@ public class Fragment_Text extends ZeeguuFragment {
         ImageButton button_transl = (ImageButton) view.findViewById(R.id.translate_button);
         button_transl.setOnClickListener(new translationListener());
 
+        setLanguageFlags();
+        
         return view;
+    }
+
+    private void setLanguageFlags() {
+        setFlag(flag_translate_from, connectionManager.getNative_language());
+        setFlag(flag_translate_to, connectionManager.getLearning_language());
+    }
+
+    private void setFlag(ImageView flag, String language) {
+        switch (language) {
+            case "en":
+                flag.setImageResource(R.drawable.flag_uk);
+                break;
+            case "de":
+                flag.setImageResource(R.drawable.flag_german);
+                break;
+            case "fr":
+                flag.setImageResource(R.drawable.flag_france);
+                break;
+            case "it":
+                flag.setImageResource(R.drawable.flag_italy);
+                break;
+        }
     }
 
     @Override
@@ -65,6 +99,15 @@ public class Fragment_Text extends ZeeguuFragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
+
+    @Override
+    public void onResume() {
+        // The activity has become visible (it is now "resumed").
+        super.onResume();
+        //setLanguageFlags();
+    }
+
+    //Listeners
     private class voiceRecognitionListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -84,7 +127,7 @@ public class Fragment_Text extends ZeeguuFragment {
         @Override
         public void onClick(View v) {
             String input = native_language_text.getText().toString();
-            connectionManager.getTranslation(input, "en", "de", to_language_text);
+            connectionManager.getTranslation(input, to_language_text);
         }
     }
 
@@ -94,5 +137,7 @@ public class Fragment_Text extends ZeeguuFragment {
             //ToDo: implement OCR
         }
     }
+
+
 
 }

@@ -27,7 +27,7 @@
     <string name="password_info">Bitte geben Sie hier das Passwort ein</string>
     <string name="email_info">Bitte geben Sie hier Ihre E-Mail Adresse ein</string>
 
-    <string name="category_main_settings">Zeeguu Einstellungen</string>
+    <string name="category_main_settings">Zeeguu Konto Einstellungen</string>
 
     <string name="category_app_settings">App Einstellungen</string>
     <string name="app_language">Sprache</string>
@@ -36,5 +36,6 @@
     <!-- error messages  -->
     <string name="mic_search_not_supported">Ops! Dein Handy unterstützt diese Funktion nicht.</string>
 
+    <!-- TODO: the rest of the words will be added in the end  -->
 
 </resources>

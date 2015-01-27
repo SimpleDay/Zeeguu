@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Search_Fragments.Fragment_Text;
@@ -27,6 +26,8 @@ public class Zeeguu_Activity extends FragmentActivity {
         setTheme(false);
         setContentView(R.layout.activity_zeeguu);
 
+        connectionManager = ConnectionManager.getConnectionManager(this);
+
         //Customize Actionbar
         //getActionBar().setDisplayShowTitleEnabled(false); // hides action bar title
 
@@ -37,7 +38,6 @@ public class Zeeguu_Activity extends FragmentActivity {
         transaction.replace(R.id.viewpager, new Fragment_Text());
         transaction.commit();
 
-        connectionManager = ConnectionManager.getConnectionManager(this);
         //TODO: Language change affects whole app
     }
 
@@ -50,21 +50,6 @@ public class Zeeguu_Activity extends FragmentActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // action with ID action_refresh was selected
-            case R.id.action_text:
-                Toast.makeText(this, "Text selected", Toast.LENGTH_SHORT)
-                        .show();
-                break;
-            // action with ID action_settings was selected
-            case R.id.action_voice:
-                Toast.makeText(this, "Voice selected", Toast.LENGTH_SHORT)
-                        .show();
-                break;
-
-            case R.id.action_camera:
-                Toast.makeText(this, "Camera selected", Toast.LENGTH_SHORT)
-                        .show();
-                break;
 
             case R.id.action_settings:
                 Intent settingIntent = new Intent(this, SettingsActivity.class);
@@ -77,29 +62,23 @@ public class Zeeguu_Activity extends FragmentActivity {
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // The activity has become visible (it is now "resumed").
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // Another activity is taking focus (this activity is about to be "paused").
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // The activity is no longer visible (it is now "stopped")
-        connectionManager.cancelAllPendingRequests();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // The activity is about to be destroyed.
+    public void setTheme(boolean actualizeView) {
+        //TODO: implement changable Design of app
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = settings.getString("app_design", "").toString();
+        switch (theme) {
+            case "AppThemeLight":
+                setTheme(R.style.AppThemeLight);
+                break;
+            case "AppThemeLightActionbarDark":
+                setTheme(R.style.AppThemeLightActionbarDark);
+                break;
+            case "AppThemeDark":
+                setTheme(R.style.AppThemeDark);
+                break;
+        }
+        if(actualizeView)
+            recreate();
     }
 
     @Override
@@ -116,22 +95,30 @@ public class Zeeguu_Activity extends FragmentActivity {
         }
     }
 
-    public void setTheme(boolean actualizeView) {
-        //TODO: implement changable Design of app
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        String theme = settings.getString("zeeguu_design", "").toString();
-        switch (theme) {
-            case "AppThemeLight":
-                setTheme(R.style.AppThemeLight);
-                break;
-            case "AppThemeLightActionbarDark":
-                setTheme(R.style.AppThemeLightActionbarDark);
-                break;
-            case "AppThemeDark":
-                setTheme(R.style.AppThemeDark);
-                break;
-        }
-        if(actualizeView)
-            recreate();
+
+    @Override
+    protected void onResume() {
+        // The activity has become visible (it is now "resumed").
+        super.onResume();
+        fragment.getActiveFragment().onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        // Another activity is taking focus (this activity is about to be "paused").
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        // The activity is no longer visible (it is now "stopped")
+        super.onStop();
+        connectionManager.cancelAllPendingRequests();
+    }
+
+    @Override
+    protected void onDestroy() {
+        // The activity is about to be destroyed.
+        super.onDestroy();
     }
 }
