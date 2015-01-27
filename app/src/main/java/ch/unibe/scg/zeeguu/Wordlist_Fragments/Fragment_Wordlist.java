@@ -42,8 +42,6 @@ public class Fragment_Wordlist extends ZeeguuFragment {
         resultList.setAdapter(adapter);
     }
 
-
-
     @Override
     public void actualizeFragment() {
         closeKeyboard();

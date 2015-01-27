@@ -58,7 +58,7 @@ public class Fragment_Text extends ZeeguuFragment {
         button_transl.setOnClickListener(new translationListener());
 
         setLanguageFlags();
-        
+
         return view;
     }
 
@@ -104,7 +104,8 @@ public class Fragment_Text extends ZeeguuFragment {
     public void onResume() {
         // The activity has become visible (it is now "resumed").
         super.onResume();
-        //setLanguageFlags();
+        if(!(flag_translate_from == null || flag_translate_to == null || connectionManager == null))
+            setLanguageFlags();
     }
 
     //Listeners

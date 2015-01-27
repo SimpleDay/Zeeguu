@@ -36,4 +36,6 @@ public abstract class ZeeguuFragment extends Fragment {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         //imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
+
+    public void onResume() { super.onResume(); }
 }
