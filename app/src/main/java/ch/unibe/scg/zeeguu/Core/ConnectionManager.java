@@ -352,14 +352,20 @@ public class ConnectionManager extends Application {
 
     public String getSessionId() { return session_id; }
 
-    public void getTranslation(String text, EditText translationView) {
+    public void getTranslation(String text, Boolean switchTransl, EditText translationView) {
         //more words can be translated in parallel, but no special characters
         if (!userHasLoginInfo() || text.equals(""))
             return;
 
         text = text.replaceAll("\\s+", "%20");
-        String url_translation = url + "goslate_from_to/" + text + "/" +
-                native_language + "/" + learning_language + "?session=" + session_id;
+        String url_translation;
+
+        if(!switchTransl)
+            url_translation = url + "goslate_from_to/" + text + "/" +
+                    native_language + "/" + learning_language + "?session=" + session_id;
+        else
+            url_translation = url + "goslate_from_to/" + text + "/" +
+                    learning_language + "/" + native_language + "?session=" + session_id;
 
         translationEditText = translationView;
         createLoadingDialog();

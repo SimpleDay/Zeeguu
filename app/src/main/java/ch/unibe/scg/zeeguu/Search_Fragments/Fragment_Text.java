@@ -31,6 +31,7 @@ public class Fragment_Text extends ZeeguuFragment {
     //flags
     private ImageView flag_translate_from;
     private ImageView flag_translate_to;
+    private boolean switchLanguage;
 
     public Fragment_Text() {}
 
@@ -46,6 +47,11 @@ public class Fragment_Text extends ZeeguuFragment {
 
         flag_translate_from = (ImageView) view.findViewById(R.id.flag_translate_from);
         flag_translate_to = (ImageView) view.findViewById(R.id.flag_translate_to);
+        switchLanguage = false;
+
+        //listeners for the flags to switch the flags by pressing on them
+        flag_translate_from.setOnClickListener(new cameraRecognitionListener());
+        flag_translate_to.setOnClickListener(new cameraRecognitionListener());
 
         //set listeners
         ImageButton button_mic = (ImageButton) view.findViewById(R.id.microphone_search_button);
@@ -57,14 +63,18 @@ public class Fragment_Text extends ZeeguuFragment {
         ImageButton button_transl = (ImageButton) view.findViewById(R.id.translate_button);
         button_transl.setOnClickListener(new translationListener());
 
-        setLanguageFlags();
-
         return view;
     }
 
     private void setLanguageFlags() {
-        setFlag(flag_translate_from, connectionManager.getNative_language());
-        setFlag(flag_translate_to, connectionManager.getLearning_language());
+        if (!switchLanguage) {
+            setFlag(flag_translate_from, connectionManager.getNative_language());
+            setFlag(flag_translate_to, connectionManager.getLearning_language());
+        }
+        else {
+            setFlag(flag_translate_to, connectionManager.getNative_language());
+            setFlag(flag_translate_from, connectionManager.getLearning_language());
+        }
     }
 
     private void setFlag(ImageView flag, String language) {
@@ -128,7 +138,7 @@ public class Fragment_Text extends ZeeguuFragment {
         @Override
         public void onClick(View v) {
             String input = native_language_text.getText().toString();
-            connectionManager.getTranslation(input, to_language_text);
+            connectionManager.getTranslation(input, switchLanguage ,to_language_text);
         }
     }
 
@@ -136,9 +146,12 @@ public class Fragment_Text extends ZeeguuFragment {
         @Override
         public void onClick(View v) {
             //ToDo: implement OCR
+            switchLanguage = !switchLanguage;
+            setLanguageFlags();
+
+            String native_entered = native_language_text.getText().toString();
+            native_language_text.setText(to_language_text.getText().toString());
+            to_language_text.setText(native_entered);
         }
     }
-
-
-
 }
