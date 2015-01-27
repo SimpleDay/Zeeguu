@@ -354,7 +354,7 @@ public class ConnectionManager extends Application {
 
     public void getTranslation(String text, EditText translationView) {
         //more words can be translated in parallel, but no special characters
-        if (!userHasLoginInfo())
+        if (!userHasLoginInfo() || text.equals(""))
             return;
 
         text = text.replaceAll("\\s+", "%20");
