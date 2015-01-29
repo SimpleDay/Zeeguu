@@ -11,6 +11,7 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -77,7 +78,6 @@ public class ConnectionManager extends Application {
         //try to get the users information
         settings = PreferenceManager.getDefaultSharedPreferences(activity);
         updateUserInformation();
-        //settings = activity.getSharedPreferences("ch.unibe.scg.zeeguu_preferences", 0);
 
         //ToDo: Delete after debugging
         //email = "p.giehl@gmx.ch";
@@ -208,7 +208,8 @@ public class ConnectionManager extends Application {
                 dismissDialog();
 
                 getAllWordsFromServer();
-                getUserLanguageFromServer(); //ask for the language when session ID arrived
+                getUserLanguageFromServer(false);
+                getUserLanguageFromServer(true); //ask for the language when session ID arrived
 
             }
         }, new Response.ErrorListener() {
@@ -251,7 +252,7 @@ public class ConnectionManager extends Application {
                         JSONObject dates = response.getJSONObject(j);
                         wordList.add(new Header(dates.getString("date")));
                         JSONArray contribs = dates.getJSONArray("contribs");
-                        for(int i = 0; i < contribs.length(); i++) {
+                        for (int i = 0; i < contribs.length(); i++) {
                             JSONObject translation = contribs.getJSONObject(i);
                             String nativeWord = translation.getString("from");
                             String translatedWord = translation.getString("to");
@@ -262,10 +263,10 @@ public class ConnectionManager extends Application {
 
                 } catch (JSONException error) {
                     logging(TAG, error.toString());
-                    if(debugOn)
-                        Toast.makeText(activity,"Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                    if (debugOn)
+                        Toast.makeText(activity, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
                 }
-                    dismissDialog();
+                dismissDialog();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -279,23 +280,31 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(request, tag_wordlist_Req);
     }
 
-    public void getUserLanguageFromServer(){
+    public void getUserLanguageFromServer(final boolean isNativeLanguage) {
         if (!userHasSessionId())
             return;
 
-        String url_learned_language = url + "learned_language?session=" + session_id;
+        //when native == true, get native language, else get learning language
+        String url_language;
+        if (isNativeLanguage)
+            url_language = url + "native_language?session=" + session_id;
+        else
+            url_language = url + "learned_language?session=" + session_id;
 
         createLoadingDialog();
 
         StringRequest strReq = new StringRequest(Request.Method.GET,
-                url_learned_language, new Response.Listener<String>() {
+                url_language, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
                 logging(TAG, response.toString());
                 //Save language
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString("learning_language", response.toString());
+                if (isNativeLanguage)
+                    editor.putString("native_language", response.toString());
+                else
+                    editor.putString("learning_language", response.toString());
                 editor.commit();
                 dismissDialog();
 
@@ -312,32 +321,42 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_language_Req);
     }
 
-    public void setUserLanguageOnServer(){
+    public void setUserLanguageOnServer(final boolean isNativeLanguage) {
         if (!userHasSessionId())
             return;
 
-        final String set_language = settings.getString("learning_language", "").toString();
-        String url_learn_language = url + "learned_language/" + set_language + "?session=" + session_id;
+        String url_language;
+        final String set_language;
+        if (isNativeLanguage) {
+            set_language = settings.getString("native_language", "").toString();
+            url_language = url + "native_language/" + set_language + "?session=" + session_id;
+        } else {
+            set_language = settings.getString("learning_language", "").toString();
+            url_language = url + "learned_language/" + set_language + "?session=" + session_id;
+        }
 
         createLoadingDialog();
 
-        StringRequest strReq = new StringRequest(Request.Method.POST,
-                url_learn_language, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, url_language,
+                new Response.Listener<String>() {
 
-            @Override
-            public void onResponse(String response) {
-                logging(TAG, response.toString());
-                //Save language
-                if(response.toString().equals("OK"))
-                    learning_language = set_language;
-                else
-                    Toast.makeText(getApplicationContext(), R.string.change_learning_language_not_possible,
-                            Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onResponse(String response) {
+                        logging(TAG, response.toString());
+                        //Save language
+                        if (response.toString().equals("OK"))
+                            if (isNativeLanguage)
+                                learning_language = set_language;
+                            else
+                                native_language = set_language;
+                        else
+                            Toast.makeText(getApplicationContext(), R.string.change_learning_language_not_possible,
+                                    Toast.LENGTH_LONG).show();
 
-                dismissDialog();
+                        dismissDialog();
 
-            }
-        }, new Response.ErrorListener() {
+                    }
+                }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -350,17 +369,20 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_language_Req);
     }
 
-    public String getSessionId() { return session_id; }
+    public String getSessionId() {
+        return session_id;
+    }
 
     public void getTranslation(String text, Boolean switchTransl, EditText translationView) {
         //more words can be translated in parallel, but no special characters
-        if (!userHasLoginInfo() || text.equals(""))
+        if (!userHasLoginInfo() || text.equals("") || text == null)
             return;
 
-        text = text.replaceAll("\\s+", "%20");
-        String url_translation;
+        //parse string to URL
+        text = Uri.encode(text);
 
-        if(!switchTransl)
+        String url_translation;
+        if (!switchTransl)
             url_translation = url + "goslate_from_to/" + text + "/" +
                     native_language + "/" + learning_language + "?session=" + session_id;
         else
@@ -411,12 +433,12 @@ public class ConnectionManager extends Application {
     }
 
     private void logging(String tag, String message) {
-        if(debugOn)
+        if (debugOn)
             Log.d(TAG, message);
     }
 
     private void createLoadingDialog() {
-        if(pDialog == null) {
+        if (pDialog == null) {
             pDialog = new ProgressDialog(activity);
             pDialog.setMessage("Loading...");
             pDialog.show();
@@ -424,10 +446,9 @@ public class ConnectionManager extends Application {
     }
 
     private void dismissDialog() {
-        if(pDialog != null)
+        if (pDialog != null)
             pDialog.dismiss();
     }
-
 
 
     /*

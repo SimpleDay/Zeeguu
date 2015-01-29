@@ -1,5 +1,6 @@
 package ch.unibe.scg.zeeguu.Settings;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -17,17 +18,21 @@ public class Fragment_Settings extends PreferenceFragment {
     private PreferenceListener listener;
     private SharedPreferences settings;
     private ConnectionManager connectionManager;
+    private Activity activity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
+        //initialize variables
+        activity = getActivity();
+        connectionManager = ConnectionManager.getConnectionManager(activity);
+
         //add change listener
         listener = new PreferenceListener();
-        settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        settings = PreferenceManager.getDefaultSharedPreferences(activity);
         settings.registerOnSharedPreferenceChangeListener(listener);
-        connectionManager = ConnectionManager.getConnectionManager(this.getActivity());
 
         //add Session ID to info box
         Preference session_id_preference = findPreference(this.getString(R.string.preference_user_session_id));
@@ -40,9 +45,11 @@ public class Fragment_Settings extends PreferenceFragment {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if(key.equals("app_design"))
-                getActivity().setResult(1); //used to refresh view
+                activity.setResult(1); //used to refresh view
             else if(key.equals("learning_language"))
-                connectionManager.setUserLanguageOnServer();
+                connectionManager.setUserLanguageOnServer(false);
+            else if(key.equals("native_language"))
+                connectionManager.setUserLanguageOnServer(true);
             else
                 connectionManager.updateUserInformation();
 
