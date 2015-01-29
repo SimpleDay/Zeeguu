@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.google.SlidingTab.SlidingTabLayout;
 
+import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguu.R;
 
 public class SlidingFragment extends Fragment {
@@ -23,7 +24,7 @@ public class SlidingFragment extends Fragment {
         adapter = new ZeeguuFragmentPagerAdapter(getChildFragmentManager(), this);
     }
 
-    public Fragment getActiveFragment() {
+    public ZeeguuFragment getActiveFragment() {
         return adapter.get(viewPager.getCurrentItem()).getFragment();
     }
 

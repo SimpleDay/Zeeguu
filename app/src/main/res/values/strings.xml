@@ -13,6 +13,9 @@
     <string name="search_text_title">Text search</string>
     <string name="wordlist_title">The words you learned</string>
 
+    <!-- Textview -->
+    <string name="text_view_translate_button">translate</string>
+
     <!-- sign in dialog strings -->
     <string name="dialog_title">Sign In</string>
     <string name="email">E-Mail</string>
@@ -38,31 +41,31 @@
     <string name="category_app_settings">App Settings</string>
     <string name="app_language">App Language</string>
     <string name="app_language_dialog">Change the language of the app</string>
-    <string name="default_language">en</string>
+    <string name="language_default">en</string>
 
 
     <!-- choosable languages  -->
-    <string-array name="choosable_languages">
+    <string-array name="languages">
         <item>English</item>
         <item>Deutsch</item>
     </string-array>
 
-    <string-array name="choosable_languages_keys">
+    <string-array name="language_keys">
         <item>en</item>
         <item>de</item>
     </string-array>
 
     <string name="app_design">Zeeguu Design</string>
     <string name="app_design_dialog">Change the design of the app</string>
-    <string name="default_theme">AppThemeDark</string>
+    <string name="theme_default">AppThemeLightActionbarDark</string>
 
-    <string-array name="choosable_themes">
+    <string-array name="themes">
         <item>Light</item>
         <item>Light/Dark</item>
         <item>Dark</item>
     </string-array>
 
-    <string-array name="choosable_themes_keys">
+    <string-array name="theme_keys">
         <item>AppThemeLight</item>
         <item>AppThemeLightActionbarDark</item>
         <item>AppThemeDark</item>

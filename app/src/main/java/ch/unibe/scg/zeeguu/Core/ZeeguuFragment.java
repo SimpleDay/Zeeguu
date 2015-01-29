@@ -18,7 +18,6 @@ public abstract class ZeeguuFragment extends Fragment {
 
     public abstract void actualizeFragment();
 
-    //TODO: make this work
     /**
      * Force opens the soft keyboard
      */
