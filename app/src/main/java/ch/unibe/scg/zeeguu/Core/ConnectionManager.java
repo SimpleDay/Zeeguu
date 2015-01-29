@@ -73,6 +73,8 @@ public class ConnectionManager extends Application {
     private static ArrayList<Item> wordList;
     private static EditText translationEditText;
 
+
+
     public ConnectionManager(Activity activity) {
         super();
 
@@ -112,14 +114,10 @@ public class ConnectionManager extends Application {
     }
 
     public void updateUserInformation() {
-        String tmpEmail = settings.getString(activity.getString(R.string.preference_email), "").toString();
-        String tmpPw = settings.getString(activity.getString(R.string.preference_password), "").toString();
+        email = settings.getString(activity.getString(R.string.preference_email), "").toString();
+        pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
 
-        if(!tmpEmail.equals(email) || !tmpPw.equals(pw)){
-            email = tmpEmail;
-            pw = tmpPw;
-            getSessionId();
-        }
+        getSessionIdFromServer();
     }
 
     public boolean userHasSessionId() {
@@ -285,6 +283,7 @@ public class ConnectionManager extends Application {
             @Override
             public void onResponse(String response) {
                 session_id = response.toString();
+                toast(activity.getString(R.string.login_successful));
                 logging(TAG, session_id);
 
                 //Save session ID
@@ -302,7 +301,7 @@ public class ConnectionManager extends Application {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                //TODO: Message when used wrong name, pw
+                toast(activity.getString(R.string.error_user_login_wrong));
                 logging(TAG, error.toString());
                 dismissDialog();
             }
@@ -427,7 +426,7 @@ public class ConnectionManager extends Application {
                                 native_language = language_key;
                         }
                         else
-                            toast(activity.getString(R.string.change_learning_language_not_possible));
+                            toast(activity.getString(R.string.error_change_learning_language_not_possible));
 
                         dismissDialog();
 
@@ -473,7 +472,7 @@ public class ConnectionManager extends Application {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         if(activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
-            toast(activity.getString(R.string.no_iternet_connection));
+            toast(activity.getString(R.string.error_no_internet_connection));
             return false;
         }
 

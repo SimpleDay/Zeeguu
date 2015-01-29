@@ -34,7 +34,7 @@
     <string name="app_language_dialog">Wechseln sie die Sprache der App</string>
 
     <!-- error messages  -->
-    <string name="mic_search_not_supported">Ops! Dein Handy unterstützt diese Funktion nicht.</string>
+    <string name="error_mic_search_not_supported">Ops! Dein Handy unterstützt diese Funktion nicht.</string>
 
     <!-- TODO: the rest of the words will be added in the end  -->
 

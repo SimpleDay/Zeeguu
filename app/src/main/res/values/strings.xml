@@ -84,9 +84,13 @@
 
 
     <!-- error messages  -->
-    <string name="mic_search_not_supported">Ops! Your device does not support Speech to Text</string>
-    <string name="change_learning_language_not_possible">Ops! There occurred an error, we could not change your learning language. Do you have connection to the internet?</string>
-    <string name="no_iternet_connection">Ops! Your device is not connected to the internet</string>
+    <string name="error_mic_search_not_supported">Ops! Your device does not support Speech to Text</string>
+    <string name="error_change_learning_language_not_possible">Ops! There occurred an error, we could not change your learning language. Do you have connection to the internet?</string>
+    <string name="error_no_internet_connection">Ops! Your device is not connected to the internet</string>
+    <string name="error_user_login_wrong">Ops! Your username or password is not correct</string>
+
+    <!-- success messages  -->
+    <string name="login_successful">successfully logged in</string>
 
 
 </resources>

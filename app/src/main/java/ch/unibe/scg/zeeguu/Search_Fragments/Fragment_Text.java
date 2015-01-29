@@ -135,7 +135,7 @@ public class Fragment_Text extends ZeeguuFragment {
                 startActivityForResult(intent, RESULT_SPEECH);
             } catch (ActivityNotFoundException a) {
                 Toast t = Toast.makeText(getActivity(),
-                        getString(R.string.mic_search_not_supported),
+                        getString(R.string.error_mic_search_not_supported),
                         Toast.LENGTH_SHORT);
                 t.show();
             }

@@ -55,8 +55,10 @@ public class Fragment_Settings extends PreferenceFragment {
                 connectionManager.setNativeLanguage(sharedPreferences.getString(
                         activity.getString(R.string.preference_native_language), "en"));
 
-            else
+            else if (key.equals(activity.getString(R.string.preference_email)) ||
+                    key.equals(activity.getString(R.string.preference_password)))
                 connectionManager.updateUserInformation();
+            else { /* Do nothing yet */ }
         }
     }
 }
