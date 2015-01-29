@@ -31,18 +31,18 @@ public class Fragment_Wordlist extends ZeeguuFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        //getWordlist from server
-        ConnectionManager connectionManager = ConnectionManager.getConnectionManager(this.getActivity());
+        //getWordlist from server and add it to adapter
+        ConnectionManager connectionManager = ConnectionManager.getConnectionManager(getActivity());
         list = connectionManager.getWordList();
+        adapter = new WordlistAdapter(getActivity(), list);
 
         //create listview for wordlist and customize it
-        adapter = new WordlistAdapter(this.getActivity(), list);
-        ListView resultList = (ListView) view.findViewById(R.id.wordlist_listview);
-        resultList.setAdapter(adapter);
+        ListView wordlist = (ListView) view.findViewById(R.id.wordlist_listview);
+        wordlist.setAdapter(adapter);
 
         //Set text when listview empty
         TextView emptyText = (TextView) view.findViewById(R.id.wordlist_empty);
-        resultList.setEmptyView(emptyText);
+        wordlist.setEmptyView(emptyText);
     }
 
     @Override

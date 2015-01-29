@@ -75,8 +75,11 @@ public class ConnectionManager extends Application {
 
     public ConnectionManager(Activity activity) {
         super();
+
+        //initialise all variables
         this.activity = activity;
         this.wordList = new ArrayList<>();
+        this.instance = this;
 
         //try to get the users information
         settings = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -87,13 +90,13 @@ public class ConnectionManager extends Application {
         //pw = "Micky";
         //session_id = "1467847111";
 
+        //get the information that is missing from start point
         if (!userHasLoginInfo())
             getLoginInformation();
         else if (!userHasSessionId())
             getSessionIdFromServer();
-
-
-        instance = this;
+        else
+            getAllWordsFromServer();
     }
 
     @Override
@@ -161,7 +164,7 @@ public class ConnectionManager extends Application {
 
     public void getTranslation(String text, Boolean switchTransl, EditText translationView) {
         //more words can be translated in parallel, but no special characters
-        if (!userHasLoginInfo() || text.equals("") || text == null)
+        if (!userHasLoginInfo() || text.equals("") || text == null || !isNetworkAvailable())
             return;
 
         //parse string to URL
@@ -270,13 +273,12 @@ public class ConnectionManager extends Application {
     }
 
     private void getSessionIdFromServer() {
-        String url_session_ID = url + "session/" + email;
-
-        if (!userHasLoginInfo())
+        if (!userHasLoginInfo() || !isNetworkAvailable())
             return;
 
-        createLoadingDialog();
+        String url_session_ID = url + "session/" + email;
 
+        createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 url_session_ID, new Response.Listener<String>() {
 
@@ -319,11 +321,12 @@ public class ConnectionManager extends Application {
     }
 
     private void getAllWordsFromServer() {
-        if (!userHasSessionId()) return;
+        if (!userHasSessionId() || !isNetworkAvailable())
+            return;
 
         String url_session_ID = url + "contribs_by_day/with_context?session=" + session_id;
-        createLoadingDialog();
 
+        createLoadingDialog();
         JsonArrayRequest request = new JsonArrayRequest(url_session_ID, new Response.Listener<JSONArray>() {
 
             @Override
@@ -347,8 +350,6 @@ public class ConnectionManager extends Application {
 
                 } catch (JSONException error) {
                     logging(TAG, error.toString());
-                    if (debugOn)
-                        Toast.makeText(activity, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
                 }
                 dismissDialog();
             }
@@ -365,7 +366,8 @@ public class ConnectionManager extends Application {
     }
 
     private void getUserLanguageFromServer(final boolean isNativeLanguage) {
-        if (!userHasSessionId())
+        if (!userHasSessionId() || !isNetworkAvailable())
+
             return;
 
         //when native == true, get native language, else get learning language
@@ -376,7 +378,6 @@ public class ConnectionManager extends Application {
             url_language = url + "learned_language?session=" + session_id;
 
         createLoadingDialog();
-
         StringRequest strReq = new StringRequest(Request.Method.GET,
                 url_language, new Response.Listener<String>() {
 
@@ -406,13 +407,12 @@ public class ConnectionManager extends Application {
     }
 
     private void setUserLanguageOnServer(final Boolean isNativeLanguage, final String language_key) {
-        if (!userHasSessionId())
+        if (!userHasSessionId() || !isNetworkAvailable())
             return;
 
         String url_language = url + "native_language/" + language_key + "?session=" + session_id;
 
         createLoadingDialog();
-
         StringRequest strReq = new StringRequest(Request.Method.POST, url_language,
                 new Response.Listener<String>() {
 
@@ -420,14 +420,14 @@ public class ConnectionManager extends Application {
                     public void onResponse(String response) {
                         logging(TAG, response.toString());
                         //Save language
-                        if (response.toString().equals("OK"))
+                        if (response.toString().equals("OK")) {
                             if (isNativeLanguage)
                                 learning_language = language_key;
                             else
                                 native_language = language_key;
+                        }
                         else
-                            Toast.makeText(getApplicationContext(), R.string.change_learning_language_not_possible,
-                                    Toast.LENGTH_LONG).show();
+                            toast(activity.getString(R.string.change_learning_language_not_possible));
 
                         dismissDialog();
 
@@ -458,6 +458,10 @@ public class ConnectionManager extends Application {
         }
     }
 
+    private void toast(String text){
+        Toast.makeText(activity, text, Toast.LENGTH_LONG).show();
+    }
+
     private void dismissDialog() {
         if (pDialog != null)
             pDialog.dismiss();
@@ -465,12 +469,14 @@ public class ConnectionManager extends Application {
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if(activeNetworkInfo == null || !activeNetworkInfo.isConnected())
+        if(activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+            toast(activity.getString(R.string.no_iternet_connection));
             return false;
-        else
-            return true;
+        }
+
+        return true;
     }
 }

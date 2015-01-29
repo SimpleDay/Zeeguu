@@ -51,9 +51,9 @@ public class Fragment_Settings extends PreferenceFragment {
                 connectionManager.setLearningLanguage(sharedPreferences.getString(
                         activity.getString(R.string.preference_learning_language), "en"));
 
-            else if (key.equals(activity.getString(R.string.preference_learning_language)))
+            else if (key.equals(activity.getString(R.string.preference_native_language)))
                 connectionManager.setNativeLanguage(sharedPreferences.getString(
-                        activity.getString(R.string.preference_learning_language), "en"));
+                        activity.getString(R.string.preference_native_language), "en"));
 
             else
                 connectionManager.updateUserInformation();

@@ -33,6 +33,7 @@ public class Fragment_Text extends ZeeguuFragment {
     private ImageView flag_translate_to;
     private boolean switchLanguage;
 
+
     public Fragment_Text() {}
 
     @Override
@@ -70,6 +71,32 @@ public class Fragment_Text extends ZeeguuFragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //TODO: distinguish between image and sound recognition
+        if (resultCode == Activity.RESULT_OK && null != data) {
+            ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            native_language_text.setText(text.get(0));
+        }
+    }
+
+    @Override
+    public void actualizeFragment() {
+    }
+
+    @Override
+    public void onResume() {
+        // The activity has become visible (it is now "resumed").
+        super.onResume();
+        if(flag_translate_from != null || flag_translate_to != null || connectionManager != null)
+            setLanguageFlags();
+    }
+
+
+    //private Methods
+
+    //TODO: Implement listener that when language change in settings delays, flags are still changed
     private void setLanguageFlags() {
         if (!switchLanguage) {
             setFlag(flag_translate_from, connectionManager.getNativeLanguage());
@@ -98,30 +125,8 @@ public class Fragment_Text extends ZeeguuFragment {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //TODO: distinguish between image and sound recognition
-        if (resultCode == Activity.RESULT_OK && null != data) {
-            ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            native_language_text.setText(text.get(0));
-        }
-    }
-
-    @Override
-    public void actualizeFragment() {
-    }
-
-
-    @Override
-    public void onResume() {
-        // The activity has become visible (it is now "resumed").
-        super.onResume();
-        if(flag_translate_from != null || flag_translate_to != null || connectionManager != null)
-            setLanguageFlags();
-    }
-
     //Listeners
+
     private class voiceRecognitionListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
