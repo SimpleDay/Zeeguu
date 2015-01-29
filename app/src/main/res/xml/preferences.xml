@@ -31,14 +31,6 @@
         android:title="@string/category_main_settings">
 
         <ListPreference
-            android:key="@string/preference_learning_language"
-            android:title="@string/learning_language"
-            android:dialogTitle="@string/learning_language_dialog"
-            android:entries="@array/languages"
-            android:entryValues="@array/language_keys"
-            android:defaultValue="@string/language_default" />
-
-        <ListPreference
             android:key="@string/preference_native_language"
             android:title="@string/native_language"
             android:dialogTitle="@string/native_language_dialog"
@@ -46,6 +38,13 @@
             android:entryValues="@array/language_keys"
             android:defaultValue="@string/language_default" />
 
+        <ListPreference
+            android:key="@string/preference_learning_language"
+            android:title="@string/learning_language"
+            android:dialogTitle="@string/learning_language_dialog"
+            android:entries="@array/languages"
+            android:entryValues="@array/language_keys"
+            android:defaultValue="@string/language_default" />
 
     </PreferenceCategory>
 

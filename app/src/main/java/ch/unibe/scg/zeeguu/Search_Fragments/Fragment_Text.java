@@ -34,7 +34,8 @@ public class Fragment_Text extends ZeeguuFragment {
     private boolean switchLanguage;
 
 
-    public Fragment_Text() {}
+    public Fragment_Text() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +90,7 @@ public class Fragment_Text extends ZeeguuFragment {
     public void onResume() {
         // The activity has become visible (it is now "resumed").
         super.onResume();
-        if(flag_translate_from != null || flag_translate_to != null || connectionManager != null)
+        if (flag_translate_from != null || flag_translate_to != null || connectionManager != null)
             setLanguageFlags();
     }
 
@@ -101,8 +102,7 @@ public class Fragment_Text extends ZeeguuFragment {
         if (!switchLanguage) {
             setFlag(flag_translate_from, connectionManager.getNativeLanguage());
             setFlag(flag_translate_to, connectionManager.getLearningLanguage());
-        }
-        else {
+        } else {
             setFlag(flag_translate_to, connectionManager.getNativeLanguage());
             setFlag(flag_translate_from, connectionManager.getLearningLanguage());
         }
@@ -131,6 +131,11 @@ public class Fragment_Text extends ZeeguuFragment {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            if (switchLanguage)
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getLearningLanguage());
+            else
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getNativeLanguage());
+
             try {
                 startActivityForResult(intent, RESULT_SPEECH);
             } catch (ActivityNotFoundException a) {
@@ -146,11 +151,11 @@ public class Fragment_Text extends ZeeguuFragment {
         @Override
         public void onClick(View v) {
             String input = native_language_text.getText().toString();
-            connectionManager.getTranslation(input, switchLanguage ,to_language_text);
+            connectionManager.getTranslation(input, switchLanguage, to_language_text);
         }
     }
 
-    private class cameraRecognitionListener implements  View.OnClickListener {
+    private class cameraRecognitionListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             //ToDo: implement OCR
@@ -167,7 +172,7 @@ public class Fragment_Text extends ZeeguuFragment {
         public boolean onKey(View v, int keyCode, KeyEvent event) {
             if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 String input = native_language_text.getText().toString();
-                connectionManager.getTranslation(input, switchLanguage ,to_language_text);
+                connectionManager.getTranslation(input, switchLanguage, to_language_text);
                 return true;
             }
             return false;
