@@ -3,25 +3,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
     android:gravity="center"
-    android:weightSum="1" >
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <RelativeLayout
+        android:id="@+id/wordlist_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/wordlist_layout"
-        android:layout_weight="1.10"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true">
-
-        <ListView
+        android:layout_alignParentStart="true" >
+        <TextView
+            android:id="@+id/wordlist_empty"
+            android:text="@string/wordlist_empty"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ListView
             android:id="@+id/wordlist_listview"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
 </RelativeLayout>

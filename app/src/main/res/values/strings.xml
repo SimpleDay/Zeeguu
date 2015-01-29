@@ -12,6 +12,7 @@
     <!-- fragment strings -->
     <string name="search_text_title">Text search</string>
     <string name="wordlist_title">The words you learned</string>
+    <string name="wordlist_empty">You do not have any words in your library yet, please log in or save your words to retrieve them.</string>
 
     <!-- Textview -->
     <string name="text_view_translate_button">translate</string>
