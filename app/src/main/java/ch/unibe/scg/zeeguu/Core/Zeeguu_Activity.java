@@ -67,7 +67,7 @@ public class Zeeguu_Activity extends FragmentActivity {
 
     public void setTheme(boolean actualizeView) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        String theme = settings.getString("app_design", "").toString();
+        String theme = settings.getString(getString(R.string.preference_app_design), "").toString();
         switch (theme) {
             case "AppThemeLight":
                 setTheme(R.style.AppThemeLight);
