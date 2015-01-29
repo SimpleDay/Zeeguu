@@ -25,6 +25,15 @@
     <string name="button_cancel">Cancel</string>
     <string name="dialog_sign_in_message">You did not sign in yet, please do so to be able to connect to the server.</string>
 
+    <!-- preference tags  -->
+    <string name="preference_email">EMAIL</string>
+    <string name="preference_password">PASSWORD</string>
+    <string name="preference_user_session_id">SESSIONID</string>
+    <string name="preference_native_language">NATIVE_LANGUAGE</string>
+    <string name="preference_learning_language">LEARNING_LANGUAGE</string>
+    <string name="preference_app_design">APP_DESIGN</string>
+    <string name="unknown">Unknown</string>
+
     <!-- setting strings -->
     <string name="title_activity_settings">Settings</string>
     <string name="category_login_settings">Zeeguu Account information</string>
@@ -38,6 +47,7 @@
     <string name="native_language">native Language</string>
     <string name="native_language_dialog">Change your native language</string>
 
+    <string name="user_session_id">Used session ID</string>
 
     <string name="category_app_settings">App Settings</string>
     <string name="app_language">App Language</string>
@@ -73,18 +83,9 @@
     </string-array>
 
 
-
     <!-- error messages  -->
     <string name="mic_search_not_supported">Ops! Your device does not support Speech to Text</string>
     <string name="change_learning_language_not_possible">Ops! There occurred an error, we could not change your learning language. Do you have connection to the internet?</string>
-
-
-    <!-- preference tags  -->
-    <string name="preference_email">EMAIL</string>
-    <string name="preference_password">PASSWORD</string>
-    <string name="user_session_id">Used session ID</string>
-    <string name="preference_user_session_id">SESSIONID</string>
-    <string name="unknown">Unknown</string>
 
 
 </resources>

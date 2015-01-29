@@ -31,7 +31,7 @@
         android:title="@string/category_main_settings">
 
         <ListPreference
-            android:key="learning_language"
+            android:key="@string/preference_learning_language"
             android:title="@string/learning_language"
             android:dialogTitle="@string/learning_language_dialog"
             android:entries="@array/languages"
@@ -39,7 +39,7 @@
             android:defaultValue="@string/language_default" />
 
         <ListPreference
-            android:key="native_language"
+            android:key="@string/preference_native_language"
             android:title="@string/native_language"
             android:dialogTitle="@string/native_language_dialog"
             android:entries="@array/languages"
@@ -63,7 +63,7 @@
             android:defaultValue="@string/language_default" />
 
         <ListPreference
-            android:key="app_design"
+            android:key="@string/preference_app_design"
             android:title="@string/app_design"
             android:dialogTitle="@string/app_design_dialog"
             android:entries="@array/themes"

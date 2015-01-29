@@ -72,12 +72,12 @@ public class Fragment_Text extends ZeeguuFragment {
 
     private void setLanguageFlags() {
         if (!switchLanguage) {
-            setFlag(flag_translate_from, connectionManager.getNative_language());
-            setFlag(flag_translate_to, connectionManager.getLearning_language());
+            setFlag(flag_translate_from, connectionManager.getNativeLanguage());
+            setFlag(flag_translate_to, connectionManager.getLearningLanguage());
         }
         else {
-            setFlag(flag_translate_to, connectionManager.getNative_language());
-            setFlag(flag_translate_from, connectionManager.getLearning_language());
+            setFlag(flag_translate_to, connectionManager.getNativeLanguage());
+            setFlag(flag_translate_from, connectionManager.getLearningLanguage());
         }
     }
 

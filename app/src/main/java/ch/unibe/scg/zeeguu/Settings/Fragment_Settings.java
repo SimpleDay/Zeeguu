@@ -44,16 +44,19 @@ public class Fragment_Settings extends PreferenceFragment {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if(key.equals("app_design"))
+            if (key.equals(activity.getString(R.string.preference_app_design)))
                 activity.setResult(1); //used to refresh view
-            else if(key.equals("learning_language"))
-                connectionManager.setUserLanguageOnServer(false);
-            else if(key.equals("native_language"))
-                connectionManager.setUserLanguageOnServer(true);
+
+            else if (key.equals(activity.getString(R.string.preference_learning_language)))
+                connectionManager.setLearningLanguage(sharedPreferences.getString(
+                        activity.getString(R.string.preference_learning_language), "en"));
+
+            else if (key.equals(activity.getString(R.string.preference_learning_language)))
+                connectionManager.setNativeLanguage(sharedPreferences.getString(
+                        activity.getString(R.string.preference_learning_language), "en"));
+
             else
                 connectionManager.updateUserInformation();
-
-
         }
     }
 }

@@ -33,7 +33,6 @@ public class Fragment_Wordlist extends ZeeguuFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         //getWordlist from server
         ConnectionManager connectionManager = ConnectionManager.getConnectionManager(this.getActivity());
-        connectionManager.getAllWordsFromServer();
         list = connectionManager.getWordList();
 
         //create listview for wordlist and customize it

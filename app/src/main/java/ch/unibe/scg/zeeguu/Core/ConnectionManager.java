@@ -9,8 +9,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -77,7 +80,7 @@ public class ConnectionManager extends Application {
 
         //try to get the users information
         settings = PreferenceManager.getDefaultSharedPreferences(activity);
-        updateUserInformation();
+        loadAllUserInformation();
 
         //ToDo: Delete after debugging
         //email = "p.giehl@gmx.ch";
@@ -93,14 +96,6 @@ public class ConnectionManager extends Application {
         instance = this;
     }
 
-    public void updateUserInformation() {
-        email = settings.getString(activity.getString(R.string.preference_email), "").toString();
-        pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
-        session_id = settings.getString(activity.getString(R.string.preference_user_session_id), "").toString();
-        native_language = settings.getString("native_language", "").toString();
-        learning_language = settings.getString("learning_language", "").toString();
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -113,36 +108,15 @@ public class ConnectionManager extends Application {
         return instance;
     }
 
-    private void getLoginInformation() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        LayoutInflater inflater = activity.getLayoutInflater();
+    public void updateUserInformation() {
+        String tmpEmail = settings.getString(activity.getString(R.string.preference_email), "").toString();
+        String tmpPw = settings.getString(activity.getString(R.string.preference_password), "").toString();
 
-        builder.setView(inflater.inflate(R.layout.dialog_sign_in, null))
-                .setPositiveButton(R.string.button_sign_in, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
-                        EditText editTextpw = (EditText) aDialog.findViewById(R.id.dialog_password);
-
-                        email = editTextEmail.getText().toString();
-                        pw = editTextpw.getText().toString();
-
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(activity.getString(R.string.preference_email), email);
-                        editor.putString(activity.getString(R.string.preference_password), pw);
-                        editor.commit();
-
-                        getSessionIdFromServer();
-                    }
-                })
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        aDialog = builder.create();
-        aDialog.show();
+        if(!tmpEmail.equals(email) || !tmpPw.equals(pw)){
+            email = tmpEmail;
+            pw = tmpPw;
+            getSessionId();
+        }
     }
 
     public boolean userHasSessionId() {
@@ -185,7 +159,117 @@ public class ConnectionManager extends Application {
         }
     }
 
-    public void getSessionIdFromServer() {
+    public void getTranslation(String text, Boolean switchTransl, EditText translationView) {
+        //more words can be translated in parallel, but no special characters
+        if (!userHasLoginInfo() || text.equals("") || text == null)
+            return;
+
+        //parse string to URL
+        text = Uri.encode(text);
+
+        String url_translation;
+        if (!switchTransl)
+            url_translation = url + "goslate_from_to/" + text + "/" +
+                    native_language + "/" + learning_language + "?session=" + session_id;
+        else
+            url_translation = url + "goslate_from_to/" + text + "/" +
+                    learning_language + "/" + native_language + "?session=" + session_id;
+
+        translationEditText = translationView;
+        createLoadingDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.GET,
+                url_translation, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                translationEditText.setText(response.toString());
+            }
+
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                logging(TAG, error.toString());
+                dismissDialog();
+            }
+        });
+
+        this.addToRequestQueue(strReq, tag_SessionID_Req);
+    }
+
+
+    //Getter und setter
+
+    public String getSessionId() {
+        return session_id;
+    }
+
+    public static ArrayList<Item> getWordList() {
+        return wordList;
+    }
+
+    public String getNativeLanguage() {
+        return native_language;
+    }
+
+    public void setNativeLanguage(String native_language_key) {
+        setUserLanguageOnServer(true, native_language_key);
+    }
+
+    public String getLearningLanguage() {
+        return learning_language;
+    }
+
+    public void setLearningLanguage(String learning_language_key) {
+        setUserLanguageOnServer(false, learning_language_key);
+    }
+
+
+    //private methods
+
+    private void loadAllUserInformation(){
+        //only need to load all information once during start up
+        email = settings.getString(activity.getString(R.string.preference_email), "").toString();
+        pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
+        session_id = settings.getString(activity.getString(R.string.preference_user_session_id), "").toString();
+        native_language = settings.getString("native_language", "").toString();
+        learning_language = settings.getString("learning_language", "").toString();
+    }
+
+    private void getLoginInformation() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        LayoutInflater inflater = activity.getLayoutInflater();
+
+        builder.setView(inflater.inflate(R.layout.dialog_sign_in, null))
+                .setPositiveButton(R.string.button_sign_in, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
+                        EditText editTextpw = (EditText) aDialog.findViewById(R.id.dialog_password);
+
+                        email = editTextEmail.getText().toString();
+                        pw = editTextpw.getText().toString();
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(activity.getString(R.string.preference_email), email);
+                        editor.putString(activity.getString(R.string.preference_password), pw);
+                        editor.commit();
+
+                        getSessionIdFromServer();
+                    }
+                })
+                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        aDialog = builder.create();
+        aDialog.show();
+    }
+
+    private void getSessionIdFromServer() {
         String url_session_ID = url + "session/" + email;
 
         if (!userHasLoginInfo())
@@ -234,7 +318,7 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_SessionID_Req);
     }
 
-    public void getAllWordsFromServer() {
+    private void getAllWordsFromServer() {
         if (!userHasSessionId()) return;
 
         String url_session_ID = url + "contribs_by_day/with_context?session=" + session_id;
@@ -280,7 +364,7 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(request, tag_wordlist_Req);
     }
 
-    public void getUserLanguageFromServer(final boolean isNativeLanguage) {
+    private void getUserLanguageFromServer(final boolean isNativeLanguage) {
         if (!userHasSessionId())
             return;
 
@@ -321,19 +405,11 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_language_Req);
     }
 
-    public void setUserLanguageOnServer(final boolean isNativeLanguage) {
+    private void setUserLanguageOnServer(final Boolean isNativeLanguage, final String language_key) {
         if (!userHasSessionId())
             return;
 
-        String url_language;
-        final String set_language;
-        if (isNativeLanguage) {
-            set_language = settings.getString("native_language", "").toString();
-            url_language = url + "native_language/" + set_language + "?session=" + session_id;
-        } else {
-            set_language = settings.getString("learning_language", "").toString();
-            url_language = url + "learned_language/" + set_language + "?session=" + session_id;
-        }
+        String url_language = url + "native_language/" + language_key + "?session=" + session_id;
 
         createLoadingDialog();
 
@@ -346,9 +422,9 @@ public class ConnectionManager extends Application {
                         //Save language
                         if (response.toString().equals("OK"))
                             if (isNativeLanguage)
-                                learning_language = set_language;
+                                learning_language = language_key;
                             else
-                                native_language = set_language;
+                                native_language = language_key;
                         else
                             Toast.makeText(getApplicationContext(), R.string.change_learning_language_not_possible,
                                     Toast.LENGTH_LONG).show();
@@ -369,69 +445,6 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_language_Req);
     }
 
-    public String getSessionId() {
-        return session_id;
-    }
-
-    public void getTranslation(String text, Boolean switchTransl, EditText translationView) {
-        //more words can be translated in parallel, but no special characters
-        if (!userHasLoginInfo() || text.equals("") || text == null)
-            return;
-
-        //parse string to URL
-        text = Uri.encode(text);
-
-        String url_translation;
-        if (!switchTransl)
-            url_translation = url + "goslate_from_to/" + text + "/" +
-                    native_language + "/" + learning_language + "?session=" + session_id;
-        else
-            url_translation = url + "goslate_from_to/" + text + "/" +
-                    learning_language + "/" + native_language + "?session=" + session_id;
-
-        translationEditText = translationView;
-        createLoadingDialog();
-
-        StringRequest strReq = new StringRequest(Request.Method.GET,
-                url_translation, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                translationEditText.setText(response.toString());
-            }
-
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                logging(TAG, error.toString());
-                dismissDialog();
-            }
-        });
-
-        this.addToRequestQueue(strReq, tag_SessionID_Req);
-    }
-
-    public static ArrayList<Item> getWordList() {
-        return wordList;
-    }
-
-    public String getNative_language() {
-        return native_language;
-    }
-
-    public void setNative_language(String native_language) {
-        this.native_language = native_language;
-    }
-
-    public String getLearning_language() {
-        return learning_language;
-    }
-
-    public void setLearning_language(String learning_language) {
-        this.learning_language = learning_language;
-    }
-
     private void logging(String tag, String message) {
         if (debugOn)
             Log.d(TAG, message);
@@ -450,15 +463,14 @@ public class ConnectionManager extends Application {
             pDialog.dismiss();
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
-    /*
-    public ConnectionManager() {
-        RequestQueue mRequestQueue;
-        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
-        Network network = new BasicNetwork(new HurlStack());
-        mRequestQueue = new RequestQueue(cache, network);
-
-        mRequestQueue.start();
-
-    }*/
+        if(activeNetworkInfo == null || !activeNetworkInfo.isConnected())
+            return false;
+        else
+            return true;
+    }
 }
