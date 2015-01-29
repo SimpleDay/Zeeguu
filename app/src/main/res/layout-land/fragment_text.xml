@@ -32,7 +32,8 @@
                 android:background="@drawable/rounded_textfield"
                 android:gravity="top"
                 android:maxLines="10"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:imeOptions="actionSearch" />
 
             <ImageView
                 android:id="@+id/flag_translate_from"
@@ -56,7 +57,8 @@
                 android:layout_width="255dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="left|center_vertical"
-                android:editable="false"
+                android:clickable="false"
+                android:focusable="false"
                 android:background="@drawable/rounded_textfield"
                 android:gravity="top"
                 android:inputType="text"

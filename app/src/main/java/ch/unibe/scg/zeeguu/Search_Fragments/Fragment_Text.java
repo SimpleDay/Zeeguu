@@ -5,10 +5,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -45,6 +45,10 @@ public class Fragment_Text extends ZeeguuFragment {
         to_language_text = (EditText) view.findViewById(R.id.text_translated);
         connectionManager = ConnectionManager.getConnectionManager(getActivity());
 
+        //Set done button to translate
+        native_language_text.setOnKeyListener(new TextViewListener());
+
+        //initialize flags
         flag_translate_from = (ImageView) view.findViewById(R.id.flag_translate_from);
         flag_translate_to = (ImageView) view.findViewById(R.id.flag_translate_to);
         switchLanguage = false;
@@ -106,7 +110,6 @@ public class Fragment_Text extends ZeeguuFragment {
 
     @Override
     public void actualizeFragment() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
 
@@ -114,7 +117,7 @@ public class Fragment_Text extends ZeeguuFragment {
     public void onResume() {
         // The activity has become visible (it is now "resumed").
         super.onResume();
-        if(!(flag_translate_from == null || flag_translate_to == null || connectionManager == null))
+        if(flag_translate_from != null || flag_translate_to != null || connectionManager != null)
             setLanguageFlags();
     }
 
@@ -152,6 +155,17 @@ public class Fragment_Text extends ZeeguuFragment {
             String native_entered = native_language_text.getText().toString();
             native_language_text.setText(to_language_text.getText().toString());
             to_language_text.setText(native_entered);
+        }
+    }
+
+    private class TextViewListener implements View.OnKeyListener {
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                String input = native_language_text.getText().toString();
+                connectionManager.getTranslation(input, switchLanguage ,to_language_text);
+                return true;
+            }
+            return false;
         }
     }
 }

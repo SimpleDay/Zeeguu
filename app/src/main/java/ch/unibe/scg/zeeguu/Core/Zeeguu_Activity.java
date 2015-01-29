@@ -26,6 +26,9 @@ public class Zeeguu_Activity extends FragmentActivity {
         setTheme(false);
         setContentView(R.layout.activity_zeeguu);
 
+        //set default settings when app started, but don't overwrite active settings
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         connectionManager = ConnectionManager.getConnectionManager(this);
 
         //Customize Actionbar
@@ -63,7 +66,6 @@ public class Zeeguu_Activity extends FragmentActivity {
     }
 
     public void setTheme(boolean actualizeView) {
-        //TODO: implement changable Design of app
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         String theme = settings.getString("app_design", "").toString();
         switch (theme) {
