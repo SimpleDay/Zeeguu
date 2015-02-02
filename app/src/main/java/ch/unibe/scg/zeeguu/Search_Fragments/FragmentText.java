@@ -56,8 +56,8 @@ public class FragmentText extends ZeeguuFragment {
         switchLanguage = false;
 
         //listeners for the flags to switch the flags by pressing on them
-        flag_translate_from.setOnClickListener(new cameraRecognitionListener());
-        flag_translate_to.setOnClickListener(new cameraRecognitionListener());
+        flag_translate_from.setOnClickListener(new switchLanguageListener());
+        flag_translate_to.setOnClickListener(new switchLanguageListener());
 
         //set listeners
         ImageButton button_mic = (ImageButton) view.findViewById(R.id.microphone_search_button);
@@ -87,7 +87,7 @@ public class FragmentText extends ZeeguuFragment {
     }
 
     @Override
-    public void actualizeLanguages() {
+    public void refreshLanguages() {
         setLanguageFlags();
     }
 
@@ -95,8 +95,11 @@ public class FragmentText extends ZeeguuFragment {
     public void onResume() {
         // The activity has become visible (it is now "resumed").
         super.onResume();
-        if (flag_translate_from != null || flag_translate_to != null || connectionManager != null)
+        if (flag_translate_from != null || flag_translate_to != null || connectionManager != null) {
+            switchLanguage = false;
             setLanguageFlags();
+        }
+
     }
 
 
@@ -130,27 +133,8 @@ public class FragmentText extends ZeeguuFragment {
         }
     }
 
+
     //Listeners
-
-    private class voiceRecognitionListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            if (switchLanguage)
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getLearningLanguage());
-            else
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getNativeLanguage());
-
-            try {
-                startActivityForResult(intent, RESULT_SPEECH);
-            } catch (ActivityNotFoundException a) {
-                Toast t = Toast.makeText(getActivity(),
-                        getString(R.string.error_mic_search_not_supported),
-                        Toast.LENGTH_SHORT);
-                t.show();
-            }
-        }
-    }
 
     private class translationListener implements View.OnClickListener {
         @Override
@@ -160,7 +144,7 @@ public class FragmentText extends ZeeguuFragment {
         }
     }
 
-    private class cameraRecognitionListener implements View.OnClickListener {
+    private class switchLanguageListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             //ToDo: implement OCR
@@ -183,4 +167,39 @@ public class FragmentText extends ZeeguuFragment {
             return false;
         }
     }
+
+    private class voiceRecognitionListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            if (switchLanguage)
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getLearningLanguage());
+            else
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getNativeLanguage());
+
+            try {
+                startActivityForResult(intent, RESULT_SPEECH);
+            } catch (ActivityNotFoundException a) {
+                Toast t = Toast.makeText(getActivity(),
+                        getString(R.string.error_mic_search_not_supported),
+                        Toast.LENGTH_SHORT);
+                t.show();
+            }
+        }
+    }
+
+    private class cameraRecognitionListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            //ToDo: implement OCR
+            switchLanguage = !switchLanguage;
+            setLanguageFlags();
+
+            String native_entered = native_language_text.getText().toString();
+            native_language_text.setText(to_language_text.getText().toString());
+            to_language_text.setText(native_entered);
+        }
+    }
 }
+
+

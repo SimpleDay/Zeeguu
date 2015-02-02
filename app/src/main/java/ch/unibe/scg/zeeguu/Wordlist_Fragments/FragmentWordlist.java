@@ -53,8 +53,8 @@ public class FragmentWordlist extends ZeeguuFragment {
     }
 
     @Override
-    public void actualizeLanguages() {
-        //use for language filter in future
+    public void refreshLanguages() {
+        //implement word filter
     }
 
 }

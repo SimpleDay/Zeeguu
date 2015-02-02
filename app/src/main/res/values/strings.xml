@@ -29,10 +29,10 @@
     <string name="preference_email">EMAIL</string>
     <string name="preference_password">PASSWORD</string>
     <string name="preference_user_session_id">SESSIONID</string>
-    <string name="preference_native_language">NATIVE_LANGUAGE</string>
-    <string name="preference_learning_language">LEARNING_LANGUAGE</string>
     <string name="preference_app_design">APP_DESIGN</string>
     <string name="unknown">Unknown</string>
+    <string name="preference_native_language">native_language</string> <!-- needs to be same tag as server URL -->
+    <string name="preference_learning_language">learned_language</string> <!-- needs to be same tag as server URL -->
 
     <!-- setting strings -->
     <string name="title_activity_settings">Settings</string>
@@ -89,14 +89,16 @@
 
     <!-- error messages  -->
     <string name="error_mic_search_not_supported">Ops! Your device does not support Speech to Text</string>
-    <string name="error_change_learning_language_not_possible">Ops! There occurred an error, we could not change your learning language. Do you have connection to the internet?</string>
+    <string name="error_change_learning_language_on_server_not_possible">Ops! There occurred an error, we could not change your learning language on the server. Do you have connection to the internet?</string>
     <string name="error_no_internet_connection">Ops! Your device is not connected to the internet</string>
     <string name="error_user_login_wrong">Ops! Your username or password is not correct</string>
+    <string name="error_server_not_online">Ops! The server is not responding, please try it later..</string>
+
 
     <!-- success messages  -->
     <string name="successful_login">Successfully logged in</string>
     <string name="successful_language_native_changed">Successfully changed your native language on the server to: </string>
-    <string name="successful_language_learning_changed">Successfully changed your native language on the server to: </string>
+    <string name="successful_language_learning_changed">Successfully changed your learning language on the server to: </string>
 
 
 </resources>

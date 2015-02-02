@@ -17,8 +17,7 @@ public abstract class ZeeguuFragment extends Fragment {
     }
 
     public abstract void actualizeFragment();
-    public abstract void actualizeLanguages();
-
+    public abstract void refreshLanguages();
     /**
      * Force opens the soft keyboard
      */

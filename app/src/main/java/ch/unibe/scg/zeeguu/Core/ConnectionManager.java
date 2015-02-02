@@ -73,7 +73,6 @@ public class ConnectionManager extends Application {
     private static EditText translationEditText;
 
 
-
     public ConnectionManager(ZeeguuActivity activity) {
         super();
 
@@ -214,7 +213,8 @@ public class ConnectionManager extends Application {
     }
 
     public void setNativeLanguage(String native_language_key) {
-        setUserLanguageOnServer(true, native_language_key);
+        native_language = native_language_key;
+        setUserLanguageOnServer(activity.getString(R.string.preference_native_language), native_language_key);
     }
 
     public String getLearningLanguage() {
@@ -222,19 +222,20 @@ public class ConnectionManager extends Application {
     }
 
     public void setLearningLanguage(String learning_language_key) {
-        setUserLanguageOnServer(false, learning_language_key);
+        learning_language = learning_language_key;
+        setUserLanguageOnServer(activity.getString(R.string.preference_learning_language), learning_language_key);
     }
 
 
     //private methods
 
-    private void loadAllUserInformation(){
+    private void loadAllUserInformation() {
         //only need to load all information once during start up
         email = settings.getString(activity.getString(R.string.preference_email), "").toString();
         pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
         session_id = settings.getString(activity.getString(R.string.preference_user_session_id), "").toString();
-        native_language = settings.getString("native_language", "").toString();
-        learning_language = settings.getString("learning_language", "").toString();
+        native_language = settings.getString(activity.getString(R.string.preference_native_language), "").toString();
+        learning_language = settings.getString(activity.getString(R.string.preference_learning_language), "").toString();
     }
 
     private void getLoginInformation() {
@@ -292,9 +293,8 @@ public class ConnectionManager extends Application {
                 dismissDialog();
 
                 getAllWordsFromServer();
-                getUserLanguageFromServer(false);
-                getUserLanguageFromServer(true); //ask for the language when session ID arrived
-
+                getUserLanguageFromServer("native_language"); //ask for the language when session ID arrived
+                getUserLanguageFromServer("learned_language");
             }
         }, new Response.ErrorListener() {
 
@@ -354,6 +354,7 @@ public class ConnectionManager extends Application {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                toast(activity.getString(R.string.error_server_not_online));
                 logging(TAG, error.toString());
                 dismissDialog();
             }
@@ -363,17 +364,11 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(request, tag_wordlist_Req);
     }
 
-    private void getUserLanguageFromServer(final boolean isNativeLanguage) {
+    private void getUserLanguageFromServer(final String urlTag) {
         if (!userHasSessionId() || !isNetworkAvailable())
-
             return;
 
-        //when native == true, get native language, else get learning language
-        String url_language;
-        if (isNativeLanguage)
-            url_language = url + "native_language?session=" + session_id;
-        else
-            url_language = url + "learned_language?session=" + session_id;
+        String url_language = url + urlTag + "?session=" + session_id;
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.GET,
@@ -382,13 +377,13 @@ public class ConnectionManager extends Application {
             @Override
             public void onResponse(String response) {
                 logging(TAG, response.toString());
+
                 //Save language
                 SharedPreferences.Editor editor = settings.edit();
-                if (isNativeLanguage)
-                    editor.putString("native_language", response.toString());
-                else
-                    editor.putString("learning_language", response.toString());
+                editor.putString(urlTag, response.toString());
+
                 editor.commit();
+                activity.refreshLanguages();
                 dismissDialog();
 
             }
@@ -396,6 +391,7 @@ public class ConnectionManager extends Application {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                toast(activity.getString(R.string.error_server_not_online));
                 logging(TAG, error.toString());
                 dismissDialog();
             }
@@ -404,11 +400,11 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_language_Req);
     }
 
-    private void setUserLanguageOnServer(final Boolean isNativeLanguage, final String language_key) {
+    private void setUserLanguageOnServer(final String urlTag, final String language_key) {
         if (!userHasSessionId() || !isNetworkAvailable())
             return;
 
-        String url_language = url + "native_language/" + language_key + "?session=" + session_id;
+        String url_language = url + urlTag + "/" + language_key + "?session=" + session_id;
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST, url_language,
@@ -417,30 +413,25 @@ public class ConnectionManager extends Application {
                     @Override
                     public void onResponse(String response) {
                         logging(TAG, response.toString());
+
                         //Save language
                         if (response.toString().equals("OK")) {
-                            if (isNativeLanguage) {
-                                learning_language = language_key;
-                                toast(activity.getString(R.string.successful_language_learning_changed) + language_key);
-                            }
-                            else {
-                                native_language = language_key;
-                                toast(activity.getString(R.string.successful_language_native_changed) + language_key);
-                            }
-                            //actualize the fragments and tell the user that language changed
-                            activity.getActiveFragment().actualizeLanguages();
+                            if (urlTag.equals(activity.getString(R.string.preference_learning_language)))
+                                toast(activity.getString(R.string.successful_language_learning_changed) + " " + language_key);
+
+                            else
+                                toast(activity.getString(R.string.successful_language_native_changed) + " " + language_key);
                         }
                         else
-                            toast(activity.getString(R.string.error_change_learning_language_not_possible));
+                            toast(activity.getString(R.string.error_change_learning_language_on_server_not_possible));
 
                         dismissDialog();
-
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                //TODO: Catch error if no internet connection!!!
+                toast(activity.getString(R.string.error_server_not_online));
                 logging(TAG, error.toString());
                 dismissDialog();
             }
@@ -451,7 +442,7 @@ public class ConnectionManager extends Application {
 
     private void logging(String tag, String message) {
         if (debugOn)
-            Log.d(TAG, message);
+            Log.d(tag, message);
     }
 
     private void createLoadingDialog() {
@@ -462,7 +453,7 @@ public class ConnectionManager extends Application {
         }
     }
 
-    private void toast(String text){
+    private void toast(String text) {
         Toast.makeText(activity, text, Toast.LENGTH_LONG).show();
     }
 
@@ -476,7 +467,7 @@ public class ConnectionManager extends Application {
                 = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if(activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+        if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
             toast(activity.getString(R.string.error_no_internet_connection));
             return false;
         }

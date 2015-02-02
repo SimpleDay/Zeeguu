@@ -84,8 +84,8 @@ public class ZeeguuActivity extends FragmentActivity {
             recreate();
     }
 
-    public ZeeguuFragment getActiveFragment() {
-        return fragment.getActiveFragment();
+    public void refreshLanguages() {
+        fragment.getActiveFragment().refreshLanguages();
     }
 
     @Override
@@ -103,7 +103,7 @@ public class ZeeguuActivity extends FragmentActivity {
     }
 
 
-    //protected methods
+    //protected android methods
 
     @Override
     protected void onResume() {
