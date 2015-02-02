@@ -11,9 +11,9 @@ import ch.unibe.scg.zeeguu.R;
 /**
  * Created by Pascal on 12/01/15.
  */
-public class Fragment_Camera extends Fragment {
+public class FragmentCamera extends Fragment {
 
-    public Fragment_Camera() {
+    public FragmentCamera() {
     }
 
     @Override

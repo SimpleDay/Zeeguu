@@ -10,17 +10,18 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ch.unibe.scg.zeeguu.Core.ConnectionManager;
+import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguu.R;
 
 /**
  * Created by Pascal on 12/01/15.
  */
-public class Fragment_Wordlist extends ZeeguuFragment {
+public class FragmentWordlist extends ZeeguuFragment {
     private ArrayList<Item> list;
     private WordlistAdapter adapter;
 
-    public Fragment_Wordlist() {
+    public FragmentWordlist() {
     }
 
     @Override
@@ -32,7 +33,7 @@ public class Fragment_Wordlist extends ZeeguuFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         //getWordlist from server and add it to adapter
-        ConnectionManager connectionManager = ConnectionManager.getConnectionManager(getActivity());
+        ConnectionManager connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) getActivity());
         list = connectionManager.getWordList();
         adapter = new WordlistAdapter(getActivity(), list);
 
@@ -49,6 +50,11 @@ public class Fragment_Wordlist extends ZeeguuFragment {
     public void actualizeFragment() {
         closeKeyboard();
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void actualizeLanguages() {
+        //use for language filter in future
     }
 
 }

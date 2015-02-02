@@ -12,7 +12,7 @@ import ch.unibe.scg.zeeguu.R;
  * Zeeguu Application
  * Created by Pascal on 22/01/15.
  */
-public class TranslatedWord implements Item {
+public class WordlistItem implements Item {
     private String nativeWord;
     private String translation;
 
@@ -21,15 +21,15 @@ public class TranslatedWord implements Item {
 
     private String context;
 
-    public TranslatedWord(String nativeWord, String translation) {
+    public WordlistItem(String nativeWord, String translation) {
         this(nativeWord, translation, "", null, null);
     }
 
-    public TranslatedWord(String nativeWord, String translation, String context) {
+    public WordlistItem(String nativeWord, String translation, String context) {
         this(nativeWord, translation, context, null, null);
     }
 
-    public TranslatedWord(String nativeWord, String translation, String context, Locale nativeLanguage, Locale translationLanguage) {
+    public WordlistItem(String nativeWord, String translation, String context, Locale nativeLanguage, Locale translationLanguage) {
         this.nativeWord = nativeWord;
         this.translation = translation;
         this.context = context;

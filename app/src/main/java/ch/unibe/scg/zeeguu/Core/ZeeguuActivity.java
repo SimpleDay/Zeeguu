@@ -10,18 +10,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import ch.unibe.scg.zeeguu.R;
-import ch.unibe.scg.zeeguu.Search_Fragments.Fragment_Text;
+import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
 import ch.unibe.scg.zeeguu.Settings.SettingsActivity;
 import ch.unibe.scg.zeeguu.Sliding_menu.SlidingFragment;
 
-public class Zeeguu_Activity extends FragmentActivity {
+public class ZeeguuActivity extends FragmentActivity {
     private ConnectionManager connectionManager;
     private SlidingFragment fragment;
 
     private final int SETTINGSCHANGED = 100;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(false);
         setContentView(R.layout.activity_zeeguu);
@@ -38,7 +39,7 @@ public class Zeeguu_Activity extends FragmentActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         fragment = new SlidingFragment();
         transaction.replace(R.id.fragment_menu, fragment);
-        transaction.replace(R.id.viewpager, new Fragment_Text());
+        transaction.replace(R.id.viewpager, new FragmentText());
         transaction.commit();
 
         //TODO: Language change affects whole app
@@ -83,6 +84,10 @@ public class Zeeguu_Activity extends FragmentActivity {
             recreate();
     }
 
+    public ZeeguuFragment getActiveFragment() {
+        return fragment.getActiveFragment();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -97,6 +102,8 @@ public class Zeeguu_Activity extends FragmentActivity {
         }
     }
 
+
+    //protected methods
 
     @Override
     protected void onResume() {

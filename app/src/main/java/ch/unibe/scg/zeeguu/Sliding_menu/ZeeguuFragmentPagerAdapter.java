@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.unibe.scg.zeeguu.R;
-import ch.unibe.scg.zeeguu.Search_Fragments.Fragment_Text;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.Fragment_Wordlist;
+import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
+import ch.unibe.scg.zeeguu.Wordlist_Fragments.FragmentWordlist;
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 
 /**
@@ -30,14 +30,14 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
                 fragment.getString(R.string.search_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                new Fragment_Text() //fragment which the tab represents
+                new FragmentText() //fragment which the tab represents
         ));
 
         tabs.add(new PagerFragmentTab(
                 fragment.getString(R.string.wordlist_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                new Fragment_Wordlist() //fragment which the tab represents
+                new FragmentWordlist() //fragment which the tab represents
         ));
     }
 

@@ -11,9 +11,9 @@ import ch.unibe.scg.zeeguu.R;
 /**
  * Created by Pascal on 12/01/15.
  */
-public class Fragment_Voice extends Fragment {
+public class FragmentVoice extends Fragment {
 
-    public Fragment_Voice() {
+    public FragmentVoice() {
     }
 
     @Override

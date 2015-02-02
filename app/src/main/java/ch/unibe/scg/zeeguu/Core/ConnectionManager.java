@@ -5,7 +5,6 @@ package ch.unibe.scg.zeeguu.Core;
  * Created by Pascal on 19/01/15.
  */
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;
@@ -39,9 +38,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.unibe.scg.zeeguu.R;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.Header;
+import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.Item;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.TranslatedWord;
+import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
 
 public class ConnectionManager extends Application {
 
@@ -68,14 +67,14 @@ public class ConnectionManager extends Application {
     private String learning_language;
 
     private static ConnectionManager instance;
-    private static Activity activity;
+    private static ZeeguuActivity activity;
 
     private static ArrayList<Item> wordList;
     private static EditText translationEditText;
 
 
 
-    public ConnectionManager(Activity activity) {
+    public ConnectionManager(ZeeguuActivity activity) {
         super();
 
         //initialise all variables
@@ -106,8 +105,8 @@ public class ConnectionManager extends Application {
         super.onCreate();
     }
 
-    public static ConnectionManager getConnectionManager(Activity activity) {
-        if (instance == null)
+    public static ConnectionManager getConnectionManager(ZeeguuActivity activity) {
+        if (instance == null && activity != null)
             return new ConnectionManager(activity);
 
         return instance;
@@ -283,7 +282,7 @@ public class ConnectionManager extends Application {
             @Override
             public void onResponse(String response) {
                 session_id = response.toString();
-                toast(activity.getString(R.string.login_successful));
+                toast(activity.getString(R.string.successful_login));
                 logging(TAG, session_id);
 
                 //Save session ID
@@ -336,14 +335,14 @@ public class ConnectionManager extends Application {
                 try {
                     for (int j = 0; j < response.length(); j++) {
                         JSONObject dates = response.getJSONObject(j);
-                        wordList.add(new Header(dates.getString("date")));
+                        wordList.add(new WordlistHeader(dates.getString("date")));
                         JSONArray contribs = dates.getJSONArray("contribs");
                         for (int i = 0; i < contribs.length(); i++) {
                             JSONObject translation = contribs.getJSONObject(i);
                             String nativeWord = translation.getString("from");
                             String translatedWord = translation.getString("to");
                             String context = translation.getString("context");
-                            wordList.add(new TranslatedWord(nativeWord, translatedWord, context));
+                            wordList.add(new WordlistItem(nativeWord, translatedWord, context));
                         }
                     }
 
@@ -420,10 +419,16 @@ public class ConnectionManager extends Application {
                         logging(TAG, response.toString());
                         //Save language
                         if (response.toString().equals("OK")) {
-                            if (isNativeLanguage)
+                            if (isNativeLanguage) {
                                 learning_language = language_key;
-                            else
+                                toast(activity.getString(R.string.successful_language_learning_changed) + language_key);
+                            }
+                            else {
                                 native_language = language_key;
+                                toast(activity.getString(R.string.successful_language_native_changed) + language_key);
+                            }
+                            //actualize the fragments and tell the user that language changed
+                            activity.getActiveFragment().actualizeLanguages();
                         }
                         else
                             toast(activity.getString(R.string.error_change_learning_language_not_possible));

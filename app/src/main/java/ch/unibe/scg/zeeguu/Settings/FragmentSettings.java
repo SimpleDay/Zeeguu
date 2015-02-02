@@ -14,7 +14,7 @@ import ch.unibe.scg.zeeguu.R;
  * Zeeguu Application
  * Created by Pascal on 12/01/15.
  */
-public class Fragment_Settings extends PreferenceFragment {
+public class FragmentSettings extends PreferenceFragment {
     private PreferenceListener listener;
     private SharedPreferences settings;
     private ConnectionManager connectionManager;
@@ -27,7 +27,7 @@ public class Fragment_Settings extends PreferenceFragment {
 
         //initialize variables
         activity = getActivity();
-        connectionManager = ConnectionManager.getConnectionManager(activity);
+        connectionManager = ConnectionManager.getConnectionManager(null); //null because we don't want to create a new one
 
         //add change listener
         listener = new PreferenceListener();

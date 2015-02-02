@@ -17,13 +17,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import ch.unibe.scg.zeeguu.Core.ConnectionManager;
+import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguu.R;
 
 /**
  * Created by Pascal on 12/01/15.
  */
-public class Fragment_Text extends ZeeguuFragment {
+public class FragmentText extends ZeeguuFragment {
     private EditText native_language_text;
     private EditText to_language_text;
     private ConnectionManager connectionManager;
@@ -34,8 +35,7 @@ public class Fragment_Text extends ZeeguuFragment {
     private boolean switchLanguage;
 
 
-    public Fragment_Text() {
-    }
+    public FragmentText() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +45,7 @@ public class Fragment_Text extends ZeeguuFragment {
         //initialize class variables
         native_language_text = (EditText) view.findViewById(R.id.text_native_translation_user_entered);
         to_language_text = (EditText) view.findViewById(R.id.text_translated);
-        connectionManager = ConnectionManager.getConnectionManager(getActivity());
+        connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) getActivity());
 
         //Set done button to translate
         native_language_text.setOnKeyListener(new TextViewListener());
@@ -84,6 +84,11 @@ public class Fragment_Text extends ZeeguuFragment {
 
     @Override
     public void actualizeFragment() {
+    }
+
+    @Override
+    public void actualizeLanguages() {
+        setLanguageFlags();
     }
 
     @Override

@@ -10,10 +10,10 @@ import ch.unibe.scg.zeeguu.R;
  * Zeeguu Application
  * Created by Pascal on 24/01/15.
  */
-public class Header implements Item {
+public class WordlistHeader implements Item {
     private final String name;
 
-    public Header(String name) {
+    public WordlistHeader(String name) {
         this.name = name;
     }
 

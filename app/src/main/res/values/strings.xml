@@ -94,7 +94,9 @@
     <string name="error_user_login_wrong">Ops! Your username or password is not correct</string>
 
     <!-- success messages  -->
-    <string name="login_successful">successfully logged in</string>
+    <string name="successful_login">Successfully logged in</string>
+    <string name="successful_language_native_changed">Successfully changed your native language on the server to: </string>
+    <string name="successful_language_learning_changed">Successfully changed your native language on the server to: </string>
 
 
 </resources>
