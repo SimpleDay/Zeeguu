@@ -6,12 +6,13 @@
     </style>
 
     <style name="AppThemeLightActionbarDark" parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="customIconText">@drawable/ic_action_edit_halo_dark</item>
-        <item name="customIconVoice">@drawable/ic_action_mic_halo_dark</item>
-        <item name="customIconCamera">@drawable/ic_action_camera_halo_dark</item>
+        <item name="customIconText">@drawable/ic_action_edit_halo_light</item>
+        <item name="customIconVoice">@drawable/ic_action_mic_halo_light</item>
+        <item name="customIconCamera">@drawable/ic_action_camera_halo_light</item>
         <item name="customIconSettings">@drawable/ic_action_settings_holo_dark</item>
-        <item name="customIconTranslate">@drawable/ic_action_translate_holo_dark</item>
-        <item name="customIconClock">@drawable/ic_action_calendar_holo_dark</item>
+        <item name="customIconTranslate">@drawable/ic_action_translate_holo_light</item>
+        <item name="customIconClock">@drawable/ic_action_calendar_holo_light</item>
+        <item name="customIconSave">@drawable/ic_action_save_halo_light</item>
     </style>
 
     <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light">
@@ -21,6 +22,8 @@
         <item name="customIconSettings">@drawable/ic_action_settings_holo_light</item>
         <item name="customIconTranslate">@drawable/ic_action_translate_holo_light</item>
         <item name="customIconClock">@drawable/ic_action_calendar_holo_light</item>
+        <item name="customIconSave">@drawable/ic_action_save_halo_light</item>
+
     </style>
 
     <style name="AppThemeDark" parent="@android:style/Theme.Holo">
@@ -30,6 +33,8 @@
         <item name="customIconSettings">@drawable/ic_action_settings_holo_dark</item>
         <item name="customIconTranslate">@drawable/ic_action_translate_holo_dark</item>
         <item name="customIconClock">@drawable/ic_action_calendar_holo_dark</item>
+        <item name="customIconSave">@drawable/ic_action_save_halo_dark</item>
+
 
     </style>
 

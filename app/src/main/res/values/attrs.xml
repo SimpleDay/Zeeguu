@@ -25,4 +25,8 @@
         <attr name="customIconClock" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="customAttrsSave">
+        <attr name="customIconSave" format="reference" />
+    </declare-styleable>
+
 </resources>

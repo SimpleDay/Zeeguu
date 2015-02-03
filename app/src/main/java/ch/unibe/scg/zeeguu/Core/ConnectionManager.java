@@ -57,6 +57,8 @@ public class ConnectionManager extends Application {
     private static final String tag_wordlist_Req = "tag_wordlist_id";
     private static final String tag_SessionID_Req = "tag_session_id";
     private static final String tag_language_Req = "tag_language_id";
+    private static final String tag_translation_Req = "tag_translation_id";
+    private static final String tag_contribute_Req = "tag_contrib_id";
     private static final String TAG = "tag_logging";
 
     //user login information
@@ -194,8 +196,46 @@ public class ConnectionManager extends Application {
             }
         });
 
-        this.addToRequestQueue(strReq, tag_SessionID_Req);
+        this.addToRequestQueue(strReq, tag_translation_Req);
     }
+
+    public void contributeToServer(String input, String translation) {
+        //more words can be translated in parallel, but no special characters
+        if (!userHasLoginInfo() || input.equals("") || translation.equals("") || !isNetworkAvailable())
+            return;
+
+        //parse string to URL
+        input = Uri.encode(input);
+        translation = Uri.encode(translation);
+
+        String urlContribution = url + "contribute/" + learning_language + "/" + translation + "/" +
+                native_language + "/" + input + "?session=" + session_id;
+        logging(TAG, urlContribution);
+
+        createLoadingDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                urlContribution, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                logging(TAG, "successful contributed: " + response);
+                toast("Contribution successful");
+            }
+
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                logging(TAG, error.toString());
+                dismissDialog();
+            }
+        });
+
+        this.addToRequestQueue(strReq, tag_contribute_Req);
+    }
+
+
 
 
     //Getter und setter

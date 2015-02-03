@@ -59,6 +59,12 @@ public class FragmentText extends ZeeguuFragment {
         flag_translate_from.setOnClickListener(new switchLanguageListener());
         flag_translate_to.setOnClickListener(new switchLanguageListener());
 
+        //if a text was entered and the screen rotated, the text will be added again here.
+        if (savedInstanceState != null) {
+            native_language_text.setText(savedInstanceState.getString("language_native"));
+            to_language_text.setText(savedInstanceState.getString("language_learning"));
+        }
+
         //set listeners
         ImageButton button_mic = (ImageButton) view.findViewById(R.id.microphone_search_button);
         button_mic.setOnClickListener(new voiceRecognitionListener());
@@ -68,6 +74,9 @@ public class FragmentText extends ZeeguuFragment {
 
         ImageButton button_transl = (ImageButton) view.findViewById(R.id.translate_button);
         button_transl.setOnClickListener(new translationListener());
+
+        ImageButton button_contribute = (ImageButton) view.findViewById(R.id.contribute_to_server);
+        button_contribute.setOnClickListener(new uploadWordToLibraryListener());
 
         return view;
     }
@@ -102,6 +111,13 @@ public class FragmentText extends ZeeguuFragment {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString("language_native", native_language_text.getText().toString());
+        savedInstanceState.putString("language_learning", to_language_text.getText().toString());
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
     //private Methods
 
@@ -147,7 +163,6 @@ public class FragmentText extends ZeeguuFragment {
     private class switchLanguageListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            //ToDo: implement OCR
             switchLanguage = !switchLanguage;
             setLanguageFlags();
 
@@ -188,16 +203,19 @@ public class FragmentText extends ZeeguuFragment {
         }
     }
 
+    private class uploadWordToLibraryListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            String input = native_language_text.getText().toString();
+            String translation = to_language_text.getText().toString();
+            connectionManager.contributeToServer(input, translation);
+        }
+    }
+
     private class cameraRecognitionListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             //ToDo: implement OCR
-            switchLanguage = !switchLanguage;
-            setLanguageFlags();
-
-            String native_entered = native_language_text.getText().toString();
-            native_language_text.setText(to_language_text.getText().toString());
-            to_language_text.setText(native_entered);
         }
     }
 }

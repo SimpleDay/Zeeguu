@@ -22,9 +22,9 @@
             android:layout_centerVertical="true"
             android:background="@drawable/rounded_textfield"
             android:gravity="top"
+            android:imeOptions="actionSearch"
             android:maxLines="10"
-            android:padding="10dp"
-            android:imeOptions="actionSearch" />
+            android:padding="10dp" />
 
         <ImageView
             android:id="@+id/flag_translate_from"
@@ -34,9 +34,9 @@
             android:layout_alignEnd="@+id/text_native_translation_user_entered"
             android:layout_alignRight="@+id/text_native_translation_user_entered"
             android:layout_gravity="right|bottom"
-            android:gravity="top"
             android:layout_marginBottom="12dp"
-            android:layout_marginRight="15dp" />
+            android:layout_marginRight="15dp"
+            android:gravity="top" />
 
     </RelativeLayout>
 
@@ -54,44 +54,55 @@
             android:id="@+id/microphone_search_button"
             android:layout_width="55dp"
             android:layout_height="45dp"
-            android:layout_gravity="left"
-            android:background="@drawable/rounded_button"
-            android:clickable="true"
-            android:src="?attr/customIconVoice"
-            android:text="voice"
-            android:layout_marginLeft="35dp"
             android:layout_alignBottom="@+id/camera_search_button"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="35dp" />
+            android:layout_gravity="left"
+            android:layout_marginLeft="35dp"
+            android:layout_marginStart="35dp"
+            android:background="@drawable/rounded_button"
+            android:clickable="true"
+            android:src="?attr/customIconVoice" />
 
         <ImageButton
             android:id="@+id/camera_search_button"
             android:layout_width="55dp"
             android:layout_height="45dp"
+            android:layout_alignParentTop="true"
             android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@+id/microphone_search_button"
+            android:layout_toRightOf="@+id/microphone_search_button"
             android:background="@drawable/rounded_button"
             android:clickable="true"
-            android:src="?attr/customIconCamera"
-            android:text="camera"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="44dp"
+            android:src="?attr/customIconCamera" />
+
+        <ImageButton
+            android:id="@+id/contribute_to_server"
+            android:layout_width="55dp"
+            android:layout_height="45dp"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/microphone_search_button"
-            android:layout_toEndOf="@+id/microphone_search_button" />
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/rounded_button"
+            android:layout_toEndOf="@+id/camera_search_button"
+            android:layout_toRightOf="@+id/camera_search_button"
+            android:clickable="true"
+            android:src="?attr/customIconSave" />
 
         <ImageButton
             android:id="@+id/translate_button"
             android:layout_width="55dp"
             android:layout_height="45dp"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"
             android:background="@drawable/rounded_button"
             android:gravity="right"
-            android:src="?attr/customIconTranslate"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="false"
-            android:layout_marginRight="40dp"
-            android:layout_marginEnd="40dp" />
+            android:src="?attr/customIconTranslate" />
 
 
     </RelativeLayout>

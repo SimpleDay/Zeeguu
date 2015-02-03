@@ -10,13 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import ch.unibe.scg.zeeguu.R;
-import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
 import ch.unibe.scg.zeeguu.Settings.SettingsActivity;
 import ch.unibe.scg.zeeguu.Sliding_menu.SlidingFragment;
 
 public class ZeeguuActivity extends FragmentActivity {
     private ConnectionManager connectionManager;
-    private SlidingFragment fragment;
+    private static SlidingFragment fragment;
 
     private final int SETTINGSCHANGED = 100;
 
@@ -37,9 +36,9 @@ public class ZeeguuActivity extends FragmentActivity {
 
         //create slidemenu
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        fragment = new SlidingFragment();
+        if(fragment == null)
+            fragment = new SlidingFragment();
         transaction.replace(R.id.fragment_menu, fragment);
-        transaction.replace(R.id.viewpager, new FragmentText());
         transaction.commit();
 
         //TODO: Language change affects whole app
