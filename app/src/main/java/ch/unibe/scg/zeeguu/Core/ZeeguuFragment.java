@@ -39,7 +39,7 @@ public abstract class ZeeguuFragment extends Fragment {
     /**
      * Force opens the soft keyboard
      */
-    //TODO: DO this right - now its just toggling the window..
+    //TODO: DO this correct - now its just toggling the window..
     public void openKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         //imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
@@ -48,7 +48,7 @@ public abstract class ZeeguuFragment extends Fragment {
     /**
      * Force closes the soft keyboard
      */
-    //TODO: DO this right - now its just toggling the window...
+    //TODO: DO this correct - now its just toggling the window...
     public void closeKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         //imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);

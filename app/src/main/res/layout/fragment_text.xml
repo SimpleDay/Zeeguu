@@ -70,6 +70,15 @@
             android:layout_toRightOf="@+id/camera_search_button"
             android:src="?attr/customIconSound" />
 
+        <ImageView
+            android:id="@+id/button_paste"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:src="?attr/customIconPaste"
+            android:layout_centerVertical="true"
+            android:layout_alignRight="@+id/flag_translate_from"
+            android:layout_alignEnd="@+id/flag_translate_from" />
+
 
     </RelativeLayout>
 
@@ -163,6 +172,15 @@
             android:layout_toEndOf="@+id/button_read_to_user_learning_language"
             android:layout_toRightOf="@+id/button_read_to_user_learning_language"
             android:src="?attr/customIconSound" />
+
+        <ImageView
+            android:id="@+id/button_copy"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:src="?attr/customIconCopy"
+            android:layout_centerVertical="true"
+            android:layout_alignRight="@+id/flag_translate_to"
+            android:layout_alignEnd="@+id/flag_translate_to" />
 
     </RelativeLayout>
 

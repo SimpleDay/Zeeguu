@@ -33,5 +33,13 @@
         <attr name="customIconSound" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="customAttrsCopy">
+        <attr name="customIconCopy" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="customAttrsPaste">
+        <attr name="customIconPaste" format="reference" />
+    </declare-styleable>
+
 
 </resources>
