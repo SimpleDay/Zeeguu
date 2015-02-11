@@ -93,6 +93,8 @@
     <string name="error_no_internet_connection">Ops! Your device is not connected to the internet</string>
     <string name="error_user_login_wrong">Ops! Your username or password is not correct</string>
     <string name="error_server_not_online">Ops! The server is not responding, please try it later..</string>
+    <string name="error_language_speaking_not_supported">Ops! The language you choose cannot be read</string>
+    <string name="error_TTS_not_inititalized">Ops! There occurred a problem with the text to speech software. </string>
 
 
     <!-- success messages  -->

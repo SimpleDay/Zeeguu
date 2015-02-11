@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import ch.unibe.scg.zeeguu.Core.ConnectionManager;
 import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
@@ -24,18 +25,28 @@ import ch.unibe.scg.zeeguu.R;
 /**
  * Created by Pascal on 12/01/15.
  */
-public class FragmentText extends ZeeguuFragment {
+public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitListener {
     private EditText native_language_text;
     private EditText to_language_text;
+    private Activity activity;
     private ConnectionManager connectionManager;
+
+    private TextToSpeech textToSpeechNativeLanguage;
+    private TextToSpeech textToSpeechOtherLanguage;
+
 
     //flags
     private ImageView flag_translate_from;
     private ImageView flag_translate_to;
     private boolean switchLanguage;
 
+    //buttons
+    ImageView button_read_to_user_native_language;
+    ImageView button_read_to_user_learning_language;
 
-    public FragmentText() {}
+
+    public FragmentText() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +56,11 @@ public class FragmentText extends ZeeguuFragment {
         //initialize class variables
         native_language_text = (EditText) view.findViewById(R.id.text_native_translation_user_entered);
         to_language_text = (EditText) view.findViewById(R.id.text_translated);
-        connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) getActivity());
+        activity = getActivity();
+        connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) activity);
+
+        textToSpeechNativeLanguage = new TextToSpeech(activity, this);
+        textToSpeechOtherLanguage = new TextToSpeech(activity, this);
 
         //Set done button to translate
         native_language_text.setOnKeyListener(new TextViewListener());
@@ -61,15 +76,17 @@ public class FragmentText extends ZeeguuFragment {
 
         //if a text was entered and the screen rotated, the text will be added again here.
         if (savedInstanceState != null) {
-            native_language_text.setText(savedInstanceState.getString("language_native"));
-            to_language_text.setText(savedInstanceState.getString("language_learning"));
+            native_language_text.setText(savedInstanceState.getString(
+                    getString(R.string.preference_native_language)));
+            to_language_text.setText(savedInstanceState.getString(
+                    getString(R.string.preference_learning_language)));
         }
 
         //set listeners
-        ImageButton button_mic = (ImageButton) view.findViewById(R.id.microphone_search_button);
+        ImageView button_mic = (ImageView) view.findViewById(R.id.microphone_search_button);
         button_mic.setOnClickListener(new voiceRecognitionListener());
 
-        ImageButton button_cam = (ImageButton) view.findViewById(R.id.camera_search_button);
+        ImageView button_cam = (ImageView) view.findViewById(R.id.camera_search_button);
         button_cam.setOnClickListener(new cameraRecognitionListener());
 
         ImageButton button_transl = (ImageButton) view.findViewById(R.id.translate_button);
@@ -77,6 +94,22 @@ public class FragmentText extends ZeeguuFragment {
 
         ImageButton button_contribute = (ImageButton) view.findViewById(R.id.contribute_to_server);
         button_contribute.setOnClickListener(new uploadWordToLibraryListener());
+
+        button_read_to_user_native_language = (ImageView) view.findViewById(R.id.button_read_to_user_native_language);
+        button_read_to_user_native_language.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speak(textToSpeechNativeLanguage);
+            }
+        });
+
+        button_read_to_user_learning_language = (ImageView) view.findViewById(R.id.button_bookmark);
+        button_read_to_user_learning_language.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speak(textToSpeechOtherLanguage);
+            }
+        });
 
         return view;
     }
@@ -111,42 +144,88 @@ public class FragmentText extends ZeeguuFragment {
 
     }
 
+    public void onDestroy() {
+        // Don't forget to shutdown!
+        if (textToSpeechNativeLanguage != null) {
+            textToSpeechNativeLanguage.stop();
+            textToSpeechNativeLanguage.shutdown();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+
+        } else {
+            String error = getString(R.string.error_TTS_not_inititalized);
+            toast(error);
+            logging(error);
+        }
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString("language_native", native_language_text.getText().toString());
-        savedInstanceState.putString("language_learning", to_language_text.getText().toString());
+        //TODO: NOT YET WORKING
+        savedInstanceState.putString(getString(R.string.preference_native_language), native_language_text.getText().toString());
+        savedInstanceState.putString(getString(R.string.preference_learning_language), to_language_text.getText().toString());
 
         super.onSaveInstanceState(savedInstanceState);
     }
 
     //private Methods
 
-    //TODO: Implement listener that when language change in settings delays, flags are still changed
     private void setLanguageFlags() {
         if (!switchLanguage) {
-            setFlag(flag_translate_from, connectionManager.getNativeLanguage());
-            setFlag(flag_translate_to, connectionManager.getLearningLanguage());
+            setFlag(flag_translate_from, textToSpeechNativeLanguage, connectionManager.getNativeLanguage());
+            setFlag(flag_translate_to, textToSpeechOtherLanguage, connectionManager.getLearningLanguage());
         } else {
-            setFlag(flag_translate_to, connectionManager.getNativeLanguage());
-            setFlag(flag_translate_from, connectionManager.getLearningLanguage());
+            setFlag(flag_translate_to, textToSpeechOtherLanguage, connectionManager.getNativeLanguage());
+            setFlag(flag_translate_from, textToSpeechNativeLanguage, connectionManager.getLearningLanguage());
         }
     }
 
-    private void setFlag(ImageView flag, String language) {
+    private void setFlag(ImageView flag, TextToSpeech tts, String language) {
+        int result = 0;
         switch (language) {
             case "en":
                 flag.setImageResource(R.drawable.flag_uk);
+                result = tts.setLanguage(Locale.UK);
                 break;
             case "de":
                 flag.setImageResource(R.drawable.flag_german);
+                result = tts.setLanguage(Locale.GERMANY);
                 break;
             case "fr":
                 flag.setImageResource(R.drawable.flag_france);
+                result = tts.setLanguage(Locale.FRANCE);
                 break;
             case "it":
                 flag.setImageResource(R.drawable.flag_italy);
+                result = tts.setLanguage(Locale.ITALY);
                 break;
         }
+
+        //if textToSpeech library is not installed, make a toast
+        if (result == TextToSpeech.LANG_MISSING_DATA
+                || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+
+            String error = getString(R.string.error_language_speaking_not_supported);
+            toast(error);
+            logging(error);
+
+            //button_read_to_user_native_language.setEnabled(true);
+        }
+    }
+
+    private void speak(TextToSpeech tts) {
+        String text;
+        if (tts == textToSpeechNativeLanguage)
+            text = native_language_text.getText().toString();
+        else
+            text = to_language_text.getText().toString();
+
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
 
@@ -195,11 +274,15 @@ public class FragmentText extends ZeeguuFragment {
             try {
                 startActivityForResult(intent, RESULT_SPEECH);
             } catch (ActivityNotFoundException a) {
-                Toast t = Toast.makeText(getActivity(),
-                        getString(R.string.error_mic_search_not_supported),
-                        Toast.LENGTH_SHORT);
-                t.show();
+                toast(getString(R.string.error_mic_search_not_supported));
             }
+        }
+    }
+
+    private class cameraRecognitionListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            //ToDo: implement OCR
         }
     }
 
@@ -212,12 +295,6 @@ public class FragmentText extends ZeeguuFragment {
         }
     }
 
-    private class cameraRecognitionListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            //ToDo: implement OCR
-        }
-    }
 }
 
 

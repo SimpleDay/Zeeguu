@@ -13,6 +13,7 @@
         <item name="customIconTranslate">@drawable/ic_action_translate_holo_light</item>
         <item name="customIconClock">@drawable/ic_action_calendar_holo_light</item>
         <item name="customIconSave">@drawable/ic_action_save_halo_light</item>
+        <item name="customIconSound">@drawable/ic_action_sound_halo_light</item>
     </style>
 
     <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light">
@@ -23,6 +24,7 @@
         <item name="customIconTranslate">@drawable/ic_action_translate_holo_light</item>
         <item name="customIconClock">@drawable/ic_action_calendar_holo_light</item>
         <item name="customIconSave">@drawable/ic_action_save_halo_light</item>
+        <item name="customIconSound">@drawable/ic_action_sound_halo_light</item>
 
     </style>
 
@@ -34,6 +36,7 @@
         <item name="customIconTranslate">@drawable/ic_action_translate_holo_dark</item>
         <item name="customIconClock">@drawable/ic_action_calendar_holo_dark</item>
         <item name="customIconSave">@drawable/ic_action_save_halo_dark</item>
+        <item name="customIconSound">@drawable/ic_action_sound_halo_dark</item>
 
 
     </style>

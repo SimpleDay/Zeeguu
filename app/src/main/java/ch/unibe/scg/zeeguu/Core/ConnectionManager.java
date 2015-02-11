@@ -416,13 +416,20 @@ public class ConnectionManager extends Application {
 
             @Override
             public void onResponse(String response) {
-                logging(TAG, response.toString());
+                String language = response.toString();
+                logging(TAG, urlTag + ": " + language);
 
                 //Save language
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString(urlTag, response.toString());
-
+                editor.putString(urlTag, language);
                 editor.commit();
+
+                //save it to the variable
+                if(urlTag.equals("learned_language"))
+                    learning_language = language;
+                else
+                    native_language = language;
+
                 activity.refreshLanguages();
                 dismissDialog();
 
