@@ -54,7 +54,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         View view = inflater.inflate(R.layout.fragment_text, container, false);
 
         //initialize class variables
-        native_language_text = (EditText) view.findViewById(R.id.text_native_translation_user_entered);
+        native_language_text = (EditText) view.findViewById(R.id.text_native);
         to_language_text = (EditText) view.findViewById(R.id.text_translated);
         activity = getActivity();
         connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) activity);
@@ -66,8 +66,8 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         native_language_text.setOnKeyListener(new TextViewListener());
 
         //initialize flags
-        flag_translate_from = (ImageView) view.findViewById(R.id.flag_translate_from);
-        flag_translate_to = (ImageView) view.findViewById(R.id.flag_translate_to);
+        flag_translate_from = (ImageView) view.findViewById(R.id.ic_flag_translate_from);
+        flag_translate_to = (ImageView) view.findViewById(R.id.ic_flag_translate_to);
         switchLanguage = false;
 
         //listeners for the flags to switch the flags by pressing on them
@@ -83,19 +83,19 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         }
 
         //set listeners
-        ImageView button_mic = (ImageView) view.findViewById(R.id.microphone_search_button);
+        ImageView button_mic = (ImageView) view.findViewById(R.id.btn_microphone_search);
         button_mic.setOnClickListener(new voiceRecognitionListener());
 
-        ImageView button_cam = (ImageView) view.findViewById(R.id.camera_search_button);
+        ImageView button_cam = (ImageView) view.findViewById(R.id.btn_camera_search);
         button_cam.setOnClickListener(new cameraRecognitionListener());
 
-        ImageButton button_transl = (ImageButton) view.findViewById(R.id.translate_button);
+        ImageButton button_transl = (ImageButton) view.findViewById(R.id.btn_translate);
         button_transl.setOnClickListener(new translationListener());
 
-        ImageButton button_contribute = (ImageButton) view.findViewById(R.id.contribute_to_server);
+        ImageButton button_contribute = (ImageButton) view.findViewById(R.id.btn_contribute);
         button_contribute.setOnClickListener(new uploadWordToLibraryListener());
 
-        button_read_to_user_native_language = (ImageView) view.findViewById(R.id.button_read_to_user_native_language);
+        button_read_to_user_native_language = (ImageView) view.findViewById(R.id.btn_tts_native_language);
         button_read_to_user_native_language.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +103,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
             }
         });
 
-        button_read_to_user_learning_language = (ImageView) view.findViewById(R.id.button_bookmark);
+        button_read_to_user_learning_language = (ImageView) view.findViewById(R.id.btn_bookmark);
         button_read_to_user_learning_language.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

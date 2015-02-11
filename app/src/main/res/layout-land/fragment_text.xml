@@ -14,7 +14,6 @@
         android:id="@+id/text_native_translation"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/image_button_layout"
         android:layout_alignParentTop="true"
         android:padding="15dp">
 
@@ -25,7 +24,7 @@
             android:layout_gravity="left|center_vertical">
 
             <EditText
-                android:id="@+id/text_native_translation_user_entered"
+                android:id="@+id/text_native"
                 android:layout_width="255dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="right|top"
@@ -36,21 +35,21 @@
                 android:padding="10dp" />
 
             <ImageView
-                android:id="@+id/flag_translate_from"
+                android:id="@+id/ic_flag_translate_from"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_alignParentBottom="true"
-                android:layout_alignRight="@+id/text_native_translation_user_entered"
+                android:layout_alignRight="@+id/text_native"
                 android:layout_gravity="center_horizontal|bottom"
                 android:layout_marginBottom="12dp"
                 android:layout_marginRight="15dp"
                 android:src="@drawable/flag_german" />
 
             <ImageView
-                android:id="@+id/microphone_search_button"
+                android:id="@+id/btn_microphone_search"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:layout_alignBottom="@+id/flag_translate_from"
+                android:layout_alignBottom="@+id/ic_flag_translate_from"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_gravity="right"
@@ -60,25 +59,34 @@
                 android:textColor="#fff" />
 
             <ImageView
-                android:id="@+id/camera_search_button"
+                android:id="@+id/btn_camera_search"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:layout_alignTop="@+id/microphone_search_button"
+                android:layout_alignTop="@+id/btn_microphone_search"
                 android:layout_gravity="right"
-                android:layout_toEndOf="@+id/microphone_search_button"
-                android:layout_toRightOf="@+id/microphone_search_button"
+                android:layout_toEndOf="@+id/btn_microphone_search"
+                android:layout_toRightOf="@+id/btn_microphone_search"
                 android:clickable="true"
                 android:src="?attr/customIconCamera"
                 android:textColor="#fff" />
 
             <ImageView
-                android:id="@+id/button_read_to_user_native_language"
+                android:id="@+id/btn_tts_native_language"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:layout_alignTop="@+id/camera_search_button"
-                android:layout_toEndOf="@+id/camera_search_button"
-                android:layout_toRightOf="@+id/camera_search_button"
+                android:layout_alignTop="@+id/btn_camera_search"
+                android:layout_toEndOf="@+id/btn_camera_search"
+                android:layout_toRightOf="@+id/btn_camera_search"
                 android:src="?attr/customIconSound" />
+
+            <ImageView
+                android:id="@+id/btn_paste"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_alignLeft="@+id/ic_flag_translate_from"
+                android:layout_alignStart="@+id/ic_flag_translate_from"
+                android:layout_centerVertical="true"
+                android:src="?attr/customIconPaste" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -100,7 +108,7 @@
                 android:padding="10dp" />
 
             <ImageView
-                android:id="@+id/flag_translate_to"
+                android:id="@+id/ic_flag_translate_to"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_alignParentBottom="true"
@@ -113,60 +121,61 @@
                 android:src="@drawable/flag_uk" />
 
             <ImageView
-                android:id="@+id/button_bookmark"
+                android:id="@+id/btn_bookmark"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:layout_alignBottom="@+id/flag_translate_to"
+                android:layout_alignBottom="@+id/ic_flag_translate_to"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_action_star_halo_light" />
+                android:src="@drawable/btn_star_holo_light" />
 
             <ImageView
-                android:id="@+id/button_read_to_user_learning_language"
+                android:id="@+id/btn_tts_learning_language"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:layout_alignTop="@+id/button_bookmark"
-                android:layout_toEndOf="@+id/button_bookmark"
-                android:layout_toRightOf="@+id/button_bookmark"
+                android:layout_alignTop="@+id/btn_bookmark"
+                android:layout_toEndOf="@+id/btn_bookmark"
+                android:layout_toRightOf="@+id/btn_bookmark"
                 android:src="?attr/customIconSound" />
+
+            <ImageView
+                android:id="@+id/btn_copy"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_alignEnd="@+id/ic_flag_translate_to"
+                android:layout_alignRight="@+id/ic_flag_translate_to"
+                android:layout_centerVertical="true"
+                android:src="?attr/customIconCopy" />
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btn_translate"
+                android:layout_width="55dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:background="@drawable/rounded_button"
+                android:src="?attr/customIconTranslate" />
+
+            <ImageButton
+                android:id="@+id/btn_contribute"
+                android:layout_width="55dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@drawable/rounded_button"
+                android:clickable="true"
+                android:src="?attr/customIconSave" />
+        </LinearLayout>
+
     </FrameLayout>
-
-    <RelativeLayout
-        android:id="@+id/image_button_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="54dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-
-        <ImageButton
-            android:id="@+id/translate_button"
-            android:layout_width="55dp"
-            android:layout_height="45dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/rounded_button"
-            android:src="?attr/customIconTranslate" />
-
-
-        <ImageButton
-            android:id="@+id/contribute_to_server"
-            android:layout_width="55dp"
-            android:layout_height="45dp"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="left"
-            android:layout_toLeftOf="@+id/translate_button"
-            android:layout_toStartOf="@+id/translate_button"
-            android:background="@drawable/rounded_button"
-            android:clickable="true"
-            android:src="?attr/customIconSave" />
-
-    </RelativeLayout>
 
 </RelativeLayout>
 
