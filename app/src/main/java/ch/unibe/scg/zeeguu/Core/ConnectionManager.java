@@ -155,20 +155,16 @@ public class ConnectionManager extends Application {
         }
     }
 
-    public void getTranslation(String text, Boolean switchTransl, final FragmentText fragmentText) {
-        if (!userHasLoginInfo() || text.equals("") || text == null || !isNetworkAvailable())
+    public void getTranslation(String input, String inputLanguage, String outputLanguage, final FragmentText fragmentText) {
+        if (!userHasLoginInfo() || input.equals("") || input == null || !isNetworkAvailable())
             return;
 
         //parse string to URL
-        text = Uri.encode(text);
+        input = Uri.encode(input);
 
-        String url_translation;
-        if (!switchTransl)
-            url_translation = url + "goslate_from_to/" + text + "/" +
-                    native_language + "/" + learning_language + "?session=" + session_id;
-        else
-            url_translation = url + "goslate_from_to/" + text + "/" +
-                    learning_language + "/" + native_language + "?session=" + session_id;
+        String url_translation = url + "goslate_from_to/" + input + "/" +
+                    inputLanguage + "/" + outputLanguage + "?session=" + session_id;
+        logging(TAG, url_translation);
 
         createLoadingDialog();
 
@@ -201,7 +197,7 @@ public class ConnectionManager extends Application {
         input = Uri.encode(input);
         translation = Uri.encode(translation);
 
-        String urlContribution = url + "contribute/" + learning_language + "/" + translation + "/" +
+        String urlContribution = url + "contribute_with_context/" + learning_language + "/" + translation + "/" +
                 native_language + "/" + input + "?session=" + session_id;
         logging(TAG, urlContribution);
 
@@ -214,6 +210,7 @@ public class ConnectionManager extends Application {
             public void onResponse(String response) {
                 logging(TAG, "successful contributed: " + response);
                 toast("Contribution successful");
+                getAllWordsFromServer(); //TODO: Not always get the whole list, just add word locally
             }
 
         }, new Response.ErrorListener() {
@@ -223,7 +220,18 @@ public class ConnectionManager extends Application {
                 logging(TAG, error.toString());
                 dismissDialog();
             }
-        });
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("title", "Android Application");
+                params.put("url", "");
+                params.put("context", "");
+
+                return params;
+            }
+        };
 
         this.addToRequestQueue(strReq, tag_contribute_Req);
     }

@@ -155,6 +155,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     public void refreshLanguages() {
         switchLanguage = false;
         setLanguagesTextFields();
+        resetTextFields();
     }
 
     @Override
@@ -208,13 +209,8 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     //private Methods
 
     private void setLanguagesTextFields() {
-        if (!switchLanguage) {
-            setFlag(flag_translate_from, textToSpeechNativeLanguage, connectionManager.getNativeLanguage());
-            setFlag(flag_translate_to, textToSpeechOtherLanguage, connectionManager.getLearningLanguage());
-        } else {
-            setFlag(flag_translate_to, textToSpeechOtherLanguage, connectionManager.getNativeLanguage());
-            setFlag(flag_translate_from, textToSpeechNativeLanguage, connectionManager.getLearningLanguage());
-        }
+        setFlag(flag_translate_from, textToSpeechNativeLanguage, getInputLanguage());
+        setFlag(flag_translate_to, textToSpeechOtherLanguage, getOutputLanguage());
     }
 
     private void setFlag(ImageView flag, TextToSpeech tts, String language) {
@@ -275,7 +271,20 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     private void translate() {
         String input = edit_text_native.getText().toString();
-        connectionManager.getTranslation(input, switchLanguage, this);
+        connectionManager.getTranslation(input, getInputLanguage(), getOutputLanguage(), this);
+    }
+
+    private String getInputLanguage() {
+        return switchLanguage? connectionManager.getLearningLanguage() : connectionManager.getNativeLanguage();
+    }
+
+    private String getOutputLanguage() {
+        return switchLanguage? connectionManager.getNativeLanguage() : connectionManager.getLearningLanguage();
+    }
+
+    private void resetTextFields() {
+        edit_text_translated.setText("");
+        edit_text_native.setText("");
     }
 
 
@@ -341,7 +350,10 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         public void onClick(View v) {
             String input = edit_text_native.getText().toString();
             String translation = edit_text_translated.getText().toString();
-            connectionManager.contributeToServer(input, translation);
+            if(switchLanguage) 
+                connectionManager.contributeToServer(input, translation);
+            else
+                connectionManager.contributeToServer(translation, input);
         }
     }
 
