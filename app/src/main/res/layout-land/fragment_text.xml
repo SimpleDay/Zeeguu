@@ -86,6 +86,8 @@
                 android:layout_alignLeft="@+id/ic_flag_translate_from"
                 android:layout_alignStart="@+id/ic_flag_translate_from"
                 android:layout_centerVertical="true"
+                android:enabled="false"
+                android:alpha=".3"
                 android:src="?attr/customIconPaste" />
         </RelativeLayout>
 
@@ -146,6 +148,8 @@
                 android:layout_alignEnd="@+id/ic_flag_translate_to"
                 android:layout_alignRight="@+id/ic_flag_translate_to"
                 android:layout_centerVertical="true"
+                android:enabled="false"
+                android:alpha=".3"
                 android:src="?attr/customIconCopy" />
 
         </RelativeLayout>
@@ -168,8 +172,8 @@
                 android:id="@+id/btn_contribute"
                 android:layout_width="55dp"
                 android:layout_height="45dp"
-                android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_button"
                 android:clickable="true"
                 android:src="?attr/customIconSave" />

@@ -101,6 +101,7 @@
     <string name="successful_login">Successfully logged in</string>
     <string name="successful_language_native_changed">Successfully changed your native language on the server to: </string>
     <string name="successful_language_learning_changed">Successfully changed your learning language on the server to: </string>
+    <string name="successful_text_copied">Text has been copied </string>
 
 
 </resources>

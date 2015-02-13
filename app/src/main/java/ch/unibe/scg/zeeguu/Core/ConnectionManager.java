@@ -38,8 +38,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.unibe.scg.zeeguu.R;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
+import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.Item;
+import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
 
 public class ConnectionManager extends Application {
@@ -72,7 +73,6 @@ public class ConnectionManager extends Application {
     private static ZeeguuActivity activity;
 
     private static ArrayList<Item> wordList;
-    private static EditText translationEditText;
 
 
     public ConnectionManager(ZeeguuActivity activity) {
@@ -86,11 +86,6 @@ public class ConnectionManager extends Application {
         //try to get the users information
         settings = PreferenceManager.getDefaultSharedPreferences(activity);
         loadAllUserInformation();
-
-        //ToDo: Delete after debugging
-        //email = "p.giehl@gmx.ch";
-        //pw = "Micky";
-        //session_id = "1467847111";
 
         //get the information that is missing from start point
         if (!userHasLoginInfo())
@@ -160,8 +155,7 @@ public class ConnectionManager extends Application {
         }
     }
 
-    public void getTranslation(String text, Boolean switchTransl, EditText translationView) {
-        //more words can be translated in parallel, but no special characters
+    public void getTranslation(String text, Boolean switchTransl, final FragmentText fragmentText) {
         if (!userHasLoginInfo() || text.equals("") || text == null || !isNetworkAvailable())
             return;
 
@@ -176,7 +170,6 @@ public class ConnectionManager extends Application {
             url_translation = url + "goslate_from_to/" + text + "/" +
                     learning_language + "/" + native_language + "?session=" + session_id;
 
-        translationEditText = translationView;
         createLoadingDialog();
 
         StringRequest strReq = new StringRequest(Request.Method.GET,
@@ -184,7 +177,8 @@ public class ConnectionManager extends Application {
 
             @Override
             public void onResponse(String response) {
-                translationEditText.setText(response.toString());
+                fragmentText.setTranslatedText(response.toString());
+                fragmentText.activateButtons();
             }
 
         }, new Response.ErrorListener() {
@@ -236,8 +230,6 @@ public class ConnectionManager extends Application {
     }
 
 
-
-
     //Getter und setter
 
     public String getSessionId() {
@@ -254,6 +246,7 @@ public class ConnectionManager extends Application {
 
     public void setNativeLanguage(String native_language_key) {
         native_language = native_language_key;
+        activity.refreshLanguages();
         setUserLanguageOnServer(activity.getString(R.string.preference_native_language), native_language_key);
     }
 
@@ -263,6 +256,7 @@ public class ConnectionManager extends Application {
 
     public void setLearningLanguage(String learning_language_key) {
         learning_language = learning_language_key;
+        activity.refreshLanguages();
         setUserLanguageOnServer(activity.getString(R.string.preference_learning_language), learning_language_key);
     }
 
@@ -425,7 +419,7 @@ public class ConnectionManager extends Application {
                 editor.commit();
 
                 //save it to the variable
-                if(urlTag.equals("learned_language"))
+                if (urlTag.equals("learned_language"))
                     learning_language = language;
                 else
                     native_language = language;
@@ -468,8 +462,7 @@ public class ConnectionManager extends Application {
 
                             else
                                 toast(activity.getString(R.string.successful_language_native_changed) + " " + language_key);
-                        }
-                        else
+                        } else
                             toast(activity.getString(R.string.error_change_learning_language_on_server_not_possible));
 
                         dismissDialog();
