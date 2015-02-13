@@ -113,7 +113,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
 
         //See if something has been added to clipboard and if activate paste button
-        initButton(btn_paste, clipboard.hasPrimaryClip());
+        initButton(btn_paste, hasClipboardEntry());
         initButton(btn_copy, !edit_text_translated.getText().toString().isEmpty());
 
 
@@ -266,6 +266,11 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
             imageView.setEnabled(false);
             imageView.setAlpha(.3f);
         }
+    }
+
+    private boolean hasClipboardEntry() {
+        if(clipboard == null) return false;
+        return clipboard.hasPrimaryClip() && !clipboard.getPrimaryClip().getItemAt(0).getText().equals("");
     }
 
     private void translate() {

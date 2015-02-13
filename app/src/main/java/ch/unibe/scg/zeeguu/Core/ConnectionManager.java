@@ -194,7 +194,6 @@ public class ConnectionManager extends Application {
     }
 
     public void contributeToServer(String input, String translation) {
-        //more words can be translated in parallel, but no special characters
         if (!userHasLoginInfo() || input.equals("") || translation.equals("") || !isNetworkAvailable())
             return;
 
