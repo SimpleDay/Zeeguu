@@ -189,7 +189,7 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_translation_Req);
     }
 
-    public void contributeToServer(String input, String translation) {
+    public void contributeToServer(String input, String translation, final FragmentText fragmentText) {
         if (!userHasLoginInfo() || input.equals("") || translation.equals("") || !isNetworkAvailable())
             return;
 
@@ -208,6 +208,7 @@ public class ConnectionManager extends Application {
 
             @Override
             public void onResponse(String response) {
+                fragmentText.activateContribution();
                 logging(TAG, "successful contributed: " + response);
                 toast("Contribution successful");
                 getAllWordsFromServer(); //TODO: Not always get the whole list, just add word locally

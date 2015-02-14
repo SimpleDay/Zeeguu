@@ -123,7 +123,7 @@
                 android:src="@drawable/flag_uk" />
 
             <ImageView
-                android:id="@+id/btn_bookmark"
+                android:id="@+id/btn_contribute"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
                 android:layout_alignBottom="@+id/ic_flag_translate_to"
@@ -136,9 +136,9 @@
                 android:id="@+id/btn_tts_learning_language"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:layout_alignTop="@+id/btn_bookmark"
-                android:layout_toEndOf="@+id/btn_bookmark"
-                android:layout_toRightOf="@+id/btn_bookmark"
+                android:layout_alignTop="@+id/btn_contribute"
+                android:layout_toEndOf="@+id/btn_contribute"
+                android:layout_toRightOf="@+id/btn_contribute"
                 android:src="?attr/customIconSound" />
 
             <ImageView
@@ -168,15 +168,6 @@
                 android:background="@drawable/rounded_button"
                 android:src="?attr/customIconTranslate" />
 
-            <ImageButton
-                android:id="@+id/btn_contribute"
-                android:layout_width="55dp"
-                android:layout_height="45dp"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/rounded_button"
-                android:clickable="true"
-                android:src="?attr/customIconSave" />
         </LinearLayout>
 
     </FrameLayout>

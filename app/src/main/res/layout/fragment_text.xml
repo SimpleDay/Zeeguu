@@ -95,18 +95,6 @@
 
 
         <ImageButton
-            android:id="@+id/btn_contribute"
-            android:layout_width="55dp"
-            android:layout_height="45dp"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="left"
-            android:layout_toLeftOf="@+id/btn_translate"
-            android:layout_toStartOf="@+id/btn_translate"
-            android:background="@drawable/rounded_button"
-            android:clickable="true"
-            android:src="?attr/customIconSave" />
-
-        <ImageButton
             android:id="@+id/btn_translate"
             android:layout_width="55dp"
             android:layout_height="45dp"
@@ -141,7 +129,6 @@
             android:clickable="false"
             android:focusable="false"
             android:gravity="top"
-            android:inputType="text"
             android:maxLines="10"
             android:padding="15dp" />
 
@@ -157,23 +144,25 @@
             android:gravity="top" />
 
         <ImageView
+            android:id="@+id/btn_contribute"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/btn_star_holo_light"
+            android:layout_alignBottom="@+id/ic_flag_translate_to"
+            android:layout_alignLeft="@+id/text_translated"
+            android:layout_alignStart="@+id/text_translated" />
+
+        <ImageView
             android:id="@+id/btn_tts_learning_language"
             android:layout_width="40dp"
             android:layout_height="35dp"
+            android:src="?attr/customIconSound"
+            android:layout_alignBottom="@+id/ic_flag_translate_to"
             android:layout_alignLeft="@+id/text_translated"
             android:layout_alignStart="@+id/text_translated"
-            android:layout_alignTop="@+id/btn_bookmark"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/btn_star_holo_light" />
-
-        <ImageView
-            android:id="@+id/btn_bookmark"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:layout_alignBottom="@+id/ic_flag_translate_to"
-            android:layout_toEndOf="@+id/btn_tts_learning_language"
-            android:layout_toRightOf="@+id/btn_tts_learning_language"
-            android:src="?attr/customIconSound" />
+            android:layout_marginLeft="44dp"
+            android:layout_marginStart="44dp" />
 
         <ImageView
             android:id="@+id/btn_copy"

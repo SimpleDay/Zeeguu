@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +35,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private Activity activity;
     private ConnectionManager connectionManager;
     private ClipboardManager clipboard;
+    private String switchedText;
 
+    //TTS
     private TextToSpeech textToSpeechNativeLanguage;
     private TextToSpeech textToSpeechOtherLanguage;
 
@@ -43,11 +47,14 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private boolean switchLanguage;
 
     //buttons
-    ImageView btn_tts_native_language;
-    ImageView btn_tts_learning_language;
+    private ImageView btn_tts_native_language;
+    private ImageView btn_tts_learning_language;
 
     private ImageView btn_copy;
     private ImageView btn_paste;
+
+    private ImageView btn_contribute;
+    private boolean contributed;
 
 
     public FragmentText() {
@@ -101,8 +108,11 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         ImageButton btn_transl = (ImageButton) view.findViewById(R.id.btn_translate);
         btn_transl.setOnClickListener(new TranslationListener());
 
-        ImageButton btn_contribute = (ImageButton) view.findViewById(R.id.btn_contribute);
+        btn_contribute = (ImageView) view.findViewById(R.id.btn_contribute);
         btn_contribute.setOnClickListener(new ContributionListener());
+        contributed = false;
+
+        edit_text_translated.addTextChangedListener(new EditTextLearningLanguageListener());
 
         //Clipboard button listeners
         btn_paste = (ImageView) view.findViewById(R.id.btn_paste);
@@ -126,7 +136,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
             }
         });
 
-        btn_tts_learning_language = (ImageView) view.findViewById(R.id.btn_bookmark);
+        btn_tts_learning_language = (ImageView) view.findViewById(R.id.btn_tts_learning_language);
         btn_tts_learning_language.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,6 +211,11 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         //TODO: Add read to button functionability
     }
 
+    public void activateContribution() {
+        contributed = true;
+        btn_contribute.setImageResource(R.drawable.btn_star_yellow);
+    }
+
     public void setTranslatedText(String text) {
         edit_text_translated.setText(text);
     }
@@ -255,7 +270,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     private void initButton(ImageView imageView, Boolean condition) {
-        if(condition) {
+        if (condition) {
             imageView.setEnabled(true);
             imageView.setAlpha(1f);
         } else {
@@ -265,7 +280,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     private boolean hasClipboardEntry() {
-        if(clipboard == null) return false;
+        if (clipboard == null) return false;
         return clipboard.hasPrimaryClip() && !clipboard.getPrimaryClip().getItemAt(0).getText().equals("");
     }
 
@@ -274,12 +289,28 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         connectionManager.getTranslation(input, getInputLanguage(), getOutputLanguage(), this);
     }
 
+    private void contribute() {
+        if (!contributed) {
+            String input = edit_text_native.getText().toString();
+            String translation = edit_text_translated.getText().toString();
+
+            if (switchLanguage)
+                connectionManager.contributeToServer(input, translation, this);
+            else
+                connectionManager.contributeToServer(translation, input, this);
+
+            contributed = true;
+        } else {
+            toast(getString(R.string.error_contributed_already));
+        }
+    }
+
     private String getInputLanguage() {
-        return switchLanguage? connectionManager.getLearningLanguage() : connectionManager.getNativeLanguage();
+        return switchLanguage ? connectionManager.getLearningLanguage() : connectionManager.getNativeLanguage();
     }
 
     private String getOutputLanguage() {
-        return switchLanguage? connectionManager.getNativeLanguage() : connectionManager.getLearningLanguage();
+        return switchLanguage ? connectionManager.getNativeLanguage() : connectionManager.getLearningLanguage();
     }
 
     private void resetTextFields() {
@@ -315,9 +346,15 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
             switchLanguage = !switchLanguage;
             setLanguagesTextFields();
 
-            String native_entered = edit_text_native.getText().toString();
-            edit_text_native.setText(edit_text_translated.getText().toString());
-            edit_text_translated.setText(native_entered);
+            String tmpLearning = edit_text_native.getText().toString();
+            String textNative = edit_text_translated.getText().toString();
+            if(textNative.equals(""))
+                edit_text_native.setText(switchedText);
+            else
+                edit_text_native.setText(textNative);
+
+            switchedText = tmpLearning;
+            edit_text_translated.setText("");
         }
     }
 
@@ -325,10 +362,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            if (switchLanguage)
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getLearningLanguage());
-            else
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getNativeLanguage());
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getInputLanguage());
 
             try {
                 startActivityForResult(intent, RESULT_SPEECH);
@@ -348,12 +382,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private class ContributionListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            String input = edit_text_native.getText().toString();
-            String translation = edit_text_translated.getText().toString();
-            if(switchLanguage) 
-                connectionManager.contributeToServer(input, translation);
-            else
-                connectionManager.contributeToServer(translation, input);
+            contribute();
         }
     }
 
@@ -367,7 +396,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     private class CopyListener implements View.OnClickListener {
         @Override
-        public void onClick(View view){
+        public void onClick(View view) {
             ClipData clip = ClipData.newPlainText("paste", edit_text_translated.getText().toString());
             clipboard.setPrimaryClip(clip);
             //Feedback that text has been copied
@@ -380,6 +409,26 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         public void onPrimaryClipChanged() {
             //initialize paste button because something is added to clipboard
             initButton(btn_paste, true);
+        }
+    }
+
+    private class EditTextLearningLanguageListener implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            //Do nothing
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            //also do nothing
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            //when learning textfield changes, it can be contributed again.
+            contributed = false;
+            btn_contribute.setImageResource(R.drawable.btn_star_holo_light);
         }
     }
 }
