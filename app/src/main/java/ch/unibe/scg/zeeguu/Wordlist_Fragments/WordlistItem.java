@@ -90,6 +90,7 @@ public class WordlistItem implements Item {
         if (convertView == null)
         {
             convertView = inflater.inflate(R.layout.listview_item, null);
+
             holder = new ViewHolder();
 
             holder.native_language = (TextView) convertView.findViewById(R.id.wordlist_native_language);
@@ -101,9 +102,9 @@ public class WordlistItem implements Item {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.native_language.setText(getNativeWord());
-        holder.other_language.setText(getTranslation());
-        holder.context.setText(getContext());
+        holder.native_language.setText(nativeWord);
+        holder.other_language.setText(translation);
+        holder.context.setText(context);
 
         return convertView;
     }

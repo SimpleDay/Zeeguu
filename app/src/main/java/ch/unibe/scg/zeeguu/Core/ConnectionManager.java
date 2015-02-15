@@ -384,6 +384,7 @@ public class ConnectionManager extends Application {
                             JSONObject translation = contribs.getJSONObject(i);
                             String nativeWord = translation.getString("from");
                             String translatedWord = translation.getString("to");
+
                             String context = translation.getString("context");
                             wordList.add(new WordlistItem(nativeWord, translatedWord, context));
                         }

@@ -20,7 +20,7 @@
             android:gravity="left"
             android:padding="10dp"
             android:textColor="@color/wordlist_text_color"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,7 +31,7 @@
             android:gravity="right"
             android:padding="10dp"
             android:textColor="@color/wordlist_text_color"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -39,13 +39,12 @@
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/wordlist_context"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="left"
-        android:paddingLeft="5dp"
+        android:padding="5dp"
         android:textColor="@color/wordlist_text_color"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        android:textSize="12sp" />
 
 
 </LinearLayout>
