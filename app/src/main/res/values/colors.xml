@@ -29,6 +29,8 @@
     <!-- wordlist tab -->
     <color name="wordlist_header">#ffff1a0e</color>
     <color name="wordlist_header_text_color">#ffffff</color>
+    <color name="wordlist_info_header">#fffafffb</color>
+    <color name="wordlist_info_header_text_color">#ff0c0c0c</color>
     <color name="wordlist_text_color">#000000</color>
 
     <!-- sign in tab -->

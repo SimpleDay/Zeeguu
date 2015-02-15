@@ -16,7 +16,7 @@ public class WordlistAdapter extends ArrayAdapter<Item> {
     private LayoutInflater inflater;
 
     public enum RowType {
-        LIST_ITEM, HEADER_ITEM
+        LIST_ITEM, HEADER_ITEM, HEADER_INFO_ITEM
     }
 
     public WordlistAdapter(Context context, List<Item> items) {

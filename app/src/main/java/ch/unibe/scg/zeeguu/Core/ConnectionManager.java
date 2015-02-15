@@ -365,6 +365,7 @@ public class ConnectionManager extends Application {
             return;
 
         String url_session_ID = url + "contribs_by_day/with_context?session=" + session_id;
+        logging(TAG, url_session_ID);
 
         createLoadingDialog();
         JsonArrayRequest request = new JsonArrayRequest(url_session_ID, new Response.Listener<JSONArray>() {
