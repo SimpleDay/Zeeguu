@@ -41,6 +41,7 @@ import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.Item;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
+import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistInfoHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
 
 public class ConnectionManager extends Application {
@@ -373,17 +374,24 @@ public class ConnectionManager extends Application {
             public void onResponse(JSONArray response) {
                 logging(TAG, response.toString());
                 wordList.clear();
+
                 //ToDo: optimization that not everytime the whole list is sent
                 try {
                     for (int j = 0; j < response.length(); j++) {
                         JSONObject dates = response.getJSONObject(j);
                         wordList.add(new WordlistHeader(dates.getString("date")));
                         JSONArray contribs = dates.getJSONArray("contribs");
+                        String title = "";
                         for (int i = 0; i < contribs.length(); i++) {
                             JSONObject translation = contribs.getJSONObject(i);
+                            //add title when a new one is
+                            if(!title.equals(translation.getString("title"))) {
+                                title = translation.getString("title");
+                                wordList.add(new WordlistInfoHeader(title));
+                            }
+                            //add word as entry to list
                             String nativeWord = translation.getString("from");
                             String translatedWord = translation.getString("to");
-
                             String context = translation.getString("context");
                             wordList.add(new WordlistItem(nativeWord, translatedWord, context));
                         }

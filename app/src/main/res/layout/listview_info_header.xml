@@ -13,8 +13,8 @@
         android:layout_height="fill_parent"
         android:gravity="center_vertical"
         android:textStyle="bold"
-        android:textSize="18sp"
-        android:textColor="@color/wordlist_header_text_color"
+        android:textSize="14sp"
+        android:textColor="@color/wordlist_info_header_text_color"
         android:padding="10dp" />
 
 </LinearLayout>

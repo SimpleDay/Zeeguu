@@ -184,10 +184,15 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     public void onDestroy() {
-        // Don't forget to shutdown!
+        // Shut down both TTS to prevent memory leaks
         if (textToSpeechNativeLanguage != null) {
             textToSpeechNativeLanguage.stop();
             textToSpeechNativeLanguage.shutdown();
+        }
+
+        if (textToSpeechOtherLanguage != null) {
+            textToSpeechOtherLanguage.stop();
+            textToSpeechOtherLanguage.shutdown();
         }
         super.onDestroy();
     }

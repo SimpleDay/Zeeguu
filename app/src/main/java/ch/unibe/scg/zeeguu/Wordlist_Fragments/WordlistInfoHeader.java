@@ -42,7 +42,7 @@ public class WordlistInfoHeader implements Item {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.header_title.setText(getName());
+        holder.header_title.setText(name);
 
         return convertView;
     }
