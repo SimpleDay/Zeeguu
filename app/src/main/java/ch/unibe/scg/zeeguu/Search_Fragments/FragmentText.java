@@ -135,7 +135,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         btn_tts_native_language.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speak(textToSpeechNativeLanguage);
+                speak(textToSpeechNativeLanguage, edit_text_native);
             }
         });
 
@@ -143,7 +143,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         btn_tts_learning_language.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speak(textToSpeechOtherLanguage);
+                speak(textToSpeechOtherLanguage, edit_text_translated);
             }
         });
 
@@ -240,15 +240,15 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
                 break;
             case "de":
                 flag.setImageResource(R.drawable.flag_german);
-                result = tts.setLanguage(Locale.GERMANY);
+                result = tts.setLanguage(Locale.GERMAN);
                 break;
             case "fr":
                 flag.setImageResource(R.drawable.flag_france);
-                result = tts.setLanguage(Locale.FRANCE);
+                result = tts.setLanguage(Locale.FRENCH);
                 break;
             case "it":
                 flag.setImageResource(R.drawable.flag_italy);
-                result = tts.setLanguage(Locale.ITALY);
+                result = tts.setLanguage(Locale.ITALIAN);
                 break;
         }
 
@@ -262,14 +262,10 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         }
     }
 
-    private void speak(TextToSpeech tts) {
-        String text;
-        if (tts == textToSpeechNativeLanguage)
-            text = edit_text_native.getText().toString();
-        else
-            text = edit_text_translated.getText().toString();
-
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    private void speak(TextToSpeech tts, EditText edit_text) {
+        String text = edit_text.getText().toString();
+        if(text != null && !text.equals(""))
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
     private void initButton(ImageView imageView, Boolean condition) {
