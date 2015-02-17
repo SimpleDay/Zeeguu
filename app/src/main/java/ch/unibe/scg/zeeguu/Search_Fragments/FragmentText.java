@@ -166,13 +166,16 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     @Override
     public void refreshLanguages() {
-        switchLanguage = false;
+        if (switchLanguage) {
+            flipTextFields();
+        }
+
         setLanguagesTextFields();
         resetTextFields();
     }
 
     @Override
-    public void onResume() {
+    public void onResume(){
         // The activity has become visible (it is now "resumed").
         super.onResume();
 
@@ -209,11 +212,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    public void activateButtons() {
-        initButton(btn_copy, !edit_text_translated.getText().toString().isEmpty());
-        //TODO: Add read to button functionability
-    }
-
     public void activateContribution() {
         contributed = true;
         btn_contribute.setImageResource(R.drawable.btn_star_yellow);
@@ -221,6 +219,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     public void setTranslatedText(String text) {
         edit_text_translated.setText(text);
+        initButton(btn_copy, !edit_text_translated.getText().toString().equals(""));
     }
 
 
@@ -313,6 +312,22 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         return switchLanguage ? connectionManager.getNativeLanguage() : connectionManager.getLearningLanguage();
     }
 
+    private void flipTextFields() {
+        switchLanguage = !switchLanguage;
+        setLanguagesTextFields();
+
+        String tmpText = edit_text_native.getText().toString();
+        String textLearning = edit_text_translated.getText().toString();
+        if(textLearning.equals(""))
+            edit_text_native.setText(switchedText);
+        else
+            edit_text_native.setText(textLearning);
+
+        switchedText = tmpText;
+        edit_text_translated.setText("");
+        initButton(btn_copy, false);
+    }
+
     private void resetTextFields() {
         edit_text_translated.setText("");
         edit_text_native.setText("");
@@ -348,18 +363,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private class LanguageSwitchListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            switchLanguage = !switchLanguage;
-            setLanguagesTextFields();
-
-            String tmpLearning = edit_text_native.getText().toString();
-            String textNative = edit_text_translated.getText().toString();
-            if(textNative.equals(""))
-                edit_text_native.setText(switchedText);
-            else
-                edit_text_native.setText(textNative);
-
-            switchedText = tmpLearning;
-            edit_text_translated.setText("");
+            flipTextFields();
         }
     }
 

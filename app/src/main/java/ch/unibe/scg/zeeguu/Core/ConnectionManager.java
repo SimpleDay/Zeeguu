@@ -174,7 +174,6 @@ public class ConnectionManager extends Application {
             @Override
             public void onResponse(String response) {
                 fragmentText.setTranslatedText(response.toString());
-                fragmentText.activateButtons();
             }
 
         }, new Response.ErrorListener() {
