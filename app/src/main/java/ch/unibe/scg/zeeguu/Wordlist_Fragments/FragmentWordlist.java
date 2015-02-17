@@ -48,13 +48,18 @@ public class FragmentWordlist extends ZeeguuFragment {
 
     @Override
     public void actualizeFragment() {
-        closeKeyboard();
         adapter.notifyDataSetChanged();
     }
 
     @Override
     public void refreshLanguages() {
         //implement word filter
+    }
+
+    @Override
+    public void onResume() {
+        // The activity has become visible (it is now "resumed").
+        super.onResume();
     }
 
 }

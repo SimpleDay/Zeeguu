@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -14,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,12 +32,11 @@ import ch.unibe.scg.zeeguu.R;
  * Created by Pascal on 12/01/15.
  */
 public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitListener {
+    private Activity activity;
     private EditText edit_text_native;
     private EditText edit_text_translated;
-    private Activity activity;
     private ConnectionManager connectionManager;
     private ClipboardManager clipboard;
-    private String switchedText;
 
     //TTS
     private TextToSpeech textToSpeechNativeLanguage;
@@ -44,7 +45,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     //flags
     private ImageView flag_translate_from;
     private ImageView flag_translate_to;
+
     private boolean switchLanguage;
+    private String switchedText;
 
     //buttons
     private ImageView btn_tts_native_language;
@@ -66,9 +69,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         View view = inflater.inflate(R.layout.fragment_text, container, false);
 
         //initialize class variables
+        activity = getActivity();
         edit_text_native = (EditText) view.findViewById(R.id.text_native);
         edit_text_translated = (EditText) view.findViewById(R.id.text_translated);
-        activity = getActivity();
         connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) activity);
         clipboard = (ClipboardManager) activity.getSystemService(Activity.CLIPBOARD_SERVICE);
 
@@ -287,6 +290,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private void translate() {
         String input = edit_text_native.getText().toString();
         connectionManager.getTranslation(input, getInputLanguage(), getOutputLanguage(), this);
+        closeKeyboard();
     }
 
     private void contribute() {
@@ -316,6 +320,11 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private void resetTextFields() {
         edit_text_translated.setText("");
         edit_text_native.setText("");
+    }
+
+    private void closeKeyboard() {
+        InputMethodManager iMM = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        iMM.hideSoftInputFromWindow(edit_text_native.getWindowToken(), 0);
     }
 
 
