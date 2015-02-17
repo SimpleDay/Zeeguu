@@ -395,7 +395,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         @Override
         public void onClick(View view) {
             ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
-            edit_text_native.setText(item.getText());
+            edit_text_native.getText().insert(edit_text_native.getSelectionStart(), item.getText());
         }
     }
 
