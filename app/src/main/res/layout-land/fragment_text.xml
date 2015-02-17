@@ -136,7 +136,7 @@
                 android:id="@+id/btn_contribute"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:src="@drawable/btn_star_holo_light"
+                android:src="@drawable/btn_bookmark"
                 android:layout_alignTop="@+id/btn_tts_learning_language"
                 android:layout_toRightOf="@+id/btn_copy"
                 android:layout_toEndOf="@+id/btn_copy" />

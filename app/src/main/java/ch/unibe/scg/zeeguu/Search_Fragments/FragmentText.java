@@ -175,7 +175,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         // The activity has become visible (it is now "resumed").
         super.onResume();
 
@@ -219,7 +219,8 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     public void activateContribution() {
         contributed = true;
-        btn_contribute.setImageResource(R.drawable.btn_star_yellow);
+        btn_contribute.setImageResource(R.drawable.btn_bookmark_filled);
+
     }
 
     public void setTranslatedText(String text) {
@@ -268,7 +269,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     private void speak(TextToSpeech tts, EditText edit_text) {
         String text = edit_text.getText().toString();
-        if(text != null && !text.equals(""))
+        if (text != null && !text.equals(""))
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
@@ -294,18 +295,22 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     private void contribute() {
-        if (!contributed) {
-            String input = edit_text_native.getText().toString();
-            String translation = edit_text_translated.getText().toString();
+        if (edit_text_native.getText().length() != 0 && edit_text_translated.getText().length() != 0) {
+            if (!contributed) {
+                String input = edit_text_native.getText().toString();
+                String translation = edit_text_translated.getText().toString();
 
-            if (switchLanguage)
-                connectionManager.contributeToServer(input, translation, this);
-            else
-                connectionManager.contributeToServer(translation, input, this);
+                if (switchLanguage)
+                    connectionManager.contributeToServer(input, translation, this);
+                else
+                    connectionManager.contributeToServer(translation, input, this);
 
-            contributed = true;
+                contributed = true;
+            } else {
+                toast(getString(R.string.error_contributed_already));
+            }
         } else {
-            toast(getString(R.string.error_contributed_already));
+            toast(getString(R.string.error_no_text_to_contribute));
         }
     }
 
@@ -323,7 +328,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
         String tmpText = edit_text_native.getText().toString();
         String textLearning = edit_text_translated.getText().toString();
-        if(textLearning.equals(""))
+        if (textLearning.equals(""))
             edit_text_native.setText(switchedText);
         else
             edit_text_native.setText(textLearning);
@@ -442,7 +447,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         public void afterTextChanged(Editable s) {
             //when learning textfield changes, it can be contributed again.
             contributed = false;
-            btn_contribute.setImageResource(R.drawable.btn_star_holo_light);
+            btn_contribute.setImageResource(R.drawable.btn_bookmark);
+
+            initButton(btn_copy, false);
         }
     }
 }
