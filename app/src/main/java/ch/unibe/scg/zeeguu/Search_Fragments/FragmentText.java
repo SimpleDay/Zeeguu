@@ -115,6 +115,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         btn_contribute.setOnClickListener(new ContributionListener());
         contributed = false;
 
+        edit_text_native.addTextChangedListener(new EditTextNativeLanguageListener());
         edit_text_translated.addTextChangedListener(new EditTextLearningLanguageListener());
 
         //Clipboard button listeners
@@ -138,6 +139,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
                 speak(textToSpeechNativeLanguage, edit_text_native);
             }
         });
+        initButton(btn_tts_native_language, !edit_text_native.getText().toString().equals(""));
 
         btn_tts_learning_language = (ImageView) view.findViewById(R.id.btn_tts_learning_language);
         btn_tts_learning_language.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +148,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
                 speak(textToSpeechOtherLanguage, edit_text_translated);
             }
         });
+        initButton(btn_tts_learning_language, !edit_text_translated.getText().toString().equals(""));
 
         return view;
     }
@@ -271,6 +274,8 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         String text = edit_text.getText().toString();
         if (text != null && !text.equals(""))
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        else
+            toast(getString(R.string.error_no_text_to_read));
     }
 
     private void initButton(ImageView imageView, Boolean condition) {
@@ -363,7 +368,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         public boolean onKey(View v, int keyCode, KeyEvent event) {
             if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 translate();
-                //TODO: close the keyboard here
                 return true;
             }
             return false;
@@ -431,6 +435,24 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         }
     }
 
+    private class EditTextNativeLanguageListener implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            //Do nothing
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            //also do nothing
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            initButton(btn_tts_native_language, !edit_text_native.getText().toString().equals(""));
+        }
+    }
+
     private class EditTextLearningLanguageListener implements TextWatcher {
 
         @Override
@@ -449,7 +471,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
             contributed = false;
             btn_contribute.setImageResource(R.drawable.btn_bookmark);
 
-            initButton(btn_copy, false);
+            boolean editTextIsEmpty = edit_text_translated.getText().toString().equals("");
+            initButton(btn_copy, !editTextIsEmpty);
+            initButton(btn_tts_learning_language, !editTextIsEmpty);
         }
     }
 }

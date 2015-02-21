@@ -163,7 +163,7 @@ public class ConnectionManager extends Application {
         //parse string to URL
         input = Uri.encode(input);
 
-        String url_translation = url + "goslate_from_to/" + input + "/" +
+        String url_translation = url + "translate_from_to/" + input + "/" +
                     inputLanguage + "/" + outputLanguage + "?session=" + session_id;
         logging(TAG, url_translation);
 

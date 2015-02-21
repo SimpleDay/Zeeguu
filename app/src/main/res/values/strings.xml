@@ -97,6 +97,7 @@
     <string name="error_TTS_not_inititalized">Ops! There occurred a problem with the text to speech software. </string>
     <string name="error_contributed_already">Ops! It was already contributed, it cannot be done twice. </string>
     <string name="error_no_text_to_contribute">Ops! One or both text fields are empty. Not possible to contribute </string>
+    <string name="error_no_text_to_read">Ops! There is no text that could be read. Please enter first the text and then try it again. </string>
 
 
     <!-- success messages  -->
