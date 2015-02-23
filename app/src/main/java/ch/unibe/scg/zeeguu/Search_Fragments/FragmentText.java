@@ -27,6 +27,7 @@ import ch.unibe.scg.zeeguu.Core.ConnectionManager;
 import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguu.R;
+import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
 
 /**
  * Created by Pascal on 12/01/15.
@@ -181,9 +182,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     public void onResume() {
         // The activity has become visible (it is now "resumed").
         super.onResume();
-
-        if (flag_translate_from != null || flag_translate_to != null || connectionManager != null)
-            setLanguagesTextFields();
     }
 
     public void onDestroy() {
@@ -203,7 +201,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
-
+            setLanguagesTextFields();
         } else {
             String error = getString(R.string.error_TTS_not_inititalized);
             toast(error);
@@ -228,34 +226,33 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     public void setTranslatedText(String text) {
         edit_text_translated.setText(text);
-        initButton(btn_copy, !edit_text_translated.getText().toString().equals(""));
+        initButton(btn_copy, text.equals(""));
     }
 
 
     //private Methods
 
     private void setLanguagesTextFields() {
-        setFlag(flag_translate_from, textToSpeechNativeLanguage, getInputLanguage());
-        setFlag(flag_translate_to, textToSpeechOtherLanguage, getOutputLanguage());
+        setFlag(flag_translate_from, getInputLanguage());
+        setTTS(textToSpeechNativeLanguage, getInputLanguage());
+
+        setFlag(flag_translate_to, getOutputLanguage());
+        setTTS(textToSpeechOtherLanguage, getOutputLanguage());
     }
 
-    private void setFlag(ImageView flag, TextToSpeech tts, String language) {
+    private void setTTS(TextToSpeech tts, String language) {
         int result = 0;
         switch (language) {
             case "en":
-                flag.setImageResource(R.drawable.flag_uk);
                 result = tts.setLanguage(Locale.UK);
                 break;
             case "de":
-                flag.setImageResource(R.drawable.flag_german);
                 result = tts.setLanguage(Locale.GERMAN);
                 break;
             case "fr":
-                flag.setImageResource(R.drawable.flag_france);
                 result = tts.setLanguage(Locale.FRENCH);
                 break;
             case "it":
-                flag.setImageResource(R.drawable.flag_italy);
                 result = tts.setLanguage(Locale.ITALIAN);
                 break;
         }
@@ -295,9 +292,27 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     private void translate() {
         String input = edit_text_native.getText().toString();
-        connectionManager.getTranslation(input, getInputLanguage(), getOutputLanguage(), this);
+        String wordlistSearch = checkWordlist(input);
+
+        if(wordlistSearch == null)
+            connectionManager.getTranslation(input, getInputLanguage(), getOutputLanguage(), this);
+        else {
+            edit_text_translated.setText(wordlistSearch);
+            activateContribution();
+        }
         closeKeyboard();
     }
+
+    private String checkWordlist(String input) {
+        ArrayList<WordlistItem> wordlist = connectionManager.getWordlistItems();
+        //TODO: make it nice as soon as the database is integrated
+        for(WordlistItem i : wordlist) {
+            if(i.getNativeWord().equals(input) && i.getTranslationLanguage().equals(connectionManager.getLearningLanguage()))
+                return i.getTranslation();
+        }
+        return null;
+    }
+
 
     private void contribute() {
         if (edit_text_native.getText().length() != 0 && edit_text_translated.getText().length() != 0) {

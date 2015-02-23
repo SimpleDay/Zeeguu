@@ -73,7 +73,8 @@ public class ConnectionManager extends Application {
     private static ConnectionManager instance;
     private static ZeeguuActivity activity;
 
-    private static ArrayList<Item> wordList;
+    private static ArrayList<Item> wordlist;
+    private static ArrayList<WordlistItem> wordlistItems;
 
 
     public ConnectionManager(ZeeguuActivity activity) {
@@ -81,7 +82,8 @@ public class ConnectionManager extends Application {
 
         //initialise all variables
         this.activity = activity;
-        this.wordList = new ArrayList<>();
+        this.wordlist = new ArrayList<>();
+        this.wordlistItems = new ArrayList<>();
         this.instance = this;
 
         //try to get the users information
@@ -244,9 +246,11 @@ public class ConnectionManager extends Application {
         return session_id;
     }
 
-    public static ArrayList<Item> getWordList() {
-        return wordList;
+    public static ArrayList<Item> getWordlist() {
+        return wordlist;
     }
+
+    public static ArrayList<WordlistItem> getWordlistItems() { return wordlistItems; }
 
     public String getNativeLanguage() {
         return native_language;
@@ -373,13 +377,15 @@ public class ConnectionManager extends Application {
             @Override
             public void onResponse(JSONArray response) {
                 logging(TAG, response.toString());
-                wordList.clear();
+                wordlist.clear();
+                wordlistItems.clear();
+                wordlist.add(new WordlistItem("","","")); //testing an extra space for the flags
 
                 //ToDo: optimization that not everytime the whole list is sent
                 try {
                     for (int j = 0; j < response.length(); j++) {
                         JSONObject dates = response.getJSONObject(j);
-                        wordList.add(new WordlistHeader(dates.getString("date")));
+                        wordlist.add(new WordlistHeader(dates.getString("date")));
                         JSONArray contribs = dates.getJSONArray("contribs");
                         String title = "";
                         for (int i = 0; i < contribs.length(); i++) {
@@ -387,13 +393,14 @@ public class ConnectionManager extends Application {
                             //add title when a new one is
                             if(!title.equals(translation.getString("title"))) {
                                 title = translation.getString("title");
-                                wordList.add(new WordlistInfoHeader(title));
+                                wordlist.add(new WordlistInfoHeader(title));
                             }
                             //add word as entry to list
                             String nativeWord = translation.getString("from");
                             String translatedWord = translation.getString("to");
                             String context = translation.getString("context");
-                            wordList.add(new WordlistItem(nativeWord, translatedWord, context));
+                            wordlist.add(new WordlistItem(nativeWord, translatedWord, context, native_language, learning_language));
+                            wordlistItems.add(new WordlistItem(nativeWord, translatedWord, context, native_language, learning_language));
                         }
                     }
 

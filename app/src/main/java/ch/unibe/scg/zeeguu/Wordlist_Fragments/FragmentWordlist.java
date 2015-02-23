@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +21,13 @@ import ch.unibe.scg.zeeguu.R;
 public class FragmentWordlist extends ZeeguuFragment {
     private ArrayList<Item> list;
     private WordlistAdapter adapter;
+    private ConnectionManager connectionManager;
+
+    //flags
+    private ImageView flag_translate_from;
+    private ImageView flag_translate_to;
+
+    //TODO: Show tags without context small
 
     public FragmentWordlist() {
     }
@@ -33,8 +41,8 @@ public class FragmentWordlist extends ZeeguuFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         //getWordlist from server and add it to adapter
-        ConnectionManager connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) getActivity());
-        list = connectionManager.getWordList();
+        connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) getActivity());
+        list = connectionManager.getWordlist();
         adapter = new WordlistAdapter(getActivity(), list);
 
         //create listview for wordlist and customize it
@@ -44,6 +52,12 @@ public class FragmentWordlist extends ZeeguuFragment {
         //Set text when listview empty
         TextView emptyText = (TextView) view.findViewById(R.id.wordlist_empty);
         wordlist.setEmptyView(emptyText);
+
+        //set language flags
+        flag_translate_from = (ImageView) view.findViewById(R.id.ic_flag_translate_from);
+        flag_translate_to = (ImageView) view.findViewById(R.id.ic_flag_translate_to);
+
+        updateFlags();
     }
 
     @Override
@@ -53,6 +67,7 @@ public class FragmentWordlist extends ZeeguuFragment {
 
     @Override
     public void refreshLanguages() {
+        updateFlags();
         //implement word filter
     }
 
@@ -60,6 +75,11 @@ public class FragmentWordlist extends ZeeguuFragment {
     public void onResume() {
         // The activity has become visible (it is now "resumed").
         super.onResume();
+    }
+
+    private void updateFlags() {
+        setFlag(flag_translate_from, connectionManager.getNativeLanguage());
+        setFlag(flag_translate_to, connectionManager.getLearningLanguage());
     }
 
 }

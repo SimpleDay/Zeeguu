@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
     android:orientation="vertical"
     android:weightSum="1">
 
+
     <RelativeLayout
         android:id="@+id/wordlist_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" >
+        android:layout_height="match_parent"  >
+
         <TextView
             android:id="@+id/wordlist_empty"
             android:text="@string/wordlist_empty"
@@ -28,8 +27,28 @@
             android:id="@+id/wordlist_listview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:id="@+id/ic_flag_translate_from"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:gravity="top"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="10dp" />
+
+        <ImageView
+            android:id="@+id/ic_flag_translate_to"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:gravity="top"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"/>
+
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

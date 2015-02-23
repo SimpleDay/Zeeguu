@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.google.SlidingTab.SlidingTabLayout;
 
+import java.util.ArrayList;
+
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguu.R;
 
@@ -26,6 +28,10 @@ public class SlidingFragment extends Fragment {
 
     public ZeeguuFragment getActiveFragment() {
         return adapter.get(viewPager.getCurrentItem()).getFragment();
+    }
+
+    public ArrayList<ZeeguuFragment> getAllFragments() {
+        return adapter.getAllFragments();
     }
 
     @Override

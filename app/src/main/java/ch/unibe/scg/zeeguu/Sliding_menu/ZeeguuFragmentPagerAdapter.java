@@ -76,4 +76,12 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
         return tabs.get(position).getTitle();
     }
 
+    public ArrayList<ZeeguuFragment> getAllFragments() {
+        ArrayList<ZeeguuFragment> fragments = new ArrayList<>();
+        for(PagerFragmentTab i : tabs)
+            fragments.add(i.getFragment());
+
+        return fragments;
+    }
+
 }

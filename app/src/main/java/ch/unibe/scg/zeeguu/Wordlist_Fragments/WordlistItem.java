@@ -4,8 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.Locale;
-
 import ch.unibe.scg.zeeguu.R;
 
 /**
@@ -16,8 +14,8 @@ public class WordlistItem implements Item {
     private String nativeWord;
     private String translation;
 
-    private Locale nativeLanguage;
-    private Locale translationLanguage;
+    private String nativeLanguage;
+    private String translationLanguage;
 
     private String context;
 
@@ -29,7 +27,7 @@ public class WordlistItem implements Item {
         this(nativeWord, translation, context, null, null);
     }
 
-    public WordlistItem(String nativeWord, String translation, String context, Locale nativeLanguage, Locale translationLanguage) {
+    public WordlistItem(String nativeWord, String translation, String context, String nativeLanguage, String translationLanguage) {
         this.nativeWord = nativeWord;
         this.translation = translation;
         this.context = context;
@@ -42,11 +40,11 @@ public class WordlistItem implements Item {
         return translation;
     }
 
-    public Locale getNativeLanguage() {
+    public String getNativeLanguage() {
         return nativeLanguage;
     }
 
-    public Locale getTranslationLanguage() {
+    public String getTranslationLanguage() {
         return translationLanguage;
     }
 
@@ -67,11 +65,11 @@ public class WordlistItem implements Item {
         this.translation = translation;
     }
 
-    public void setNativeLanguage(Locale nativeLanguage) {
+    public void setNativeLanguage(String nativeLanguage) {
         this.nativeLanguage = nativeLanguage;
     }
 
-    public void setTranslationLanguage(Locale translationLanguage) {
+    public void setTranslationLanguage(String translationLanguage) {
         this.translationLanguage = translationLanguage;
     }
 
@@ -86,7 +84,8 @@ public class WordlistItem implements Item {
 
     @Override
     public View getView(LayoutInflater inflater, View convertView) {
-        final ViewHolder holder;
+        ViewHolder holder;
+
         if (convertView == null)
         {
             convertView = inflater.inflate(R.layout.listview_item, null);
@@ -104,13 +103,20 @@ public class WordlistItem implements Item {
 
         holder.native_language.setText(nativeWord);
         holder.other_language.setText(translation);
-        holder.context.setText(context);
+
+        //if context, write it into the textview, if not, don't show the textview
+        if(!context.equals("")) {
+            holder.context.setVisibility(View.VISIBLE);
+            holder.context.setText(context);
+        }
+        else
+            holder.context.setVisibility(View.GONE);
 
         return convertView;
     }
 
 
-    static class ViewHolder {
+    class ViewHolder {
         TextView native_language;
         TextView other_language;
         TextView context;

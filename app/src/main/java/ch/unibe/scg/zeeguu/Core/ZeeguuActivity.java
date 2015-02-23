@@ -84,7 +84,8 @@ public class ZeeguuActivity extends FragmentActivity {
     }
 
     public void refreshLanguages() {
-        fragment.getActiveFragment().refreshLanguages();
+        for(ZeeguuFragment f : fragment.getAllFragments())
+            f.refreshLanguages();
     }
 
     @Override

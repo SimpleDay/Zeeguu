@@ -2,7 +2,10 @@ package ch.unibe.scg.zeeguu.Core;
 
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import ch.unibe.scg.zeeguu.R;
 
 /**
  * Zeeguu Application
@@ -19,6 +22,23 @@ public abstract class ZeeguuFragment extends Fragment {
 
     public abstract void actualizeFragment();
     public abstract void refreshLanguages();
+
+    protected void setFlag(ImageView flag, String language) {
+        switch (language) {
+            case "en":
+                flag.setImageResource(R.drawable.flag_uk);
+                break;
+            case "de":
+                flag.setImageResource(R.drawable.flag_german);
+                break;
+            case "fr":
+                flag.setImageResource(R.drawable.flag_france);
+                break;
+            case "it":
+                flag.setImageResource(R.drawable.flag_italy);
+                break;
+        }
+    }
 
     protected void toast(String text) {
         Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
