@@ -48,6 +48,15 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="10dp"/>
 
+        <ImageView
+            android:id="@+id/listview_expand_collapse"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:gravity="top"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/ic_flag_translate_to"
+            android:layout_alignStart="@+id/ic_flag_translate_to" />
+
     </RelativeLayout>
 
 </LinearLayout>

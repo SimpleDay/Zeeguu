@@ -25,6 +25,8 @@ public class FragmentWordlist extends ZeeguuFragment {
     //Listview
     private WordlistExpandableAdapter adapter;
     private ExpandableListView wordlist;
+    private ImageView btnListviewExpandCollapse;
+    private boolean listviewExpanded;
 
     //flags
     private ImageView flag_translate_from;
@@ -60,14 +62,16 @@ public class FragmentWordlist extends ZeeguuFragment {
         flag_translate_from = (ImageView) view.findViewById(R.id.ic_flag_translate_from);
         flag_translate_to = (ImageView) view.findViewById(R.id.ic_flag_translate_to);
 
+        btnListviewExpandCollapse = (ImageView) view.findViewById(R.id.listview_expand_collapse);
+        btnListviewExpandCollapse.setOnClickListener(new ExpandAndCollapseListener());
+
         updateFlags();
     }
 
     @Override
     public void actualizeFragment() {
         adapter.notifyDataSetChanged();
-
-
+        expandWordlist();
     }
 
     @Override
@@ -88,13 +92,29 @@ public class FragmentWordlist extends ZeeguuFragment {
     }
 
     private void expandWordlist() {
-        for(int i = 0; i < adapter.getGroupCount(); i++)
+        for (int i = 0; i < adapter.getGroupCount(); i++)
             wordlist.expandGroup(i);
+
+        listviewExpanded = true;
+        btnListviewExpandCollapse.setImageResource(R.drawable.ic_action_collapse_holo_light);
     }
 
     private void collapseWordlist() {
-        for(int i = 0; i < adapter.getGroupCount(); i++)
+        for (int i = 0; i < adapter.getGroupCount(); i++)
             wordlist.collapseGroup(i);
+
+        listviewExpanded = false;
+        btnListviewExpandCollapse.setImageResource(R.drawable.ic_action_expand_holo_light);
     }
 
+    private class ExpandAndCollapseListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            if(listviewExpanded)
+                collapseWordlist();
+            else
+                expandWordlist();
+        }
+    }
 }

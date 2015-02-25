@@ -39,7 +39,6 @@ import java.util.Map;
 
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.Item;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistInfoHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
@@ -73,7 +72,8 @@ public class ConnectionManager extends Application {
     private static ConnectionManager instance;
     private static ZeeguuActivity activity;
 
-    private static ArrayList<WordlistItem> wordlistItems;
+    private static ArrayList<WordlistHeader> wordlist;
+    private static ArrayList<WordlistItem> wordlistItems; //used to make local search, not nice, is a small hack at the moment //TODO: remove
 
 
     public ConnectionManager(ZeeguuActivity activity) {
@@ -245,7 +245,7 @@ public class ConnectionManager extends Application {
         return session_id;
     }
 
-    public static ArrayList<Item> getWordlist() {
+    public static ArrayList<WordlistHeader> getWordlist() {
         return wordlist;
     }
 
@@ -378,27 +378,29 @@ public class ConnectionManager extends Application {
                 logging(TAG, response.toString());
                 wordlist.clear();
                 wordlistItems.clear();
-                wordlist.add(new WordlistItem("","","")); //testing an extra space for the flags
+                wordlist.add(new WordlistHeader("")); //testing an extra space for the flags
 
                 //ToDo: optimization that not everytime the whole list is sent
                 try {
                     for (int j = 0; j < response.length(); j++) {
                         JSONObject dates = response.getJSONObject(j);
-                        wordlist.add(new WordlistHeader(dates.getString("date")));
+                        WordlistHeader header = new WordlistHeader(dates.getString("date"));
+                        wordlist.add(header);
                         JSONArray contribs = dates.getJSONArray("contribs");
                         String title = "";
+
                         for (int i = 0; i < contribs.length(); i++) {
                             JSONObject translation = contribs.getJSONObject(i);
                             //add title when a new one is
                             if(!title.equals(translation.getString("title"))) {
                                 title = translation.getString("title");
-                                wordlist.add(new WordlistInfoHeader(title));
+                                header.addChild(new WordlistInfoHeader(title));
                             }
                             //add word as entry to list
                             String nativeWord = translation.getString("from");
                             String translatedWord = translation.getString("to");
                             String context = translation.getString("context");
-                            wordlist.add(new WordlistItem(nativeWord, translatedWord, context, native_language, learning_language));
+                            header.addChild(new WordlistItem(nativeWord, translatedWord, context, native_language, learning_language));
                             wordlistItems.add(new WordlistItem(nativeWord, translatedWord, context, native_language, learning_language));
                         }
                     }
