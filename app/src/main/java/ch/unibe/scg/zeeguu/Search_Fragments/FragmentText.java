@@ -307,7 +307,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         ArrayList<WordlistItem> wordlist = connectionManager.getWordlistItems();
         //TODO: make it nice as soon as the database is integrated
         for(WordlistItem i : wordlist) {
-            if(i.getNativeWord().equals(input) && i.getTranslationLanguage().equals(connectionManager.getLearningLanguage()))
+            if(i.getNativeWord().equals(input) && i.getLearningLanguage().equals(connectionManager.getLearningLanguage()))
                 return i.getTranslation();
         }
         return null;

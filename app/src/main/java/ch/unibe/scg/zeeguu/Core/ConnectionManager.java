@@ -378,7 +378,6 @@ public class ConnectionManager extends Application {
                 logging(TAG, response.toString());
                 wordlist.clear();
                 wordlistItems.clear();
-                wordlist.add(new WordlistHeader("")); //testing an extra space for the flags
 
                 //ToDo: optimization that not everytime the whole list is sent
                 try {

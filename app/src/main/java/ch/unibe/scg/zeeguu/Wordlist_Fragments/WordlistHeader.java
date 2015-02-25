@@ -2,6 +2,7 @@ package ch.unibe.scg.zeeguu.Wordlist_Fragments;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -15,10 +16,12 @@ import ch.unibe.scg.zeeguu.R;
 public class WordlistHeader {
     private final String name;
     private ArrayList<Item> children;
+    private boolean groupOpen;
 
     public WordlistHeader(String name) {
         this.name = name;
         this.children = new ArrayList<>();
+        groupOpen = false;
     }
 
     public String getName() {
@@ -45,6 +48,7 @@ public class WordlistHeader {
             holder = new ViewHolder();
 
             holder.header_title = (TextView) convertView.findViewById(R.id.txtHeader);
+            holder.group_status = (ImageView) convertView.findViewById(R.id.ic_action_group_status);
 
             convertView.setTag(holder);
         } else {
@@ -53,6 +57,11 @@ public class WordlistHeader {
 
         holder.header_title.setText(getName());
 
+        if(groupOpen)
+            holder.group_status.setImageResource(R.drawable.ic_action_close_list_holo_light);
+        else
+            holder.group_status.setImageResource(R.drawable.ic_action_open_list_holo_light);
+
         return convertView;
     }
 
@@ -60,7 +69,12 @@ public class WordlistHeader {
         return children.get(childPosition).getView(inflater, convertView);
     }
 
+    public void setGroupOpen(boolean groupOpen) {
+        this.groupOpen = groupOpen;
+    }
+
     static class ViewHolder {
         TextView header_title;
+        ImageView group_status;
     }
 }

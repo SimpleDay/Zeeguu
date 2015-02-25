@@ -59,11 +59,13 @@ public class WordlistExpandableAdapter extends BaseExpandableListAdapter {
     @Override
     public void onGroupCollapsed(int groupPosition) {
         super.onGroupCollapsed(groupPosition);
+        headers.get(groupPosition).setGroupOpen(false);
     }
 
     @Override
     public void onGroupExpanded(int groupPosition) {
         super.onGroupExpanded(groupPosition);
+        headers.get(groupPosition).setGroupOpen(true);
     }
 
     @Override

@@ -58,14 +58,9 @@ public class FragmentWordlist extends ZeeguuFragment {
         TextView emptyText = (TextView) view.findViewById(R.id.wordlist_empty);
         wordlist.setEmptyView(emptyText);
 
-        //set language flags
-        flag_translate_from = (ImageView) view.findViewById(R.id.ic_flag_translate_from);
-        flag_translate_to = (ImageView) view.findViewById(R.id.ic_flag_translate_to);
-
         btnListviewExpandCollapse = (ImageView) view.findViewById(R.id.listview_expand_collapse);
         btnListviewExpandCollapse.setOnClickListener(new ExpandAndCollapseListener());
 
-        updateFlags();
     }
 
     @Override
@@ -76,19 +71,13 @@ public class FragmentWordlist extends ZeeguuFragment {
 
     @Override
     public void refreshLanguages() {
-        updateFlags();
-        //implement word filter
+        //maybe integrate a filter here which only shows words of the selected language pair
     }
 
     @Override
     public void onResume() {
         // The activity has become visible (it is now "resumed").
         super.onResume();
-    }
-
-    private void updateFlags() {
-        setFlag(flag_translate_from, connectionManager.getNativeLanguage());
-        setFlag(flag_translate_to, connectionManager.getLearningLanguage());
     }
 
     private void expandWordlist() {

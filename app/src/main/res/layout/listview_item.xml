@@ -11,6 +11,11 @@
         android:orientation="horizontal"
         android:weightSum="1">
 
+        <ImageView
+            android:id="@+id/flag_native"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp" />
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/wordlist_native_language"
@@ -24,7 +29,7 @@
             android:textStyle="bold" />
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/wordlist_other_language"
+            android:id="@+id/wordlist_learning_language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight=".5"
@@ -33,6 +38,13 @@
             android:textColor="@color/wordlist_text_color"
             android:textSize="15sp"
             android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/flag_learning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp" />
+
 
     </LinearLayout>
 

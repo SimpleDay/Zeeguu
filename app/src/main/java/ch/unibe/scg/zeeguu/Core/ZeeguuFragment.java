@@ -23,7 +23,7 @@ public abstract class ZeeguuFragment extends Fragment {
     public abstract void actualizeFragment();
     public abstract void refreshLanguages();
 
-    protected void setFlag(ImageView flag, String language) {
+    public static void setFlag(ImageView flag, String language) {
         switch (language) {
             case "en":
                 flag.setImageResource(R.drawable.flag_uk);
