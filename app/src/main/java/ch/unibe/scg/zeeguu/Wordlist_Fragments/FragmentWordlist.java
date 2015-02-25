@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,9 +19,12 @@ import ch.unibe.scg.zeeguu.R;
  * Created by Pascal on 12/01/15.
  */
 public class FragmentWordlist extends ZeeguuFragment {
-    private ArrayList<Item> list;
-    private WordlistAdapter adapter;
+    private ArrayList<WordlistHeader> list;
     private ConnectionManager connectionManager;
+
+    //Listview
+    private WordlistExpandableAdapter adapter;
+    private ExpandableListView wordlist;
 
     //flags
     private ImageView flag_translate_from;
@@ -40,13 +43,13 @@ public class FragmentWordlist extends ZeeguuFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        //getWordlist from server and add it to adapter
+        //getWordlist from server
         connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) getActivity());
         list = connectionManager.getWordlist();
-        adapter = new WordlistAdapter(getActivity(), list);
 
         //create listview for wordlist and customize it
-        ListView wordlist = (ListView) view.findViewById(R.id.wordlist_listview);
+        adapter = new WordlistExpandableAdapter(getActivity(), list);
+        wordlist = (ExpandableListView) view.findViewById(R.id.wordlist_listview);
         wordlist.setAdapter(adapter);
 
         //Set text when listview empty
@@ -63,6 +66,8 @@ public class FragmentWordlist extends ZeeguuFragment {
     @Override
     public void actualizeFragment() {
         adapter.notifyDataSetChanged();
+
+
     }
 
     @Override
@@ -80,6 +85,16 @@ public class FragmentWordlist extends ZeeguuFragment {
     private void updateFlags() {
         setFlag(flag_translate_from, connectionManager.getNativeLanguage());
         setFlag(flag_translate_to, connectionManager.getLearningLanguage());
+    }
+
+    private void expandWordlist() {
+        for(int i = 0; i < adapter.getGroupCount(); i++)
+            wordlist.expandGroup(i);
+    }
+
+    private void collapseWordlist() {
+        for(int i = 0; i < adapter.getGroupCount(); i++)
+            wordlist.collapseGroup(i);
     }
 
 }

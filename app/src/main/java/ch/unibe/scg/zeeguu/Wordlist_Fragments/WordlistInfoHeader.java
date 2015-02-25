@@ -13,7 +13,6 @@ import ch.unibe.scg.zeeguu.R;
 public class WordlistInfoHeader implements Item {
     private final String name;
 
-    //TODO: Implement this header, which shows by what device it was searched, into the wordlist -> also new listview_info_header.xml and changes in color.xml and WordlistAdapter
     public WordlistInfoHeader(String name) {
         this.name = name;
     }
@@ -23,23 +22,18 @@ public class WordlistInfoHeader implements Item {
     }
 
     @Override
-    public int getViewType() {
-        return WordlistAdapter.RowType.HEADER_INFO_ITEM.ordinal();
-    }
-
-    @Override
     public View getView(LayoutInflater inflater, View convertView) {
         final ViewHolder holder;
-        if (convertView == null)
+        if (convertView != null && convertView.getTag().getClass() == ViewHolder.class)
         {
+            holder = (ViewHolder) convertView.getTag();
+        } else {
             convertView = inflater.inflate(R.layout.listview_info_header, null);
             holder = new ViewHolder();
 
             holder.header_title = (TextView) convertView.findViewById(R.id.txtInfoHeader);
 
             convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
         }
 
         holder.header_title.setText(name);

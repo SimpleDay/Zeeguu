@@ -4,29 +4,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import ch.unibe.scg.zeeguu.R;
 
 /**
  * Zeeguu Application
  * Created by Pascal on 24/01/15.
  */
-public class WordlistHeader implements Item {
+public class WordlistHeader {
     private final String name;
+    private ArrayList<Item> children;
 
     public WordlistHeader(String name) {
         this.name = name;
+        this.children = new ArrayList<>();
     }
 
     public String getName() {
         return name;
     }
 
-    @Override
-    public int getViewType() {
-        return WordlistAdapter.RowType.HEADER_ITEM.ordinal();
+    public void addChild(Item item) {
+        children.add(item);
     }
 
-    @Override
+    public Item getChild(int position) {
+        return children.get(position);
+    }
+
+    public int getChildrenSize() {
+        return children.size();
+    }
+
     public View getView(LayoutInflater inflater, View convertView) {
         final ViewHolder holder;
         if (convertView == null)
@@ -46,8 +56,11 @@ public class WordlistHeader implements Item {
         return convertView;
     }
 
+    public View getChildView(int childPosition, LayoutInflater inflater, View convertView) {
+        return children.get(childPosition).getView(inflater, convertView);
+    }
+
     static class ViewHolder {
         TextView header_title;
     }
-
 }

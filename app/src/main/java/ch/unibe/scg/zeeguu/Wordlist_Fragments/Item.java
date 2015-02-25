@@ -8,6 +8,5 @@ import android.view.View;
  * Created by Pascal on 24/01/15.
  */
 public interface Item {
-    public int getViewType();
     public View getView(LayoutInflater inflater, View convertView);
 }

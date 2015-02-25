@@ -16,15 +16,11 @@ public class WordlistItem implements Item {
 
     private String nativeLanguage;
     private String translationLanguage;
-
     private String context;
 
-    public WordlistItem(String nativeWord, String translation) {
-        this(nativeWord, translation, "", null, null);
-    }
 
     public WordlistItem(String nativeWord, String translation, String context) {
-        this(nativeWord, translation, context, null, null);
+        this(nativeWord, translation, context, "", "");
     }
 
     public WordlistItem(String nativeWord, String translation, String context, String nativeLanguage, String translationLanguage) {
@@ -78,16 +74,13 @@ public class WordlistItem implements Item {
     }
 
     @Override
-    public int getViewType() {
-        return WordlistAdapter.RowType.LIST_ITEM.ordinal();
-    }
-
-    @Override
     public View getView(LayoutInflater inflater, View convertView) {
         ViewHolder holder;
 
-        if (convertView == null)
+        if (convertView != null && convertView.getTag().getClass() == ViewHolder.class)
         {
+            holder = (ViewHolder) convertView.getTag();
+        } else {
             convertView = inflater.inflate(R.layout.listview_item, null);
 
             holder = new ViewHolder();
@@ -97,8 +90,6 @@ public class WordlistItem implements Item {
             holder.context = (TextView) convertView.findViewById(R.id.wordlist_context);
 
             convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
         }
 
         holder.native_language.setText(nativeWord);
@@ -116,7 +107,7 @@ public class WordlistItem implements Item {
     }
 
 
-    class ViewHolder {
+    static class ViewHolder {
         TextView native_language;
         TextView other_language;
         TextView context;

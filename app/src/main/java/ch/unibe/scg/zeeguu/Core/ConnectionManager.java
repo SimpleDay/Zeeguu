@@ -73,7 +73,6 @@ public class ConnectionManager extends Application {
     private static ConnectionManager instance;
     private static ZeeguuActivity activity;
 
-    private static ArrayList<Item> wordlist;
     private static ArrayList<WordlistItem> wordlistItems;
 
 
