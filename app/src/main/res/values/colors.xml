@@ -27,14 +27,14 @@
     <color name="translation_language_textfield_shadow">#ffdbd9d8</color>
 
     <!-- wordlist tab -->
-    <color name="wordlist_header">#ffff1a0e</color>
+    <color name="wordlist_header">#ffae160c</color>
     <color name="wordlist_header_text_color">#ffffff</color>
     <color name="wordlist_info_header">#ffd7dbd8</color>
     <color name="wordlist_info_header_text_color">#ff0c0c0c</color>
     <color name="wordlist_text_color">#000000</color>
 
     <!-- sign in tab -->
-    <color name="dialog_sign_in_header">#ffff1a0e</color>
+    <color name="dialog_sign_in_header">#ffd6160c</color>
 
 
 

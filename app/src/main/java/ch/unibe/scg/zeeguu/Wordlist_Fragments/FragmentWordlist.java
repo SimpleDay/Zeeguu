@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,7 +28,9 @@ public class FragmentWordlist extends ZeeguuFragment {
     private WordlistExpandableAdapter adapter;
     private ExpandableListView wordlist;
     private ImageView btnListviewExpandCollapse;
+    private ImageView btnListviewRefresh;
     private boolean listviewExpanded;
+    private boolean listviewRefreshing;
 
     //flags
     private ImageView flag_translate_from;
@@ -47,7 +51,9 @@ public class FragmentWordlist extends ZeeguuFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         //getWordlist from server
         connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) getActivity());
+        connectionManager.setWordlistListener(new WordlistListener());
         list = connectionManager.getWordlist();
+        listviewRefreshing = false;
 
         //create listview for wordlist and customize it
         adapter = new WordlistExpandableAdapter(getActivity(), list);
@@ -61,7 +67,12 @@ public class FragmentWordlist extends ZeeguuFragment {
         btnListviewExpandCollapse = (ImageView) view.findViewById(R.id.listview_expand_collapse);
         btnListviewExpandCollapse.setOnClickListener(new ExpandAndCollapseListener());
 
+        btnListviewRefresh = (ImageView) view.findViewById(R.id.listview_refresh);
+        btnListviewRefresh.setOnClickListener(new RefreshListener());
     }
+
+
+    //Public functions
 
     @Override
     public void actualizeFragment() {
@@ -80,6 +91,8 @@ public class FragmentWordlist extends ZeeguuFragment {
         super.onResume();
     }
 
+    //private functions
+
     private void expandWordlist() {
         for (int i = 0; i < adapter.getGroupCount(); i++)
             wordlist.expandGroup(i);
@@ -96,6 +109,40 @@ public class FragmentWordlist extends ZeeguuFragment {
         btnListviewExpandCollapse.setImageResource(R.drawable.ic_action_expand_holo_light);
     }
 
+    private void startRefreshAnimation() {
+
+        if(btnListviewRefresh.getAnimation() == null) {
+            //start animation
+            final int startRotationDegree = 0;
+            final int endRotationDegree = 360;
+            final long miliSecsForOneRotation = 1000;
+
+            RotateAnimation rotateAnimation = new RotateAnimation(startRotationDegree, endRotationDegree,
+                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotateAnimation.setRepeatCount(Animation.INFINITE);
+            rotateAnimation.setDuration(miliSecsForOneRotation);
+
+            btnListviewRefresh.startAnimation(rotateAnimation);
+        }
+    }
+
+
+    //Listener
+
+    public class WordlistListener {
+        public void stopRefreshingAction() {
+            //stop rotation
+            btnListviewRefresh.clearAnimation();
+            listviewRefreshing = false;
+        }
+
+        public void startRefreshingAction() {
+            startRefreshAnimation();
+        }
+    }
+
+    //private classes
+
     private class ExpandAndCollapseListener implements View.OnClickListener {
 
         @Override
@@ -104,6 +151,21 @@ public class FragmentWordlist extends ZeeguuFragment {
                 collapseWordlist();
             else
                 expandWordlist();
+        }
+    }
+
+    private class RefreshListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            if(!listviewRefreshing) {
+                listviewRefreshing = true;
+
+                //start refreshing
+                connectionManager.refreshWordlist();
+            } else {
+                toast(getString(R.string.error_refreshing_already_running));
+            }
         }
     }
 }

@@ -40,6 +40,16 @@
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="10dp" />
 
+        <ImageView
+            android:id="@+id/listview_refresh"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:gravity="top"
+            android:src="@drawable/ic_action_refresh_holo_light"
+            android:layout_alignTop="@+id/listview_expand_collapse"
+            android:layout_toLeftOf="@+id/listview_expand_collapse"
+            android:layout_toStartOf="@+id/listview_expand_collapse" />
+
     </RelativeLayout>
 
 </LinearLayout>

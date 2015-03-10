@@ -226,7 +226,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     public void setTranslatedText(String text) {
         edit_text_translated.setText(text);
-        initButton(btn_copy, text.equals(""));
+        initButton(btn_copy, !text.equals(""));
     }
 
 

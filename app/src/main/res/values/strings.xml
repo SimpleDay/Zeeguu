@@ -98,6 +98,7 @@
     <string name="error_contributed_already">Ops! It was already contributed, it cannot be done twice. </string>
     <string name="error_no_text_to_contribute">Ops! One or both text fields are empty. Not possible to contribute </string>
     <string name="error_no_text_to_read">Ops! There is no text that could be read. Please enter first the text and then try it again. </string>
+    <string name="error_refreshing_already_running">Ops! There is already one refreshing operation running </string>
 
 
     <!-- success messages  -->
@@ -105,6 +106,8 @@
     <string name="successful_language_native_changed">Successfully changed your native language on the server to: </string>
     <string name="successful_language_learning_changed">Successfully changed your learning language on the server to: </string>
     <string name="successful_text_copied">Text has been copied </string>
+    <string name="successful_wordlist_updated">wordlist updated </string>
+    <string name="successful_contribution">Contribution was successful! </string>
 
 
 </resources>

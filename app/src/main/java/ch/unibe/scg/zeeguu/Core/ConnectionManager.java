@@ -39,6 +39,7 @@ import java.util.Map;
 
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
+import ch.unibe.scg.zeeguu.Wordlist_Fragments.FragmentWordlist;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistInfoHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
@@ -46,7 +47,7 @@ import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
 public class ConnectionManager extends Application {
 
     //local variables
-    private final String url = "https://www.zeeguu.unibe.ch/";
+    private final String API_URL = "https://www.zeeguu.unibe.ch/";
 
     private RequestQueue mRequestQueue;
     private ProgressDialog pDialog;
@@ -75,6 +76,7 @@ public class ConnectionManager extends Application {
     private static ArrayList<WordlistHeader> wordlist;
     private static ArrayList<WordlistItem> wordlistItems; //used to make local search, not nice, is a small hack at the moment //TODO: remove
 
+    private FragmentWordlist.WordlistListener wordlistListener;
 
     public ConnectionManager(ZeeguuActivity activity) {
         super();
@@ -164,8 +166,8 @@ public class ConnectionManager extends Application {
         //parse string to URL
         input = Uri.encode(input);
 
-        String url_translation = url + "translate_from_to/" + input + "/" +
-                    inputLanguage + "/" + outputLanguage + "?session=" + session_id;
+        String url_translation = API_URL + "translate_from_to/" + input + "/" +
+                inputLanguage + "/" + outputLanguage + "?session=" + session_id;
         logging(TAG, url_translation);
 
         createLoadingDialog();
@@ -198,7 +200,7 @@ public class ConnectionManager extends Application {
         input = Uri.encode(input);
         translation = Uri.encode(translation);
 
-        String urlContribution = url + "contribute_with_context/" + learning_language + "/" + translation + "/" +
+        String urlContribution = API_URL + "contribute_with_context/" + learning_language + "/" + translation + "/" +
                 native_language + "/" + input + "?session=" + session_id;
         logging(TAG, urlContribution);
 
@@ -211,7 +213,7 @@ public class ConnectionManager extends Application {
             public void onResponse(String response) {
                 fragmentText.activateContribution();
                 logging(TAG, "successful contributed: " + response);
-                toast("Contribution successful");
+                toast(activity.getString(R.string.successful_contribution));
                 getAllWordsFromServer(); //TODO: Not always get the whole list, just add word locally
             }
 
@@ -249,7 +251,9 @@ public class ConnectionManager extends Application {
         return wordlist;
     }
 
-    public static ArrayList<WordlistItem> getWordlistItems() { return wordlistItems; }
+    public static ArrayList<WordlistItem> getWordlistItems() {
+        return wordlistItems;
+    }
 
     public String getNativeLanguage() {
         return native_language;
@@ -269,6 +273,14 @@ public class ConnectionManager extends Application {
         learning_language = learning_language_key;
         activity.refreshLanguages();
         setUserLanguageOnServer(activity.getString(R.string.preference_learning_language), learning_language_key);
+    }
+
+    public void refreshWordlist() {
+        getAllWordsFromServer();
+    }
+
+    public void setWordlistListener(FragmentWordlist.WordlistListener listener) {
+        wordlistListener = listener;
     }
 
 
@@ -319,7 +331,7 @@ public class ConnectionManager extends Application {
         if (!userHasLoginInfo() || !isNetworkAvailable())
             return;
 
-        String url_session_ID = url + "session/" + email;
+        String url_session_ID = API_URL + "session/" + email;
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -338,8 +350,7 @@ public class ConnectionManager extends Application {
                 dismissDialog();
 
                 getAllWordsFromServer();
-                getUserLanguageFromServer("native_language"); //ask for the language when session ID arrived
-                getUserLanguageFromServer("learned_language");
+                getBothUserLanguageFromServer();
             }
         }, new Response.ErrorListener() {
 
@@ -367,10 +378,13 @@ public class ConnectionManager extends Application {
         if (!userHasSessionId() || !isNetworkAvailable())
             return;
 
-        String url_session_ID = url + "contribs_by_day/with_context?session=" + session_id;
+        //show that wordlist is refreshing
+        if(wordlistListener != null)
+            wordlistListener.startRefreshingAction();
+
+        String url_session_ID = API_URL + "contribs_by_day/with_context?session=" + session_id;
         logging(TAG, url_session_ID);
 
-        createLoadingDialog();
         JsonArrayRequest request = new JsonArrayRequest(url_session_ID, new Response.Listener<JSONArray>() {
 
             @Override
@@ -391,7 +405,7 @@ public class ConnectionManager extends Application {
                         for (int i = 0; i < contribs.length(); i++) {
                             JSONObject translation = contribs.getJSONObject(i);
                             //add title when a new one is
-                            if(!title.equals(translation.getString("title"))) {
+                            if (!title.equals(translation.getString("title"))) {
                                 title = translation.getString("title");
                                 header.addChild(new WordlistInfoHeader(title));
                             }
@@ -404,17 +418,23 @@ public class ConnectionManager extends Application {
                         }
                     }
 
+                    toast(activity.getString(R.string.successful_wordlist_updated));
+
                 } catch (JSONException error) {
                     logging(TAG, error.toString());
                 }
-                dismissDialog();
+
+                if(wordlistListener != null)
+                    wordlistListener.stopRefreshingAction();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 toast(activity.getString(R.string.error_server_not_online));
                 logging(TAG, error.toString());
-                dismissDialog();
+
+                if(wordlistListener != null)
+                    wordlistListener.stopRefreshingAction();
             }
         });
 
@@ -426,7 +446,7 @@ public class ConnectionManager extends Application {
         if (!userHasSessionId() || !isNetworkAvailable())
             return;
 
-        String url_language = url + urlTag + "?session=" + session_id;
+        String url_language = API_URL + urlTag + "?session=" + session_id;
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.GET,
@@ -465,11 +485,57 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_language_Req);
     }
 
+    private void getBothUserLanguageFromServer() {
+        if (!userHasSessionId() || !isNetworkAvailable())
+            return;
+
+        String url_language = API_URL + "/learned_language?session=" + session_id;
+
+        createLoadingDialog();
+        JsonArrayRequest request = new JsonArrayRequest(url_language, new Response.Listener<JSONArray>() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+
+                try {
+                    for (int j = 0; j < response.length(); j++) {
+                        JSONObject jsonAnswer = response.getJSONObject(j);
+                        native_language = jsonAnswer.getString("native");
+                        learning_language = jsonAnswer.getString("learned");
+                        logging(TAG, "native: " + jsonAnswer.getString("native") + ", learned: " + jsonAnswer.getString("learned") );
+                        //Save language
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(getString(R.string.preference_native_language), native_language);
+                        editor.putString(getString(R.string.preference_native_language), learning_language);
+                        editor.commit();
+
+                        activity.refreshLanguages();
+                    }
+
+                } catch (JSONException error) {
+                    logging(TAG, error.toString());
+                }
+                dismissDialog();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                toast(activity.getString(R.string.error_server_not_online));
+                logging(TAG, error.toString());
+                dismissDialog();
+            }
+
+        });
+
+
+        this.addToRequestQueue(request, tag_language_Req);
+    }
+
     private void setUserLanguageOnServer(final String urlTag, final String language_key) {
         if (!userHasSessionId() || !isNetworkAvailable())
             return;
 
-        String url_language = url + urlTag + "/" + language_key + "?session=" + session_id;
+        String url_language = API_URL + urlTag + "/" + language_key + "?session=" + session_id;
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST, url_language,
