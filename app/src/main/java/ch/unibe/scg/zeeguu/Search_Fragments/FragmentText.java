@@ -92,6 +92,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         flag_translate_from.setOnClickListener(new LanguageSwitchListener());
         flag_translate_to.setOnClickListener(new LanguageSwitchListener());
 
+        flag_translate_from.setOnLongClickListener(new LanguageChangeListener());
+        flag_translate_to.setOnLongClickListener(new LanguageChangeListener());
+
         //if a text was entered and the screen rotated, the text will be added again here.
         if (savedInstanceState != null) {
             edit_text_native.setText(savedInstanceState.getString(
@@ -393,6 +396,28 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         @Override
         public void onClick(View v) {
             flipTextFields();
+        }
+    }
+
+    private class LanguageChangeListener implements View.OnLongClickListener {
+
+        @Override
+        public boolean onLongClick(View v) {
+
+
+            /*
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle("Choose language");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int item) {
+
+                    // will toast your selection
+                    dialog.dismiss();
+
+                }
+            }).show();*/
+
+            return false;
         }
     }
 

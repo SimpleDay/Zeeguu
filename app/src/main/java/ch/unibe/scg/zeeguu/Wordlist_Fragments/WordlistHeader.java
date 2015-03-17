@@ -55,7 +55,7 @@ public class WordlistHeader {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.header_title.setText(getName());
+        holder.header_title.setText(name);
 
         if(groupOpen)
             holder.group_status.setImageResource(R.drawable.ic_action_close_list_holo_light);
