@@ -109,7 +109,6 @@ public class ZeeguuActivity extends FragmentActivity {
     protected void onResume() {
         // The activity has become visible (it is now "resumed").
         super.onResume();
-        fragment.getActiveFragment().onResume();
     }
 
     @Override

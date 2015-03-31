@@ -54,7 +54,6 @@
     <string name="app_language_dialog">Change the language of the app</string>
     <string name="language_default">en</string>
 
-
     <!-- choosable languages  -->
     <string-array name="languages">
         <item>English</item>
@@ -99,6 +98,7 @@
     <string name="error_no_text_to_contribute">Ops! One or both text fields are empty. Not possible to contribute </string>
     <string name="error_no_text_to_read">Ops! There is no text that could be read. Please enter first the text and then try it again. </string>
     <string name="error_refreshing_already_running">Ops! There is already one refreshing operation running </string>
+    <string name="error_listpreference_array">ListPreference requires an entries array and an entryValues array which are both the same length</string>
 
 
     <!-- success messages  -->

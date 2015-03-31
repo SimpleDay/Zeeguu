@@ -175,30 +175,11 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     public void refreshLanguages() {
         if (switchLanguage) {
             flipTextFields();
+            switchLanguage = false;
         }
 
         setLanguagesTextFields();
         resetTextFields();
-    }
-
-    @Override
-    public void onResume() {
-        // The activity has become visible (it is now "resumed").
-        super.onResume();
-    }
-
-    public void onDestroy() {
-        // Shut down both TTS to prevent memory leaks
-        if (textToSpeechNativeLanguage != null) {
-            textToSpeechNativeLanguage.stop();
-            textToSpeechNativeLanguage.shutdown();
-        }
-
-        if (textToSpeechOtherLanguage != null) {
-            textToSpeechOtherLanguage.stop();
-            textToSpeechOtherLanguage.shutdown();
-        }
-        super.onDestroy();
     }
 
     @Override
@@ -231,6 +212,35 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         edit_text_translated.setText(text);
         initButton(btn_copy, !text.equals(""));
     }
+
+    @Override
+    public void onStop() {
+        // The activity has become visible (it is now "resumed").
+        super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        // The activity has become visible (it is now "resumed").
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        // Shut down both TTS to prevent memory leaks
+        if (textToSpeechNativeLanguage != null) {
+            textToSpeechNativeLanguage.stop();
+            textToSpeechNativeLanguage.shutdown();
+        }
+
+        if (textToSpeechOtherLanguage != null) {
+            textToSpeechOtherLanguage.stop();
+            textToSpeechOtherLanguage.shutdown();
+        }
+        super.onDestroy();
+    }
+
+
 
 
     //private Methods

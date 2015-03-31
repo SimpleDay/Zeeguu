@@ -26,6 +26,7 @@ import com.google.Volley.RequestQueue;
 import com.google.Volley.Response;
 import com.google.Volley.VolleyError;
 import com.google.Volley.toolbox.JsonArrayRequest;
+import com.google.Volley.toolbox.JsonObjectRequest;
 import com.google.Volley.toolbox.StringRequest;
 import com.google.Volley.toolbox.Volley;
 
@@ -96,8 +97,10 @@ public class ConnectionManager extends Application {
             getLoginInformation();
         else if (!userHasSessionId())
             getSessionIdFromServer();
-        else
+        else {
+            getBothUserLanguageFromServer();
             getAllWordsFromServer();
+        }
     }
 
     @Override
@@ -379,7 +382,7 @@ public class ConnectionManager extends Application {
             return;
 
         //show that wordlist is refreshing
-        if(wordlistListener != null)
+        if (wordlistListener != null)
             wordlistListener.startRefreshingAction();
 
         String url_session_ID = API_URL + "contribs_by_day/with_context?session=" + session_id;
@@ -424,7 +427,7 @@ public class ConnectionManager extends Application {
                     logging(TAG, error.toString());
                 }
 
-                if(wordlistListener != null)
+                if (wordlistListener != null)
                     wordlistListener.stopRefreshingAction();
             }
         }, new Response.ErrorListener() {
@@ -433,7 +436,7 @@ public class ConnectionManager extends Application {
                 toast(activity.getString(R.string.error_server_not_online));
                 logging(TAG, error.toString());
 
-                if(wordlistListener != null)
+                if (wordlistListener != null)
                     wordlistListener.stopRefreshingAction();
             }
         });
@@ -489,44 +492,38 @@ public class ConnectionManager extends Application {
         if (!userHasSessionId() || !isNetworkAvailable())
             return;
 
-        String url_language = API_URL + "/learned_language?session=" + session_id;
+        String url_language = API_URL + "/learned_and_native_language?session=" + session_id;
 
         createLoadingDialog();
-        JsonArrayRequest request = new JsonArrayRequest(url_language, new Response.Listener<JSONArray>() {
 
-            @Override
-            public void onResponse(JSONArray response) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,url_language,null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            native_language = response.getString("native");
+                            learning_language = response.getString("learned");
+                            logging(TAG, "native: " + response.getString("native") + ", learned: " + response.getString("learned"));
+                            //Save language
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString(activity.getString(R.string.preference_native_language), native_language);
+                            editor.putString(activity.getString(R.string.preference_learning_language), learning_language);
+                            editor.commit();
 
-                try {
-                    for (int j = 0; j < response.length(); j++) {
-                        JSONObject jsonAnswer = response.getJSONObject(j);
-                        native_language = jsonAnswer.getString("native");
-                        learning_language = jsonAnswer.getString("learned");
-                        logging(TAG, "native: " + jsonAnswer.getString("native") + ", learned: " + jsonAnswer.getString("learned") );
-                        //Save language
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(getString(R.string.preference_native_language), native_language);
-                        editor.putString(getString(R.string.preference_native_language), learning_language);
-                        editor.commit();
+                            activity.refreshLanguages();
 
-                        activity.refreshLanguages();
+                        } catch (JSONException error) {
+                            logging(TAG, error.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        logging(TAG, error.toString());
                     }
 
-                } catch (JSONException error) {
-                    logging(TAG, error.toString());
-                }
-                dismissDialog();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                toast(activity.getString(R.string.error_server_not_online));
-                logging(TAG, error.toString());
-                dismissDialog();
-            }
-
-        });
-
+                });
 
         this.addToRequestQueue(request, tag_language_Req);
     }
