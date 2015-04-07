@@ -6,7 +6,9 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
@@ -49,6 +51,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     private boolean switchLanguage;
     private String switchedText;
+    private SharedPreferences settings;
 
     //buttons
     private ImageView btn_tts_native_language;
@@ -86,7 +89,10 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         //initialize flags
         flag_translate_from = (ImageView) view.findViewById(R.id.ic_flag_translate_from);
         flag_translate_to = (ImageView) view.findViewById(R.id.ic_flag_translate_to);
-        switchLanguage = false;
+
+        //remembers if languages was switched
+        settings = PreferenceManager.getDefaultSharedPreferences(activity);
+        switchLanguage = settings.getBoolean("switchLanguage", false);
 
         //listeners for the flags to switch the flags by pressing on them
         flag_translate_from.setOnClickListener(new LanguageSwitchListener());
@@ -217,6 +223,11 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     public void onStop() {
         // The activity has become visible (it is now "resumed").
         super.onStop();
+
+        //Save if langauge is switched
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("switchLanguage", switchLanguage);
+        editor.commit();
     }
 
     @Override
