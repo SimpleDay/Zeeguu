@@ -427,6 +427,7 @@ public class ConnectionManager extends Application {
                     logging(TAG, error.toString());
                 }
 
+                dismissDialog();
                 if (wordlistListener != null)
                     wordlistListener.stopRefreshingAction();
             }
@@ -435,6 +436,7 @@ public class ConnectionManager extends Application {
             public void onErrorResponse(VolleyError error) {
                 toast(activity.getString(R.string.error_server_not_online));
                 logging(TAG, error.toString());
+                dismissDialog();
 
                 if (wordlistListener != null)
                     wordlistListener.stopRefreshingAction();
@@ -496,7 +498,7 @@ public class ConnectionManager extends Application {
 
         createLoadingDialog();
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,url_language,null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url_language, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -515,12 +517,14 @@ public class ConnectionManager extends Application {
                         } catch (JSONException error) {
                             logging(TAG, error.toString());
                         }
+                        dismissDialog();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         logging(TAG, error.toString());
+                        dismissDialog();
                     }
 
                 });
