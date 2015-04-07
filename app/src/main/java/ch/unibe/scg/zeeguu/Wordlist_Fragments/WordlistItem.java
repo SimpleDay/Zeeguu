@@ -13,37 +13,35 @@ import ch.unibe.scg.zeeguu.R;
  * Created by Pascal on 22/01/15.
  */
 public class WordlistItem implements Item {
-    private String nativeWord;
-    private String translation;
 
-    private String nativeLanguage;
-    private String learningLanguage;
+    int id;
+    private String nativeWord;
+    private String fromLanguage;
+    private String translationedWord;
+    private String toLanguage;
     private String context;
 
 
-    public WordlistItem(String nativeWord, String translation, String context) {
-        this(nativeWord, translation, context, "", "");
-    }
-
-    public WordlistItem(String nativeWord, String translation, String context, String nativeLanguage, String learningLanguage) {
+    public WordlistItem(int id, String nativeWord, String translationedWord, String context, String fromLanguage, String toLanguage) {
+        this.id = id;
         this.nativeWord = nativeWord;
-        this.translation = translation;
+        this.translationedWord = translationedWord;
         this.context = context;
-        this.nativeLanguage = nativeLanguage;
-        this.learningLanguage = learningLanguage;
+        this.fromLanguage = fromLanguage;
+        this.toLanguage = toLanguage;
     }
 
 
-    public String getTranslation() {
-        return translation;
+    public String getTranslationedWord() {
+        return translationedWord;
     }
 
-    public String getNativeLanguage() {
-        return nativeLanguage;
+    public String getFromLanguage() {
+        return fromLanguage;
     }
 
-    public String getLearningLanguage() {
-        return learningLanguage;
+    public String getToLanguage() {
+        return toLanguage;
     }
 
     public String getContext() {
@@ -59,16 +57,16 @@ public class WordlistItem implements Item {
         this.nativeWord = nativeWord;
     }
 
-    public void setTranslation(String translation) {
-        this.translation = translation;
+    public void setTranslationedWord(String translationedWord) {
+        this.translationedWord = translationedWord;
     }
 
-    public void setNativeLanguage(String nativeLanguage) {
-        this.nativeLanguage = nativeLanguage;
+    public void setFromLanguage(String fromLanguage) {
+        this.fromLanguage = fromLanguage;
     }
 
-    public void setLearningLanguage(String learningLanguage) {
-        this.learningLanguage = learningLanguage;
+    public void setToLanguage(String toLanguage) {
+        this.toLanguage = toLanguage;
     }
 
     public void setContext(String context) {
@@ -97,7 +95,7 @@ public class WordlistItem implements Item {
         }
 
         holder.native_language.setText(nativeWord);
-        holder.learning_language.setText(translation);
+        holder.learning_language.setText(translationedWord);
 
         //if context, write it into the textview, if not, don't show the textview
         if(!context.equals("")) {
@@ -107,10 +105,10 @@ public class WordlistItem implements Item {
         else
             holder.context.setVisibility(View.GONE);
 
-        if(nativeLanguage != null)
-            ZeeguuFragment.setFlag(holder.flag_native, nativeLanguage);
-        if(learningLanguage != null)
-            ZeeguuFragment.setFlag(holder.flag_learning, learningLanguage);
+        if(fromLanguage != null)
+            ZeeguuFragment.setFlag(holder.flag_native, fromLanguage);
+        if(toLanguage != null)
+            ZeeguuFragment.setFlag(holder.flag_learning, toLanguage);
 
         return convertView;
     }

@@ -252,8 +252,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
 
-
-
     //private Methods
 
     private void setLanguagesTextFields() {
@@ -318,7 +316,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         String input = edit_text_native.getText().toString();
         String wordlistSearch = checkWordlist(input);
 
-        if(wordlistSearch == null)
+        if (wordlistSearch == null)
             connectionManager.getTranslation(input, getInputLanguage(), getOutputLanguage(), this);
         else {
             edit_text_translated.setText(wordlistSearch);
@@ -330,9 +328,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private String checkWordlist(String input) {
         ArrayList<WordlistItem> wordlist = connectionManager.getWordlistItems();
         //TODO: make it nice as soon as the database is integrated
-        for(WordlistItem i : wordlist) {
-            if(i.getNativeWord().equals(input) && i.getLearningLanguage().equals(connectionManager.getLearningLanguage()))
-                return i.getTranslation();
+        for (WordlistItem i : wordlist) {
+            if (i.getNativeWord().equals(input) && i.getToLanguage().equals(connectionManager.getLearningLanguage()))
+                return i.getTranslationedWord();
         }
         return null;
     }
@@ -344,11 +342,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
                 String input = edit_text_native.getText().toString();
                 String translation = edit_text_translated.getText().toString();
 
-                if (switchLanguage)
-                    connectionManager.contributeToServer(input, translation, this);
-                else
-                    connectionManager.contributeToServer(translation, input, this);
-
+                connectionManager.contributeToServer(input, getInputLanguage(), translation, getOutputLanguage(), this);
                 contributed = true;
             } else {
                 toast(getString(R.string.error_contributed_already));

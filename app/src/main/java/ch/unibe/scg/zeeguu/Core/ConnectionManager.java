@@ -195,7 +195,7 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(strReq, tag_translation_Req);
     }
 
-    public void contributeToServer(String input, String translation, final FragmentText fragmentText) {
+    public void contributeToServer(String input, String inputLangauge, String translation, String translationLanguage, final FragmentText fragmentText) {
         if (!userHasLoginInfo() || input.equals("") || translation.equals("") || !isNetworkAvailable())
             return;
 
@@ -203,8 +203,8 @@ public class ConnectionManager extends Application {
         input = Uri.encode(input);
         translation = Uri.encode(translation);
 
-        String urlContribution = API_URL + "contribute_with_context/" + learning_language + "/" + translation + "/" +
-                native_language + "/" + input + "?session=" + session_id;
+        String urlContribution = API_URL + "contribute_with_context/" + inputLangauge + "/" + input + "/" +
+                translationLanguage + "/" + translation + "?session=" + session_id;
         logging(TAG, urlContribution);
 
         createLoadingDialog();
@@ -413,11 +413,15 @@ public class ConnectionManager extends Application {
                                 header.addChild(new WordlistInfoHeader(title));
                             }
                             //add word as entry to list
+                            int id = translation.getInt("id");
                             String nativeWord = translation.getString("from");
+                            String fromLanguage = translation.getString("from_language");
                             String translatedWord = translation.getString("to");
+                            String toLanguage = translation.getString("to_language");
                             String context = translation.getString("context");
-                            header.addChild(new WordlistItem(nativeWord, translatedWord, context, native_language, learning_language));
-                            wordlistItems.add(new WordlistItem(nativeWord, translatedWord, context, native_language, learning_language));
+
+                            header.addChild(new WordlistItem(id, nativeWord, translatedWord, context, fromLanguage, toLanguage));
+                            wordlistItems.add(new WordlistItem(id, nativeWord, translatedWord, context, fromLanguage, toLanguage));
                         }
                     }
 
@@ -445,6 +449,10 @@ public class ConnectionManager extends Application {
 
 
         this.addToRequestQueue(request, tag_wordlist_Req);
+    }
+
+    private void deleteContributionFromServer(int ContributionId) {
+
     }
 
     private void getUserLanguageFromServer(final String urlTag) {
@@ -584,13 +592,13 @@ public class ConnectionManager extends Application {
         }
     }
 
-    private void toast(String text) {
-        Toast.makeText(activity, text, Toast.LENGTH_LONG).show();
-    }
-
     private void dismissDialog() {
         if (pDialog != null)
             pDialog.dismiss();
+    }
+
+    private void toast(String text) {
+        Toast.makeText(activity, text, Toast.LENGTH_LONG).show();
     }
 
     private boolean isNetworkAvailable() {
