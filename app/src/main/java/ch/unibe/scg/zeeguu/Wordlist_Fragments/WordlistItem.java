@@ -113,6 +113,11 @@ public class WordlistItem implements Item {
         return convertView;
     }
 
+    @Override
+    public long getItemId() {
+        return id;
+    }
+
 
     static class ViewHolder {
         TextView native_language;

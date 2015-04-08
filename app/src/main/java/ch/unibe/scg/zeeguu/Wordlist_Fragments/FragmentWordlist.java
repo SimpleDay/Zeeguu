@@ -1,11 +1,15 @@
 package ch.unibe.scg.zeeguu.Wordlist_Fragments;
 
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,10 +36,6 @@ public class FragmentWordlist extends ZeeguuFragment {
     private boolean listviewExpanded;
     private boolean listviewRefreshing;
 
-    //flags
-    private ImageView flag_translate_from;
-    private ImageView flag_translate_to;
-
     //TODO: Show tags without context small
 
     public FragmentWordlist() {
@@ -59,6 +59,15 @@ public class FragmentWordlist extends ZeeguuFragment {
         adapter = new WordlistExpandableAdapter(getActivity(), list);
         wordlist = (ExpandableListView) view.findViewById(R.id.wordlist_listview);
         wordlist.setAdapter(adapter);
+
+        wordlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if(id != 0)
+                    getActivity().startActionMode(new ActionBarCallBack(id));
+                return true;
+            }
+        });
 
         //Set text when listview empty
         TextView emptyText = (TextView) view.findViewById(R.id.wordlist_empty);
@@ -109,35 +118,36 @@ public class FragmentWordlist extends ZeeguuFragment {
         btnListviewExpandCollapse.setImageResource(R.drawable.ic_action_expand_holo_light);
     }
 
-    private void startRefreshAnimation() {
-
-        if(btnListviewRefresh.getAnimation() == null) {
-            //start animation
-            final int startRotationDegree = 0;
-            final int endRotationDegree = 360;
-            final long miliSecsForOneRotation = 1000;
-
-            RotateAnimation rotateAnimation = new RotateAnimation(startRotationDegree, endRotationDegree,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setRepeatCount(Animation.INFINITE);
-            rotateAnimation.setDuration(miliSecsForOneRotation);
-
-            btnListviewRefresh.startAnimation(rotateAnimation);
-        }
-    }
-
 
     //Listener
 
     public class WordlistListener {
+
+        public void startRefreshingAction() {
+            if(btnListviewRefresh.getAnimation() == null) {
+                //start animation
+                final int startRotationDegree = 0;
+                final int endRotationDegree = 360;
+                final long miliSecsForOneRotation = 1000;
+
+                RotateAnimation rotateAnimation = new RotateAnimation(startRotationDegree, endRotationDegree,
+                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                rotateAnimation.setRepeatCount(Animation.INFINITE);
+                rotateAnimation.setDuration(miliSecsForOneRotation);
+
+                btnListviewRefresh.startAnimation(rotateAnimation);
+            }
+        }
+
         public void stopRefreshingAction() {
             //stop rotation
             btnListviewRefresh.clearAnimation();
             listviewRefreshing = false;
         }
 
-        public void startRefreshingAction() {
-            startRefreshAnimation();
+        public void notifyDataSetChanged() {
+            adapter.notifyDataSetChanged();
+            expandWordlist();
         }
     }
 
@@ -166,6 +176,40 @@ public class FragmentWordlist extends ZeeguuFragment {
             } else {
                 toast(getString(R.string.error_refreshing_already_running));
             }
+        }
+    }
+
+    private class ActionBarCallBack implements ActionMode.Callback {
+        private long id;
+
+        public ActionBarCallBack(long id) {
+            this.id = id;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.item_delete:
+                    logging(TAG, "");
+                    connectionManager.deleteContribution(id);
+                    break;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.menu_wordlist, menu);
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
         }
     }
 }

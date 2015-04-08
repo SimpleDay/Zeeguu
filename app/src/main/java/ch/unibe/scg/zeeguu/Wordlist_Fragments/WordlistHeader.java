@@ -40,6 +40,10 @@ public class WordlistHeader {
         return children.size();
     }
 
+    public long getItemId(int position) {
+        return getChild(position).getItemId();
+    }
+
     public View getView(LayoutInflater inflater, View convertView) {
         final ViewHolder holder;
         if (convertView == null)

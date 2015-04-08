@@ -286,6 +286,11 @@ public class ConnectionManager extends Application {
         wordlistListener = listener;
     }
 
+    public void deleteContribution(long ContributionId) {
+        deleteContributionFromServer(ContributionId);
+        getAllWordsFromServer(); //Get new wordlist TODO: delete word local
+    }
+
 
     //private methods
 
@@ -426,6 +431,8 @@ public class ConnectionManager extends Application {
                     }
 
                     toast(activity.getString(R.string.successful_wordlist_updated));
+                    if (wordlistListener != null)
+                        wordlistListener.notifyDataSetChanged();
 
                 } catch (JSONException error) {
                     logging(TAG, error.toString());
@@ -451,8 +458,41 @@ public class ConnectionManager extends Application {
         this.addToRequestQueue(request, tag_wordlist_Req);
     }
 
-    private void deleteContributionFromServer(int ContributionId) {
+    private void deleteContributionFromServer(long ContributionId) {
+        if (!userHasLoginInfo() || !isNetworkAvailable())
+            return;
 
+        String url_delete_contribution = API_URL + "delete_contribution/" + ContributionId + "?session=" + session_id;
+        logging(TAG, url_delete_contribution);
+
+        createLoadingDialog();
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                url_delete_contribution, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                String answer = response.toString();
+                if(answer.equals("OK")) {
+                    toast(activity.getString(R.string.successful_contribution_deleted));
+                    logging(TAG, activity.getString(R.string.successful_contribution_deleted));
+                } else {
+                    toast(activity.getString(R.string.error_contribution_delete));
+                    logging(TAG, activity.getString(R.string.error_contribution_delete));
+                }
+                dismissDialog();
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                toast(activity.getString(R.string.error_server_not_online));
+                logging(TAG, error.toString());
+                dismissDialog();
+            }
+
+        });
+
+        this.addToRequestQueue(strReq, tag_SessionID_Req);
     }
 
     private void getUserLanguageFromServer(final String urlTag) {

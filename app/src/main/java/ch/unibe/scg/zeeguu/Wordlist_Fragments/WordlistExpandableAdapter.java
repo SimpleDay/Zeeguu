@@ -37,6 +37,12 @@ public class WordlistExpandableAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
+    public long getCombinedChildId(long groupId, long childId) {
+        return getChild((int) groupId, (int) childId).getItemId();
+    }
+
+
+    @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         return headers.get(groupPosition).getChildView(childPosition, inflater, convertView);
     }

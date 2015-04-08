@@ -41,6 +41,11 @@ public class WordlistInfoHeader implements Item {
         return convertView;
     }
 
+    @Override
+    public long getItemId() {
+        return 0;
+    }
+
     static class ViewHolder {
         TextView header_title;
     }

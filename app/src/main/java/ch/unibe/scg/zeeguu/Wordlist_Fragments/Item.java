@@ -9,4 +9,5 @@ import android.view.View;
  */
 public interface Item {
     public View getView(LayoutInflater inflater, View convertView);
+    public long getItemId();
 }
