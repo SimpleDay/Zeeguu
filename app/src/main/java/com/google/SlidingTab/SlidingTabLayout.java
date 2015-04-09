@@ -261,13 +261,16 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 (ZeeguuFragmentPagerAdapter) mViewPager.getAdapter();
 
 
-
+        //ToDo: why is this function called twice when I only switch one tab?? Also TabClickListener!
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             int tabStripChildCount = mTabStrip.getChildCount();
             if ((tabStripChildCount == 0) || (position < 0) || (position >= tabStripChildCount)) {
                 return;
             }
+
+            //Modified to call the old defocus fct of the fragments
+            adapter.getItem(mViewPager.getCurrentItem()).defocusFragment();
 
             mTabStrip.onViewPagerPageChanged(position, positionOffset); //set marked tab
 
@@ -283,7 +286,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
             }
 
             //Modified to call the actualize fct in the fragments
-            adapter.getItem(position).actualizeFragment();
+            adapter.getItem(position).focusFragment();
 
         }
 
@@ -307,7 +310,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 mViewPagerPageChangeListener.onPageSelected(position);
             }
         }
-
     }
 
     private class TabClickListener implements View.OnClickListener {
@@ -316,11 +318,13 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         @Override
         public void onClick(View v) {
+            //Modified to call the old defocus fct of the fragments
+            adapter.getItem(mViewPager.getCurrentItem()).defocusFragment();
+
             for (int i = 0; i < mTabStrip.getChildCount(); i++) {
                 if (v == mTabStrip.getChildAt(i)) {
                     mViewPager.setCurrentItem(i);
-                    //Modified to call the actualize fct in the fragments
-                    adapter.getItem(i).actualizeFragment();
+                    adapter.getItem(i).focusFragment();
                     return;
                 }
             }

@@ -174,7 +174,13 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     @Override
-    public void actualizeFragment() {
+    public void focusFragment() {
+        //Method that gets called when this fragement is focused
+    }
+
+    @Override
+    public void defocusFragment() {
+        //Method that gets called when this fragment is not in focus anymore
     }
 
     @Override
@@ -345,7 +351,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
                 connectionManager.contributeToServer(input, getInputLanguage(), translation, getOutputLanguage(), this);
                 contributed = true;
             } else {
-                toast(getString(R.string.error_contributed_already));
+                toast(getString(R.string.error_contributed_already)); //TODO: press it again when filled deletes contribution
             }
         } else {
             toast(getString(R.string.error_no_text_to_contribute));

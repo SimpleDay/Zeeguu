@@ -20,7 +20,10 @@ public abstract class ZeeguuFragment extends Fragment {
         super();
     }
 
-    public abstract void actualizeFragment();
+    //Functions that get called when a tab gets focused or swiped away
+    public abstract void focusFragment();
+    public abstract void defocusFragment();
+
     public abstract void refreshLanguages();
 
     public static void setFlag(ImageView flag, String language) {

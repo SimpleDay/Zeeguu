@@ -36,6 +36,9 @@ public class FragmentWordlist extends ZeeguuFragment {
     private boolean listviewExpanded;
     private boolean listviewRefreshing;
 
+    private ActionMode mode;
+    private View lastSelectedView;
+
     //TODO: Show tags without context small
 
     public FragmentWordlist() {
@@ -60,11 +63,26 @@ public class FragmentWordlist extends ZeeguuFragment {
         wordlist = (ExpandableListView) view.findViewById(R.id.wordlist_listview);
         wordlist.setAdapter(adapter);
 
+        //open actionbar menu for deleting the items when longclick
         wordlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if(id != 0)
-                    getActivity().startActionMode(new ActionBarCallBack(id));
+                if (id != 0) {
+                    mode = getActivity().startActionMode(new ActionBarCallBack(id));
+                    lastSelectedView = view;
+                    view.setSelected(true);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        //when clicked somewhere else, close the longclick dialog
+        wordlist.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
+                if (lastSelectedView != null && mode != null)
+                    mode.finish();
                 return true;
             }
         });
@@ -84,20 +102,21 @@ public class FragmentWordlist extends ZeeguuFragment {
     //Public functions
 
     @Override
-    public void actualizeFragment() {
+    public void focusFragment() {
         adapter.notifyDataSetChanged();
         expandWordlist();
     }
 
     @Override
-    public void refreshLanguages() {
-        //maybe integrate a filter here which only shows words of the selected language pair
+    public void defocusFragment() {
+        if (mode != null) {
+            mode.finish();
+        }
     }
 
     @Override
-    public void onResume() {
-        // The activity has become visible (it is now "resumed").
-        super.onResume();
+    public void refreshLanguages() {
+        //maybe integrate a filter here which only shows words of the selected language pair
     }
 
     //private functions
@@ -124,7 +143,7 @@ public class FragmentWordlist extends ZeeguuFragment {
     public class WordlistListener {
 
         public void startRefreshingAction() {
-            if(btnListviewRefresh.getAnimation() == null) {
+            if (btnListviewRefresh.getAnimation() == null) {
                 //start animation
                 final int startRotationDegree = 0;
                 final int endRotationDegree = 360;
@@ -157,7 +176,7 @@ public class FragmentWordlist extends ZeeguuFragment {
 
         @Override
         public void onClick(View v) {
-            if(listviewExpanded)
+            if (listviewExpanded)
                 collapseWordlist();
             else
                 expandWordlist();
@@ -168,7 +187,7 @@ public class FragmentWordlist extends ZeeguuFragment {
 
         @Override
         public void onClick(View v) {
-            if(!listviewRefreshing) {
+            if (!listviewRefreshing) {
                 listviewRefreshing = true;
 
                 //start refreshing
@@ -205,6 +224,10 @@ public class FragmentWordlist extends ZeeguuFragment {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            if (lastSelectedView != null) {
+                lastSelectedView.setSelected(false);
+                lastSelectedView = null;
+            }
         }
 
         @Override
