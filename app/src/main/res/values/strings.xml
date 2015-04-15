@@ -19,7 +19,7 @@
     <string name="text_view_translate_button">translate</string>
 
     <!-- sign in dialog strings -->
-    <string name="dialog_title">Sign In</string>
+    <string name="dialog_sign_in_title">Sign In</string>
     <string name="email">E-Mail</string>
     <string name="password">Password</string>
     <string name="button_sign_in">Sign in</string>
@@ -110,7 +110,7 @@
     <string name="successful_wordlist_updated">wordlist updated </string>
     <string name="successful_contribution">Contribution was successful! </string>
     <string name="successful_contribution_deleted">Contribution was deleted successfully! </string>
-    />
+
 
 
 </resources>

@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
@@ -29,6 +30,7 @@ import ch.unibe.scg.zeeguu.Core.ConnectionManager;
 import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguu.R;
+import ch.unibe.scg.zeeguu.Settings.LanguageListPreference;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
 
 /**
@@ -98,8 +100,8 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         flag_translate_from.setOnClickListener(new LanguageSwitchListener());
         flag_translate_to.setOnClickListener(new LanguageSwitchListener());
 
-        flag_translate_from.setOnLongClickListener(new LanguageChangeListener());
-        flag_translate_to.setOnLongClickListener(new LanguageChangeListener());
+        flag_translate_from.setOnLongClickListener(new LanguageChangeListener(true));
+        flag_translate_to.setOnLongClickListener(new LanguageChangeListener(false));
 
         //if a text was entered and the screen rotated, the text will be added again here.
         if (savedInstanceState != null) {
@@ -184,8 +186,8 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     @Override
-    public void refreshLanguages() {
-        if (switchLanguage) {
+    public void refreshLanguages(boolean switchFlagsIfNeeded) {
+        if (switchLanguage && switchFlagsIfNeeded) {
             flipTextFields();
             switchLanguage = false;
         }
@@ -393,7 +395,17 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
 
-    //Listeners
+    ///// Listeners /////
+
+    public class FragmentTextListener {
+
+        public void updateLanguage(String languageCode, boolean nativeLanguage) {
+            if(nativeLanguage)
+                connectionManager.setNativeLanguage(languageCode, false);
+            else
+                connectionManager.setLearningLanguage(languageCode, false);
+        }
+    }
 
     private class TranslationListener implements View.OnClickListener {
         @Override
@@ -421,24 +433,22 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     private class LanguageChangeListener implements View.OnLongClickListener {
+        private boolean nativeLanguage;
+
+        public LanguageChangeListener(boolean nativeLanguage) {
+            this.nativeLanguage = nativeLanguage;
+        }
 
         @Override
         public boolean onLongClick(View v) {
+            LanguageListPreference listPreference = new LanguageListPreference(activity, null);
 
+            Resources res = activity.getResources();
+            listPreference.setEntries(res.getStringArray(R.array.languages));
+            listPreference.setEntryValues(res.getStringArray(R.array.language_keys));
 
-            /*
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle("Choose language");
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int item) {
-
-                    // will toast your selection
-                    dialog.dismiss();
-
-                }
-            }).show();*/
-
-            return false;
+            listPreference.showDialog(activity, switchLanguage? !nativeLanguage : nativeLanguage, new FragmentTextListener());
+            return true;
         }
     }
 
@@ -467,32 +477,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         @Override
         public void onClick(View v) {
             contribute();
-        }
-    }
-
-    private class PasteListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
-            edit_text_native.getText().insert(edit_text_native.getSelectionStart(), item.getText());
-        }
-    }
-
-    private class CopyListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            ClipData clip = ClipData.newPlainText("paste", edit_text_translated.getText().toString());
-            clipboard.setPrimaryClip(clip);
-            //Feedback that text has been copied
-            toast(getString(R.string.successful_text_copied));
-        }
-    }
-
-    private class ClipboardChangeListener implements ClipboardManager.OnPrimaryClipChangedListener {
-        @Override
-        public void onPrimaryClipChanged() {
-            //initialize paste button because something is added to clipboard
-            initButton(btn_paste, true);
         }
     }
 
@@ -537,6 +521,36 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
             initButton(btn_tts_learning_language, !editTextIsEmpty);
         }
     }
+
+
+    ///// Listeners for copy and paste functions /////
+
+    private class PasteListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+            edit_text_native.getText().insert(edit_text_native.getSelectionStart(), item.getText());
+        }
+    }
+
+    private class CopyListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            ClipData clip = ClipData.newPlainText("paste", edit_text_translated.getText().toString());
+            clipboard.setPrimaryClip(clip);
+            //Feedback that text has been copied
+            toast(getString(R.string.successful_text_copied));
+        }
+    }
+
+    private class ClipboardChangeListener implements ClipboardManager.OnPrimaryClipChangedListener {
+        @Override
+        public void onPrimaryClipChanged() {
+            //initialize paste button because something is added to clipboard
+            initButton(btn_paste, true);
+        }
+    }
+
 }
 
 

@@ -6,7 +6,6 @@ package ch.unibe.scg.zeeguu.Core;
  */
 
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -45,7 +44,7 @@ import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistInfoHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
 
-public class ConnectionManager extends Application {
+public class ConnectionManager  {
 
     //local variables
     private final String API_URL = "https://www.zeeguu.unibe.ch/";
@@ -101,11 +100,6 @@ public class ConnectionManager extends Application {
             getBothUserLanguageFromServer();
             getAllWordsFromServer();
         }
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
     }
 
     public static ConnectionManager getConnectionManager(ZeeguuActivity activity) {
@@ -262,9 +256,9 @@ public class ConnectionManager extends Application {
         return native_language;
     }
 
-    public void setNativeLanguage(String native_language_key) {
+    public void setNativeLanguage(String native_language_key, boolean switchFlagsIfNeeded) {
         native_language = native_language_key;
-        activity.refreshLanguages();
+        activity.refreshLanguages(switchFlagsIfNeeded);
         setUserLanguageOnServer(activity.getString(R.string.preference_native_language), native_language_key);
     }
 
@@ -272,9 +266,9 @@ public class ConnectionManager extends Application {
         return learning_language;
     }
 
-    public void setLearningLanguage(String learning_language_key) {
+    public void setLearningLanguage(String learning_language_key, boolean switchFlagsIfNeeded) {
         learning_language = learning_language_key;
-        activity.refreshLanguages();
+        activity.refreshLanguages(switchFlagsIfNeeded);
         setUserLanguageOnServer(activity.getString(R.string.preference_learning_language), learning_language_key);
     }
 
@@ -521,7 +515,7 @@ public class ConnectionManager extends Application {
                 else
                     native_language = language;
 
-                activity.refreshLanguages();
+                activity.refreshLanguages(true);
                 dismissDialog();
 
             }
@@ -560,7 +554,7 @@ public class ConnectionManager extends Application {
                             editor.putString(activity.getString(R.string.preference_learning_language), learning_language);
                             editor.commit();
 
-                            activity.refreshLanguages();
+                            activity.refreshLanguages(true);
 
                         } catch (JSONException error) {
                             logging(TAG, error.toString());

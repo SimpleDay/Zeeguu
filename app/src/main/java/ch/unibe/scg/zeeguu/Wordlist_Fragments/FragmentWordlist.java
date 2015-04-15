@@ -115,7 +115,7 @@ public class FragmentWordlist extends ZeeguuFragment {
     }
 
     @Override
-    public void refreshLanguages() {
+    public void refreshLanguages(boolean switchFlagsIfNeeded) {
         //maybe integrate a filter here which only shows words of the selected language pair
     }
 

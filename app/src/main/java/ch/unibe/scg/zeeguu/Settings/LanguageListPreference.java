@@ -1,5 +1,7 @@
 package ch.unibe.scg.zeeguu.Settings;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
@@ -16,6 +18,7 @@ import android.widget.ImageView;
 
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguu.R;
+import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
 
 /**
  * New Preference List extended from ListPreference that allows to add flags in front of the language names.
@@ -31,6 +34,12 @@ public class LanguageListPreference extends ListPreference {
     private SharedPreferences.Editor editor;
     private String mKey;
     private int selectedEntry = -1;
+
+    //variables for showDialog
+    private Dialog mDialog;
+    private boolean nativeLanguage;
+    private FragmentText.FragmentTextListener fragmentTextListener;
+
 
     public LanguageListPreference(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -60,31 +69,63 @@ public class LanguageListPreference extends ListPreference {
         return super.getValue();
     }
 
+    public void showDialog(Activity activity, boolean nativeLanguage, FragmentText.FragmentTextListener fragmentTextListener) {
+        entries = getEntries();
+        entryValues = getEntryValues();
+        mKey = nativeLanguage? activity.getString(R.string.preference_native_language) : activity.getString(R.string.preference_learning_language);
+        updateSelectedEntry();
+
+        if(iconListPreferenceAdapter == null)
+            iconListPreferenceAdapter = new IconListPreferenceAdapter();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setAdapter(iconListPreferenceAdapter, null);
+        builder.setTitle(nativeLanguage? activity.getString(R.string.native_language_dialog) :
+                activity.getString(R.string.learning_language_dialog));
+
+        this.fragmentTextListener = fragmentTextListener;
+        this.nativeLanguage = nativeLanguage;
+        this.mDialog = builder.show();
+    }
+
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
         super.onPrepareDialogBuilder(builder);
 
         entries = getEntries();
         entryValues = getEntryValues();
+        updateSelectedEntry();
 
         if (entries.length != entryValues.length) {
             throw new IllegalStateException("ListPreference requires an entries array and an entryValues array which are both the same length");
         }
 
+        if(iconListPreferenceAdapter == null)
+            iconListPreferenceAdapter = new IconListPreferenceAdapter();
+        builder.setAdapter(iconListPreferenceAdapter, null);
 
-        iconListPreferenceAdapter = new IconListPreferenceAdapter();
+    }
 
-
+    private void updateSelectedEntry() {
         String selectedValue = prefs.getString(mKey, "");
         for (int i = 0; i < entryValues.length; i++) {
             if (selectedValue.compareTo((String) entryValues[i]) == 0) {
                 selectedEntry = i;
-                break;
+                return;
             }
         }
-        builder.setAdapter(iconListPreferenceAdapter, null);
     }
 
+    protected void closeDialog() {
+        if(mDialog != null) {
+            mDialog.dismiss();
+            mDialog = null;
+        }
+
+        if(getDialog() != null)
+            getDialog().dismiss();
+
+    }
 
     /**
      * Adapter that supports the LanguageListPreference by adding images before the language names
@@ -137,14 +178,17 @@ public class LanguageListPreference extends ListPreference {
                 public void onClick(View v) {
                     v.requestFocus();
 
-                    Dialog mDialog = getDialog();
-                    mDialog.dismiss();
+                    if(mDialog == null) {
+                        LanguageListPreference.this.callChangeListener(entryValues[p]);
+                    } else {
+                        fragmentTextListener.updateLanguage(entryValues[p].toString(), nativeLanguage);
+                    }
 
-                    LanguageListPreference.this.callChangeListener(entryValues[p]);
                     editor.putString(mKey, entryValues[p].toString());
                     selectedEntry = p;
                     editor.commit();
 
+                    closeDialog();
                 }
             });
 

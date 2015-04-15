@@ -49,11 +49,11 @@ public class FragmentSettings extends PreferenceFragment {
 
             else if (key.equals(activity.getString(R.string.preference_learning_language)))
                 connectionManager.setLearningLanguage(sharedPreferences.getString(
-                        activity.getString(R.string.preference_learning_language), "en"));
+                        activity.getString(R.string.preference_learning_language), "en"), true);
 
             else if (key.equals(activity.getString(R.string.preference_native_language)))
                 connectionManager.setNativeLanguage(sharedPreferences.getString(
-                        activity.getString(R.string.preference_native_language), "en"));
+                        activity.getString(R.string.preference_native_language), "en"), true);
 
             else if (key.equals(activity.getString(R.string.preference_email)) ||
                     key.equals(activity.getString(R.string.preference_password)))

@@ -24,7 +24,7 @@ public abstract class ZeeguuFragment extends Fragment {
     public abstract void focusFragment();
     public abstract void defocusFragment();
 
-    public abstract void refreshLanguages();
+    public abstract void refreshLanguages(boolean switchFlagsIfNeeded);
 
     public static void setFlag(ImageView flag, String language) {
         switch (language) {
