@@ -77,8 +77,7 @@ public class WordlistItem implements Item {
     public View getView(LayoutInflater inflater, View convertView) {
         ViewHolder holder;
 
-        if (convertView != null && convertView.getTag().getClass() == ViewHolder.class)
-        {
+        if (convertView != null && convertView.getTag().getClass() == ViewHolder.class) {
             holder = (ViewHolder) convertView.getTag();
         } else {
             convertView = inflater.inflate(R.layout.listview_item, null);
@@ -98,16 +97,15 @@ public class WordlistItem implements Item {
         holder.learning_language.setText(translationedWord);
 
         //if context, write it into the textview, if not, don't show the textview
-        if(!context.equals("")) {
+        if (!context.equals("")) {
             holder.context.setVisibility(View.VISIBLE);
             holder.context.setText(context);
-        }
-        else
+        } else
             holder.context.setVisibility(View.GONE);
 
-        if(fromLanguage != null)
+        if (fromLanguage != null)
             ZeeguuFragment.setFlag(holder.flag_native, fromLanguage);
-        if(toLanguage != null)
+        if (toLanguage != null)
             ZeeguuFragment.setFlag(holder.flag_learning, toLanguage);
 
         return convertView;
@@ -116,6 +114,17 @@ public class WordlistItem implements Item {
     @Override
     public long getItemId() {
         return id;
+    }
+
+    public String isTranslation(String input, String fromLanguage, String toLanguage) {
+        if (fromLanguage.equals(this.fromLanguage) && toLanguage.equals(this.toLanguage)) {
+            if (input.equals(nativeWord))
+                return translationedWord;
+        } else if (fromLanguage.equals(this.toLanguage) && toLanguage.equals(this.fromLanguage)) {
+            if (input.equals(translationedWord))
+                return nativeWord;
+        }
+        return null;
     }
 
 
