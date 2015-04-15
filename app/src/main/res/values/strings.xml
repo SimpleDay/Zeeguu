@@ -35,6 +35,10 @@
     <string name="preference_native_language">native_language</string> <!-- needs to be same tag as server URL -->
     <string name="preference_learning_language">learned_language</string> <!-- needs to be same tag as server URL -->
 
+    <!-- contribution tags  -->
+    <string name="contribution_url_code">android_application</string>
+    <string name="contribution_title">Android Application</string>
+
     <!-- setting strings -->
     <string name="title_activity_settings">Settings</string>
     <string name="category_login_settings">Zeeguu Account information</string>

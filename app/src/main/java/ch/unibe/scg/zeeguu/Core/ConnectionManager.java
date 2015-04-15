@@ -226,8 +226,8 @@ public class ConnectionManager  {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("title", "Android Application");
-                params.put("url", "");
+                params.put("title", activity.getString(R.string.contribution_title));
+                params.put("url", activity.getString(R.string.contribution_url_code));
                 params.put("context", "");
 
                 return params;
