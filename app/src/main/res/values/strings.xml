@@ -115,6 +115,8 @@
     <string name="error_refreshing_already_running">Ops! There is already one refreshing operation running </string>
     <string name="error_listpreference_array">ListPreference requires an entries array and an entryValues array which are both the same length</string>
     <string name="error_contribution_delete">Ops! The contribution could not be deleted. Please try later again.</string>
+    <string name="error_user_logged_out">You have been logged out. Please enter again valid account information in the settings.</string>
+    <string name="error_user_not_logged_in_yet">Please log in first before you use these functions</string>
 
     <!-- success messages  -->
     <string name="successful_login">Successfully logged in</string>
@@ -124,7 +126,6 @@
     <string name="successful_wordlist_updated">wordlist updated </string>
     <string name="successful_contribution">Contribution was successful! </string>
     <string name="successful_contribution_deleted">Contribution was deleted successfully! </string>
-
 
 
 </resources>

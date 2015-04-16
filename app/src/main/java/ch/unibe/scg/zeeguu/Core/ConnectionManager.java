@@ -5,23 +5,13 @@ package ch.unibe.scg.zeeguu.Core;
  * Created by Pascal on 19/01/15.
  */
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.Volley.Request;
@@ -48,15 +38,13 @@ import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistInfoHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
 
-public class ConnectionManager  {
+public class ConnectionManager {
 
     //local variables
     private final String API_URL = "https://www.zeeguu.unibe.ch/";
 
     private RequestQueue mRequestQueue;
     private ProgressDialog pDialog;
-    private AlertDialog aDialog;
-    private SharedPreferences settings;
 
     //TAGS
     private static final boolean debugOn = true;
@@ -67,38 +55,30 @@ public class ConnectionManager  {
     private static final String tag_contribute_Req = "tag_contrib_id";
     private static final String TAG = "tag_logging";
 
-    //user login information
-    private String email;
-    private String pw;
-    private String session_id;
-    private String native_language;
-    private String learning_language;
-
+    private User user;
     private static ConnectionManager instance;
     private static ZeeguuActivity activity;
 
-    private ArrayList<WordlistHeader> wordlist;
-    private ArrayList<WordlistItem> wordlistItems; //used to make local search, not nice, is a small hack at the moment //TODO: remove
 
     private FragmentWordlist.WordlistListener wordlistListener;
+
 
     public ConnectionManager(ZeeguuActivity activity) {
         super();
 
         //initialise all variables
         this.activity = activity;
-        this.wordlist = new ArrayList<>();
-        this.wordlistItems = new ArrayList<>();
+        this.user = new User(activity, this);
+
         this.instance = this;
-        this.settings = PreferenceManager.getDefaultSharedPreferences(activity);
 
         //try to get the users information
-        loadAllUserInformationLocally();
+        user.loadAllUserInformationLocally();
 
         //get the information that is missing from start point
-        if (!userHasLoginInfo())
-            getLoginInformation();
-        else if (!userHasSessionId())
+        if (!user.userHasLoginInfo())
+            user.getLoginInformation();
+        else if (!user.userHasSessionId())
             getSessionIdFromServer();
         else {
             getBothUserLanguageFromServer();
@@ -111,21 +91,6 @@ public class ConnectionManager  {
             return new ConnectionManager(activity);
 
         return instance;
-    }
-
-    public void updateUserInformation() {
-        email = settings.getString(activity.getString(R.string.preference_email), "").toString();
-        pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
-
-        getSessionIdFromServer();
-    }
-
-    public boolean userHasSessionId() {
-        return !session_id.equals("");
-    }
-
-    public boolean userHasLoginInfo() {
-        return !email.equals("") && !pw.equals("");
     }
 
     public static synchronized ConnectionManager getInstance() {
@@ -161,14 +126,17 @@ public class ConnectionManager  {
     }
 
     public void getTranslation(String input, String inputLanguage, String outputLanguage, final FragmentText fragmentText) {
-        if (!userHasLoginInfo() || input.equals("") || input == null || !isNetworkAvailable())
+        if (!user.userHasLoginInfo()) {
+            toast(activity.getString(R.string.error_user_not_logged_in_yet));
+            return;
+        } else if (input.equals("") || input == null || !isNetworkAvailable())
             return;
 
         //parse string to URL
         input = Uri.encode(input);
 
         String url_translation = API_URL + "translate_from_to/" + input + "/" +
-                inputLanguage + "/" + outputLanguage + "?session=" + session_id;
+                inputLanguage + "/" + outputLanguage + "?session=" + user.getSession_id();
         logging(TAG, url_translation);
 
         createLoadingDialog();
@@ -194,7 +162,7 @@ public class ConnectionManager  {
     }
 
     public void contributeToServer(String input, String inputLangauge, String translation, String translationLanguage, final FragmentText fragmentText) {
-        if (!userHasLoginInfo() || input.equals("") || translation.equals("") || !isNetworkAvailable())
+        if (!user.userHasLoginInfo() || input.equals("") || translation.equals("") || !isNetworkAvailable())
             return;
 
         //parse string to URL
@@ -202,7 +170,7 @@ public class ConnectionManager  {
         translation = Uri.encode(translation);
 
         String urlContribution = API_URL + "contribute_with_context/" + inputLangauge + "/" + input + "/" +
-                translationLanguage + "/" + translation + "?session=" + session_id;
+                translationLanguage + "/" + translation + "?session=" + user.getSession_id();
         logging(TAG, urlContribution);
 
         createLoadingDialog();
@@ -245,33 +213,33 @@ public class ConnectionManager  {
     //Getter und setter
 
     public String getSessionId() {
-        return session_id;
+        return user.getSession_id();
     }
 
     public ArrayList<WordlistHeader> getWordlist() {
-        return wordlist;
+        return user.getWordlist();
     }
 
     public ArrayList<WordlistItem> getWordlistItems() {
-        return wordlistItems;
+        return user.getWordlistItems();
     }
 
     public String getNativeLanguage() {
-        return native_language;
+        return user.getNative_language();
     }
 
     public void setNativeLanguage(String native_language_key, boolean switchFlagsIfNeeded) {
-        native_language = native_language_key;
+        user.setNative_language(native_language_key);
         activity.refreshLanguages(switchFlagsIfNeeded);
         setUserLanguageOnServer(activity.getString(R.string.preference_native_language), native_language_key);
     }
 
     public String getLearningLanguage() {
-        return learning_language;
+        return user.getLearning_language();
     }
 
     public void setLearningLanguage(String learning_language_key, boolean switchFlagsIfNeeded) {
-        learning_language = learning_language_key;
+        user.setLearning_language(learning_language_key);
         activity.refreshLanguages(switchFlagsIfNeeded);
         setUserLanguageOnServer(activity.getString(R.string.preference_learning_language), learning_language_key);
     }
@@ -289,119 +257,12 @@ public class ConnectionManager  {
         getAllWordsFromServer(); //Get new wordlist TODO: delete word local
     }
 
-
-    //private methods
-
-    private void loadAllUserInformationLocally() {
-        //only need to load all information once during start up
-        email = settings.getString(activity.getString(R.string.preference_email), "").toString();
-        pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
-        session_id = settings.getString(activity.getString(R.string.preference_user_session_id), "").toString();
-        native_language = settings.getString(activity.getString(R.string.preference_native_language), "").toString();
-        learning_language = settings.getString(activity.getString(R.string.preference_learning_language), "").toString();
+    public void updateUserInformation() {
+        user.updateUserInformation();
+        getSessionIdFromServer();
     }
 
-    private void saveUserInformationLocally(String email, String pw) {
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(activity.getString(R.string.preference_email), email);
-        editor.putString(activity.getString(R.string.preference_password), pw);
-        editor.apply();
-    }
-
-    private void getLoginInformation() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_sign_in, null);
-
-        builder.setView(dialogView)
-                .setPositiveButton(R.string.button_sign_in, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
-                        EditText editTextpw = (EditText) aDialog.findViewById(R.id.dialog_password);
-
-                        email = editTextEmail.getText().toString();
-                        pw = editTextpw.getText().toString();
-
-                        saveUserInformationLocally(email, pw);
-
-                        getSessionIdFromServer();
-                    }
-                })
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-
-        aDialog = builder.create();
-
-        TextView noAccountMessage = (TextView) dialogView.findViewById(R.id.dialog_sign_in_no_account_textview);
-        noAccountMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aDialog.cancel();
-                createNewAccount();
-            }
-        });
-        aDialog.show();
-    }
-
-    public void createNewAccount() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_new_account, null);
-
-        final Spinner spinnerNativeLanguage = (Spinner) dialogView.findViewById(R.id.dialog_new_account_spinner_native);
-        final Spinner spinnerLearningLanguage = (Spinner) dialogView.findViewById(R.id.dialog_new_account_spinner_learning);
-
-        ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(activity,
-                R.array.languages, android.R.layout.simple_spinner_item);
-
-        spinnerNativeLanguage.setAdapter(languageAdapter);
-        spinnerLearningLanguage.setAdapter(languageAdapter);
-
-        builder.setView(dialogView)
-                .setPositiveButton(R.string.button_sign_in, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
-                        EditText editTextpw = (EditText) aDialog.findViewById(R.id.dialog_password);
-
-                        String email = editTextEmail.getText().toString();
-                        String pw = editTextpw.getText().toString();
-
-                        //TODO: add languages to server creation
-                        String nativeLanguage = spinnerNativeLanguage.getSelectedItem().toString();
-                        String learningLanguage = spinnerLearningLanguage.getSelectedItem().toString();
-
-                        createAccountOnServer(email, pw);
-                    }
-                })
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-
-        aDialog = builder.create();
-
-        TextView noAccountMessage = (TextView) dialogView.findViewById(R.id.dialog_sign_in_no_account_textview);
-        noAccountMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aDialog.cancel();
-                getLoginInformation();
-            }
-        });
-        aDialog.show();
-    }
-
-    private void createAccountOnServer(final String email, final String pw) {
+    public void createAccountOnServer(final String email, final String pw) {
         String url_create_account = API_URL + "adduser/" + email;
 
         createLoadingDialog();
@@ -410,10 +271,9 @@ public class ConnectionManager  {
 
             @Override
             public void onResponse(String response) {
-                ConnectionManager.this.email = email;
-                ConnectionManager.this.pw = pw;
-
-                saveUserInformationLocally(email, pw);
+                user.setEmail(email);
+                user.setPw(pw);
+                user.saveUserInformationLocally();
 
                 getSessionIDOutOfResponse(response);
             }
@@ -424,6 +284,7 @@ public class ConnectionManager  {
                 toast(activity.getString(R.string.error_account_not_created));
                 logging(TAG, error.toString());
                 dismissDialog();
+                user.createNewAccount();
             }
         }) {
 
@@ -440,11 +301,16 @@ public class ConnectionManager  {
     }
 
 
-    private void getSessionIdFromServer() {
-        if (!userHasLoginInfo() || !isNetworkAvailable())
+    public void getSessionIdFromServer() {
+        if (!user.userHasLoginInfo()) {
+            user.resetUserInformation();
+            toast(activity.getString(R.string.error_user_login_wrong));
+            return;
+        } else if (!isNetworkAvailable())
             return;
 
-        String url_session_ID = API_URL + "session/" + email;
+        String url_session_ID = API_URL + "session/" + user.getEmail();
+        logging(TAG, url_session_ID);
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -461,13 +327,16 @@ public class ConnectionManager  {
                 toast(activity.getString(R.string.error_user_login_wrong));
                 logging(TAG, error.toString());
                 dismissDialog();
+                //reset user until relogged again successfully
+                user.resetUserInformation();
+                user.getLoginInformation();
             }
         }) {
 
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("password", pw);
+                params.put("password", user.getPw());
                 return params;
             }
         };
@@ -475,16 +344,14 @@ public class ConnectionManager  {
         this.addToRequestQueue(strReq, tag_SessionID_Req);
     }
 
+    //// private methods ////
 
     private void getSessionIDOutOfResponse(String response) {
-        session_id = response.toString();
-        toast(activity.getString(R.string.successful_login));
-        logging(TAG, session_id);
+        user.setSession_id(response.toString());
+        user.saveUserInformationLocally();
 
-        //Save session ID
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(activity.getString(R.string.preference_user_session_id), session_id);
-        editor.apply();
+        toast(activity.getString(R.string.successful_login));
+        logging(TAG, user.getSession_id());
         dismissDialog();
 
         getAllWordsFromServer();
@@ -492,14 +359,14 @@ public class ConnectionManager  {
     }
 
     private void getAllWordsFromServer() {
-        if (!userHasSessionId() || !isNetworkAvailable())
+        if (!user.userHasSessionId() || !isNetworkAvailable())
             return;
 
         //show that wordlist is refreshing
         if (wordlistListener != null)
             wordlistListener.startRefreshingAction();
 
-        String url_session_ID = API_URL + "contribs_by_day/with_context?session=" + session_id;
+        String url_session_ID = API_URL + "contribs_by_day/with_context?session=" + user.getSession_id();
         logging(TAG, url_session_ID);
 
         JsonArrayRequest request = new JsonArrayRequest(url_session_ID, new Response.Listener<JSONArray>() {
@@ -507,6 +374,8 @@ public class ConnectionManager  {
             @Override
             public void onResponse(JSONArray response) {
                 logging(TAG, response.toString());
+                ArrayList<WordlistHeader> wordlist = user.getWordlist();
+                ArrayList<WordlistItem> wordlistItems = user.getWordlistItems();
                 wordlist.clear();
                 wordlistItems.clear();
 
@@ -539,17 +408,19 @@ public class ConnectionManager  {
                         }
                     }
 
-                    toast(activity.getString(R.string.successful_wordlist_updated));
-                    if (wordlistListener != null)
-                        wordlistListener.notifyDataSetChanged();
+                    user.setWordlist(wordlist);
+                    user.setWordlistItems(wordlistItems);
 
+                    toast(activity.getString(R.string.successful_wordlist_updated));
                 } catch (JSONException error) {
                     logging(TAG, error.toString());
                 }
 
                 dismissDialog();
-                if (wordlistListener != null)
+                if (wordlistListener != null) {
+                    wordlistListener.notifyDataSetChanged();
                     wordlistListener.stopRefreshingAction();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -568,10 +439,10 @@ public class ConnectionManager  {
     }
 
     private void deleteContributionFromServer(long ContributionId) {
-        if (!userHasLoginInfo() || !isNetworkAvailable())
+        if (!user.userHasLoginInfo() || !isNetworkAvailable())
             return;
 
-        String url_delete_contribution = API_URL + "delete_contribution/" + ContributionId + "?session=" + session_id;
+        String url_delete_contribution = API_URL + "delete_contribution/" + ContributionId + "?session=" + user.getSession_id();
         logging(TAG, url_delete_contribution);
 
         createLoadingDialog();
@@ -581,7 +452,7 @@ public class ConnectionManager  {
             @Override
             public void onResponse(String response) {
                 String answer = response.toString();
-                if(answer.equals("OK")) {
+                if (answer.equals("OK")) {
                     toast(activity.getString(R.string.successful_contribution_deleted));
                     logging(TAG, activity.getString(R.string.successful_contribution_deleted));
                 } else {
@@ -604,54 +475,11 @@ public class ConnectionManager  {
         this.addToRequestQueue(strReq, tag_SessionID_Req);
     }
 
-    private void getUserLanguageFromServer(final String urlTag) {
-        if (!userHasSessionId() || !isNetworkAvailable())
-            return;
-
-        String url_language = API_URL + urlTag + "?session=" + session_id;
-
-        createLoadingDialog();
-        StringRequest strReq = new StringRequest(Request.Method.GET,
-                url_language, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                String language = response.toString();
-                logging(TAG, urlTag + ": " + language);
-
-                //Save language
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(urlTag, language);
-                editor.apply();
-
-                //save it to the variable
-                if (urlTag.equals("learned_language"))
-                    learning_language = language;
-                else
-                    native_language = language;
-
-                activity.refreshLanguages(true);
-                dismissDialog();
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                toast(activity.getString(R.string.error_server_not_online));
-                logging(TAG, error.toString());
-                dismissDialog();
-            }
-        });
-
-        this.addToRequestQueue(strReq, tag_language_Req);
-    }
-
     private void getBothUserLanguageFromServer() {
-        if (!userHasSessionId() || !isNetworkAvailable())
+        if (!user.userHasSessionId() || !isNetworkAvailable())
             return;
 
-        String url_language = API_URL + "/learned_and_native_language?session=" + session_id;
+        String url_language = API_URL + "/learned_and_native_language?session=" + user.getSession_id();
 
         createLoadingDialog();
 
@@ -660,14 +488,11 @@ public class ConnectionManager  {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            native_language = response.getString("native");
-                            learning_language = response.getString("learned");
+                            user.setNative_language(response.getString("native"));
+                            user.setLearning_language(response.getString("learned"));
+                            user.saveUserLanguagesLocally();
                             logging(TAG, "native: " + response.getString("native") + ", learned: " + response.getString("learned"));
-                            //Save language
-                            SharedPreferences.Editor editor = settings.edit();
-                            editor.putString(activity.getString(R.string.preference_native_language), native_language);
-                            editor.putString(activity.getString(R.string.preference_learning_language), learning_language);
-                            editor.apply();
+
 
                             activity.refreshLanguages(true);
 
@@ -690,10 +515,10 @@ public class ConnectionManager  {
     }
 
     private void setUserLanguageOnServer(final String urlTag, final String language_key) {
-        if (!userHasSessionId() || !isNetworkAvailable())
+        if (!user.userHasSessionId() || !isNetworkAvailable())
             return;
 
-        String url_language = API_URL + urlTag + "/" + language_key + "?session=" + session_id;
+        String url_language = API_URL + urlTag + "/" + language_key + "?session=" + user.getSession_id();
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST, url_language,
