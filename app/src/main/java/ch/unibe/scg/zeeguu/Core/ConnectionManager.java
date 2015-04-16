@@ -17,7 +17,11 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.Volley.Request;
@@ -73,8 +77,8 @@ public class ConnectionManager  {
     private static ConnectionManager instance;
     private static ZeeguuActivity activity;
 
-    private static ArrayList<WordlistHeader> wordlist;
-    private static ArrayList<WordlistItem> wordlistItems; //used to make local search, not nice, is a small hack at the moment //TODO: remove
+    private ArrayList<WordlistHeader> wordlist;
+    private ArrayList<WordlistItem> wordlistItems; //used to make local search, not nice, is a small hack at the moment //TODO: remove
 
     private FragmentWordlist.WordlistListener wordlistListener;
 
@@ -86,10 +90,10 @@ public class ConnectionManager  {
         this.wordlist = new ArrayList<>();
         this.wordlistItems = new ArrayList<>();
         this.instance = this;
+        this.settings = PreferenceManager.getDefaultSharedPreferences(activity);
 
         //try to get the users information
-        settings = PreferenceManager.getDefaultSharedPreferences(activity);
-        loadAllUserInformation();
+        loadAllUserInformationLocally();
 
         //get the information that is missing from start point
         if (!userHasLoginInfo())
@@ -244,11 +248,11 @@ public class ConnectionManager  {
         return session_id;
     }
 
-    public static ArrayList<WordlistHeader> getWordlist() {
+    public ArrayList<WordlistHeader> getWordlist() {
         return wordlist;
     }
 
-    public static ArrayList<WordlistItem> getWordlistItems() {
+    public ArrayList<WordlistItem> getWordlistItems() {
         return wordlistItems;
     }
 
@@ -288,7 +292,7 @@ public class ConnectionManager  {
 
     //private methods
 
-    private void loadAllUserInformation() {
+    private void loadAllUserInformationLocally() {
         //only need to load all information once during start up
         email = settings.getString(activity.getString(R.string.preference_email), "").toString();
         pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
@@ -297,11 +301,20 @@ public class ConnectionManager  {
         learning_language = settings.getString(activity.getString(R.string.preference_learning_language), "").toString();
     }
 
+    private void saveUserInformationLocally(String email, String pw) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(activity.getString(R.string.preference_email), email);
+        editor.putString(activity.getString(R.string.preference_password), pw);
+        editor.apply();
+    }
+
     private void getLoginInformation() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        LayoutInflater inflater = activity.getLayoutInflater();
 
-        builder.setView(inflater.inflate(R.layout.dialog_sign_in, null))
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_sign_in, null);
+
+        builder.setView(dialogView)
                 .setPositiveButton(R.string.button_sign_in, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -311,10 +324,7 @@ public class ConnectionManager  {
                         email = editTextEmail.getText().toString();
                         pw = editTextpw.getText().toString();
 
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(activity.getString(R.string.preference_email), email);
-                        editor.putString(activity.getString(R.string.preference_password), pw);
-                        editor.commit();
+                        saveUserInformationLocally(email, pw);
 
                         getSessionIdFromServer();
                     }
@@ -325,9 +335,110 @@ public class ConnectionManager  {
                         dialog.cancel();
                     }
                 });
+
         aDialog = builder.create();
+
+        TextView noAccountMessage = (TextView) dialogView.findViewById(R.id.dialog_sign_in_no_account_textview);
+        noAccountMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                aDialog.cancel();
+                createNewAccount();
+            }
+        });
         aDialog.show();
     }
+
+    public void createNewAccount() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_new_account, null);
+
+        final Spinner spinnerNativeLanguage = (Spinner) dialogView.findViewById(R.id.dialog_new_account_spinner_native);
+        final Spinner spinnerLearningLanguage = (Spinner) dialogView.findViewById(R.id.dialog_new_account_spinner_learning);
+
+        ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(activity,
+                R.array.languages, android.R.layout.simple_spinner_item);
+
+        spinnerNativeLanguage.setAdapter(languageAdapter);
+        spinnerLearningLanguage.setAdapter(languageAdapter);
+
+        builder.setView(dialogView)
+                .setPositiveButton(R.string.button_sign_in, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
+                        EditText editTextpw = (EditText) aDialog.findViewById(R.id.dialog_password);
+
+                        String email = editTextEmail.getText().toString();
+                        String pw = editTextpw.getText().toString();
+
+                        //TODO: add languages to server creation
+                        String nativeLanguage = spinnerNativeLanguage.getSelectedItem().toString();
+                        String learningLanguage = spinnerLearningLanguage.getSelectedItem().toString();
+
+                        createAccountOnServer(email, pw);
+                    }
+                })
+                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        aDialog = builder.create();
+
+        TextView noAccountMessage = (TextView) dialogView.findViewById(R.id.dialog_sign_in_no_account_textview);
+        noAccountMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                aDialog.cancel();
+                getLoginInformation();
+            }
+        });
+        aDialog.show();
+    }
+
+    private void createAccountOnServer(final String email, final String pw) {
+        String url_create_account = API_URL + "adduser/" + email;
+
+        createLoadingDialog();
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                url_create_account, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                ConnectionManager.this.email = email;
+                ConnectionManager.this.pw = pw;
+
+                saveUserInformationLocally(email, pw);
+
+                getSessionIDOutOfResponse(response);
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                toast(activity.getString(R.string.error_account_not_created));
+                logging(TAG, error.toString());
+                dismissDialog();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("password", pw);
+                return params;
+            }
+        };
+
+        this.addToRequestQueue(strReq, tag_SessionID_Req);
+
+    }
+
 
     private void getSessionIdFromServer() {
         if (!userHasLoginInfo() || !isNetworkAvailable())
@@ -341,18 +452,7 @@ public class ConnectionManager  {
 
             @Override
             public void onResponse(String response) {
-                session_id = response.toString();
-                toast(activity.getString(R.string.successful_login));
-                logging(TAG, session_id);
-
-                //Save session ID
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(activity.getString(R.string.preference_user_session_id), session_id);
-                editor.commit();
-                dismissDialog();
-
-                getAllWordsFromServer();
-                getBothUserLanguageFromServer();
+                getSessionIDOutOfResponse(response);
             }
         }, new Response.ErrorListener() {
 
@@ -368,12 +468,27 @@ public class ConnectionManager  {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("password", pw);
-
                 return params;
             }
         };
 
         this.addToRequestQueue(strReq, tag_SessionID_Req);
+    }
+
+
+    private void getSessionIDOutOfResponse(String response) {
+        session_id = response.toString();
+        toast(activity.getString(R.string.successful_login));
+        logging(TAG, session_id);
+
+        //Save session ID
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(activity.getString(R.string.preference_user_session_id), session_id);
+        editor.apply();
+        dismissDialog();
+
+        getAllWordsFromServer();
+        getBothUserLanguageFromServer();
     }
 
     private void getAllWordsFromServer() {
@@ -507,7 +622,7 @@ public class ConnectionManager  {
                 //Save language
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(urlTag, language);
-                editor.commit();
+                editor.apply();
 
                 //save it to the variable
                 if (urlTag.equals("learned_language"))
@@ -552,7 +667,7 @@ public class ConnectionManager  {
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString(activity.getString(R.string.preference_native_language), native_language);
                             editor.putString(activity.getString(R.string.preference_learning_language), learning_language);
-                            editor.commit();
+                            editor.apply();
 
                             activity.refreshLanguages(true);
 

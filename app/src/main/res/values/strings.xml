@@ -25,6 +25,15 @@
     <string name="button_sign_in">Sign in</string>
     <string name="button_cancel">Cancel</string>
     <string name="dialog_sign_in_message">You did not sign in yet, please do so to be able to connect to the server.</string>
+    <string name="dialog_sign_in_no_account_message">No account yet? \n Click here!</string>
+
+    <string name="enter_name">Name</string>
+    <string name="dialog_new_account_title">New account</string>
+    <string name="dialog_new_account_message">You are going to create a new account, please enter the following information</string>
+    <string name="dialog_new_account_sign_in_message">Have an account? \n Sign in here!</string>
+    <string name="dialog_new_account_native_spinner">What is your native language?</string>
+    <string name="dialog_new_account_learning_spinner">Which language do you want to improve?</string>
+
 
     <!-- preference tags  -->
     <string name="preference_email">EMAIL</string>
@@ -96,6 +105,7 @@
     <string name="error_change_learning_language_on_server_not_possible">Ops! There occurred an error, we could not change your learning language on the server. Do you have connection to the internet?</string>
     <string name="error_no_internet_connection">Ops! Your device is not connected to the internet</string>
     <string name="error_user_login_wrong">Ops! Your username or password is not correct</string>
+    <string name="error_account_not_created">Ops! Account could not be created, please try later again..</string>
     <string name="error_server_not_online">Ops! The server is not responding, please try it later..</string>
     <string name="error_language_speaking_not_supported">Ops! The language you choose cannot be read</string>
     <string name="error_TTS_not_inititalized">Ops! There occurred a problem with the text to speech software. </string>
