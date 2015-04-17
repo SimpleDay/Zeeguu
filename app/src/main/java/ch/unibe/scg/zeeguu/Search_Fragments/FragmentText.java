@@ -346,7 +346,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
 
     private void contribute() {
-        if (edit_text_native.getText().length() != 0 && edit_text_translated.getText().length() != 0) {
+        if(!connectionManager.loggedIn())
+            toast(getString(R.string.error_user_not_logged_in_yet));
+        else if (edit_text_native.getText().length() != 0 && edit_text_translated.getText().length() != 0) {
             if (!contributed) {
                 String input = edit_text_native.getText().toString();
                 String translation = edit_text_translated.getText().toString();

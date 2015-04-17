@@ -125,40 +125,30 @@ public class ConnectionManager {
         }
     }
 
-    public void getTranslation(String input, String inputLanguage, String outputLanguage, final FragmentText fragmentText) {
-        if (!user.userHasLoginInfo()) {
-            toast(activity.getString(R.string.error_user_not_logged_in_yet));
-            return;
-        } else if (input.equals("") || input == null || !isNetworkAvailable())
-            return;
+    public boolean loggedIn() {
+        return user.userHasSessionId();
+    }
 
-        //parse string to URL
-        input = Uri.encode(input);
+    public void loginout() {
+        if (user.userHasSessionId()) {
+            user.logoutUser();
+        } else {
+            user.getLoginInformation();
+        }
+    }
 
-        String url_translation = API_URL + "translate_from_to/" + input + "/" +
-                inputLanguage + "/" + outputLanguage + "?session=" + user.getSession_id();
-        logging(TAG, url_translation);
+    public void refreshWordlist() {
+        getAllWordsFromServer();
+    }
 
-        createLoadingDialog();
+    public void notifyWordlistChange() {
+        if (wordlistListener != null)
+            wordlistListener.notifyDataSetChanged();
+    }
 
-        StringRequest strReq = new StringRequest(Request.Method.GET,
-                url_translation, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                fragmentText.setTranslatedText(response.toString());
-            }
-
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                logging(TAG, error.toString());
-                dismissDialog();
-            }
-        });
-
-        this.addToRequestQueue(strReq, tag_translation_Req);
+    public void deleteContribution(long ContributionId) {
+        deleteContributionFromServer(ContributionId);
+        getAllWordsFromServer(); //Get new wordlist TODO: delete word local
     }
 
     public void contributeToServer(String input, String inputLangauge, String translation, String translationLanguage, final FragmentText fragmentText) {
@@ -209,59 +199,6 @@ public class ConnectionManager {
         this.addToRequestQueue(strReq, tag_contribute_Req);
     }
 
-
-    //Getter und setter
-
-    public String getSessionId() {
-        return user.getSession_id();
-    }
-
-    public ArrayList<WordlistHeader> getWordlist() {
-        return user.getWordlist();
-    }
-
-    public ArrayList<WordlistItem> getWordlistItems() {
-        return user.getWordlistItems();
-    }
-
-    public String getNativeLanguage() {
-        return user.getNative_language();
-    }
-
-    public void setNativeLanguage(String native_language_key, boolean switchFlagsIfNeeded) {
-        user.setNative_language(native_language_key);
-        activity.refreshLanguages(switchFlagsIfNeeded);
-        setUserLanguageOnServer(activity.getString(R.string.preference_native_language), native_language_key);
-    }
-
-    public String getLearningLanguage() {
-        return user.getLearning_language();
-    }
-
-    public void setLearningLanguage(String learning_language_key, boolean switchFlagsIfNeeded) {
-        user.setLearning_language(learning_language_key);
-        activity.refreshLanguages(switchFlagsIfNeeded);
-        setUserLanguageOnServer(activity.getString(R.string.preference_learning_language), learning_language_key);
-    }
-
-    public void refreshWordlist() {
-        getAllWordsFromServer();
-    }
-
-    public void setWordlistListener(FragmentWordlist.WordlistListener listener) {
-        wordlistListener = listener;
-    }
-
-    public void deleteContribution(long ContributionId) {
-        deleteContributionFromServer(ContributionId);
-        getAllWordsFromServer(); //Get new wordlist TODO: delete word local
-    }
-
-    public void updateUserInformation() {
-        user.updateUserInformation();
-        getSessionIdFromServer();
-    }
-
     public void createAccountOnServer(final String email, final String pw) {
         String url_create_account = API_URL + "adduser/" + email;
 
@@ -300,10 +237,9 @@ public class ConnectionManager {
 
     }
 
-
     public void getSessionIdFromServer() {
         if (!user.userHasLoginInfo()) {
-            user.resetUserInformation();
+            user.logoutUser();
             toast(activity.getString(R.string.error_user_login_wrong));
             return;
         } else if (!isNetworkAvailable())
@@ -328,8 +264,9 @@ public class ConnectionManager {
                 logging(TAG, error.toString());
                 dismissDialog();
                 //reset user until relogged again successfully
-                user.resetUserInformation();
+                user.logoutUser();
                 user.getLoginInformation();
+                activity.updateMenuTitles();
             }
         }) {
 
@@ -344,6 +281,86 @@ public class ConnectionManager {
         this.addToRequestQueue(strReq, tag_SessionID_Req);
     }
 
+    public void getTranslation(String input, String inputLanguage, String outputLanguage, final FragmentText fragmentText) {
+        if (!user.userHasLoginInfo()) {
+            toast(activity.getString(R.string.error_user_not_logged_in_yet));
+            return;
+        } else if (input.equals("") || input == null || !isNetworkAvailable())
+            return;
+
+        //parse string to URL
+        input = Uri.encode(input);
+
+        String url_translation = API_URL + "translate_from_to/" + input + "/" +
+                inputLanguage + "/" + outputLanguage + "?session=" + user.getSession_id();
+        logging(TAG, url_translation);
+
+        createLoadingDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.GET,
+                url_translation, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                fragmentText.setTranslatedText(response.toString());
+            }
+
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                logging(TAG, error.toString());
+                dismissDialog();
+            }
+        });
+
+        this.addToRequestQueue(strReq, tag_translation_Req);
+    }
+
+
+    //Getter und setter
+
+    public String getSessionId() {
+        return user.getSession_id();
+    }
+
+    public String getEmail() {
+        return user.getEmail();
+    }
+
+    public ArrayList<WordlistHeader> getWordlist() {
+        return user.getWordlist();
+    }
+
+    public ArrayList<WordlistItem> getWordlistItems() {
+        return user.getWordlistItems();
+    }
+
+    public String getNativeLanguage() {
+        return user.getNative_language();
+    }
+
+    public void setNativeLanguage(String native_language_key, boolean switchFlagsIfNeeded) {
+        user.setNative_language(native_language_key);
+        activity.refreshLanguages(switchFlagsIfNeeded);
+        setUserLanguageOnServer(activity.getString(R.string.preference_native_language), native_language_key);
+    }
+
+    public String getLearningLanguage() {
+        return user.getLearning_language();
+    }
+
+    public void setLearningLanguage(String learning_language_key, boolean switchFlagsIfNeeded) {
+        user.setLearning_language(learning_language_key);
+        activity.refreshLanguages(switchFlagsIfNeeded);
+        setUserLanguageOnServer(activity.getString(R.string.preference_learning_language), learning_language_key);
+    }
+
+    public void setWordlistListener(FragmentWordlist.WordlistListener listener) {
+        wordlistListener = listener;
+    }
+
+
     //// private methods ////
 
     private void getSessionIDOutOfResponse(String response) {
@@ -354,6 +371,7 @@ public class ConnectionManager {
         logging(TAG, user.getSession_id());
         dismissDialog();
 
+        activity.updateMenuTitles();
         getAllWordsFromServer();
         getBothUserLanguageFromServer();
     }

@@ -1,6 +1,5 @@
 package ch.unibe.scg.zeeguu.Core;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -36,7 +35,7 @@ public class User {
     private ArrayList<WordlistItem> wordlistItems; //used to make local search, not nice, is a small hack at the moment //TODO: remove
 
 
-    private Activity activity;
+    private ZeeguuActivity activity;
     private ConnectionManager connectionManager;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
@@ -44,7 +43,7 @@ public class User {
     private AlertDialog aDialog;
 
 
-    public User(Activity activity, ConnectionManager connectionManager) {
+    public User(ZeeguuActivity activity, ConnectionManager connectionManager) {
         this.activity = activity;
         this.connectionManager = connectionManager;
         this.settings = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -63,11 +62,6 @@ public class User {
         learning_language = settings.getString(activity.getString(R.string.preference_learning_language), "").toString();
     }
 
-    public void updateUserInformation() {
-        email = settings.getString(activity.getString(R.string.preference_email), "").toString();
-        pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
-    }
-
     public void saveUserInformationLocally() {
         editor.putString(activity.getString(R.string.preference_email), email);
         editor.putString(activity.getString(R.string.preference_password), pw);
@@ -81,14 +75,18 @@ public class User {
         editor.apply();
     }
 
-    public void resetUserInformation() {
+    public void logoutUser() {
         //delete Session ID when connection Info is not right
-        session_id = "";
+        session_id = ""; email = ""; pw = "";
+        editor.remove(activity.getString(R.string.preference_email));
+        editor.remove(activity.getString(R.string.preference_password));
         editor.remove(activity.getString(R.string.preference_user_session_id));
         editor.apply();
 
         wordlist.clear();
         wordlistItems.clear();
+        connectionManager.notifyWordlistChange();
+        activity.updateMenuTitles();
         Toast.makeText(activity, activity.getString(R.string.error_user_logged_out), Toast.LENGTH_LONG).show();
     }
 

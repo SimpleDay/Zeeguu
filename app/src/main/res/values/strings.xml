@@ -3,6 +3,8 @@
 
     <!-- app strings -->
     <string name="app_name">Zeeguu</string>
+    <string name="menu_login_button">Login</string>
+    <string name="menu_logout_button">Logout</string>
 
     <!-- sliding menu strings -->
     <string name="action_settings">Settings</string>
@@ -52,7 +54,7 @@
     <string name="title_activity_settings">Settings</string>
     <string name="category_login_settings">Zeeguu Account information</string>
     <string name="password_info">Please enter your password here</string>
-    <string name="email_info">Please enter your email here</string>
+    <string name="email_info">You are not logged in yet</string>
 
     <string name="category_main_settings">Zeeguu Account Settings</string>
     <string name="learning_language">Language to learn</string>

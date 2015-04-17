@@ -7,15 +7,10 @@
 
         <EditTextPreference
             android:inputType="textEmailAddress"
+            android:selectable="false"
             android:key="@string/preference_email"
             android:summary="@string/email_info"
             android:title="@string/email" />
-
-        <EditTextPreference
-            android:inputType="textPassword"
-            android:key="@string/preference_password"
-            android:summary="@string/password_info"
-            android:title="@string/password" />
 
         <EditTextPreference
             android:key="@string/preference_user_session_id"

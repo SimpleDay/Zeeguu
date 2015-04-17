@@ -34,10 +34,15 @@ public class FragmentSettings extends PreferenceFragment {
         settings = PreferenceManager.getDefaultSharedPreferences(activity);
         settings.registerOnSharedPreferenceChangeListener(listener);
 
+        //add Email to info box
+        Preference preference_email = findPreference(this.getString(R.string.preference_email));
+        String email = connectionManager.getEmail();
+        preference_email.setSummary(email);
+
         //add Session ID to info box
-        Preference session_id_preference = findPreference(this.getString(R.string.preference_user_session_id));
+        Preference preference_session_id = findPreference(this.getString(R.string.preference_user_session_id));
         String session_id = connectionManager.getSessionId();
-        session_id_preference.setSummary(session_id);
+        preference_session_id.setSummary(session_id);
     }
 
     private class PreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -55,9 +60,6 @@ public class FragmentSettings extends PreferenceFragment {
                 connectionManager.setNativeLanguage(sharedPreferences.getString(
                         activity.getString(R.string.preference_native_language), "en"), true);
 
-            else if (key.equals(activity.getString(R.string.preference_email)) ||
-                    key.equals(activity.getString(R.string.preference_password)))
-                connectionManager.updateUserInformation();
             else { /* Do nothing yet */ }
         }
     }

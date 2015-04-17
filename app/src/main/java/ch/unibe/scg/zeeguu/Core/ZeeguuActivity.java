@@ -16,6 +16,7 @@ import ch.unibe.scg.zeeguu.Sliding_menu.SlidingFragment;
 public class ZeeguuActivity extends FragmentActivity {
     private ConnectionManager connectionManager;
     private static SlidingFragment fragment;
+    private Menu menu;
 
     private final int SETTINGSCHANGED = 100;
 
@@ -31,9 +32,6 @@ public class ZeeguuActivity extends FragmentActivity {
 
         connectionManager = ConnectionManager.getConnectionManager(this);
 
-        //Customize Actionbar
-        //getActionBar().setDisplayShowTitleEnabled(false); // hides action bar title
-
         //create slidemenu
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if(fragment == null)
@@ -48,11 +46,23 @@ public class ZeeguuActivity extends FragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_zeeguu, menu);
+        this.menu = menu;
+
+        updateMenuTitles();
         return true;
+    }
+
+    public void updateMenuTitles() {
+        MenuItem item = menu.findItem(R.id.action_log_in_out);
+        item.setTitle(connectionManager.loggedIn()? getString(R.string.menu_logout_button)
+                : getString(R.string.menu_login_button));
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_log_in_out:
+                connectionManager.loginout();
+                break;
 
             case R.id.action_settings:
                 Intent settingIntent = new Intent(this, SettingsActivity.class);

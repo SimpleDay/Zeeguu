@@ -39,10 +39,6 @@ public class FragmentWordlist extends ZeeguuFragment {
     private ActionMode mode;
     private View lastSelectedView;
 
-    //TODO: Show tags without context small
-
-    public FragmentWordlist() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -176,7 +172,9 @@ public class FragmentWordlist extends ZeeguuFragment {
 
         @Override
         public void onClick(View v) {
-            if (listviewExpanded)
+            if(!connectionManager.loggedIn())
+                toast(getString(R.string.error_user_not_logged_in_yet));
+            else if (listviewExpanded)
                 collapseWordlist();
             else
                 expandWordlist();
@@ -187,7 +185,9 @@ public class FragmentWordlist extends ZeeguuFragment {
 
         @Override
         public void onClick(View v) {
-            if (!listviewRefreshing) {
+            if(!connectionManager.loggedIn())
+                toast(getString(R.string.error_user_not_logged_in_yet));
+            else if (!listviewRefreshing) {
                 listviewRefreshing = true;
 
                 //start refreshing
