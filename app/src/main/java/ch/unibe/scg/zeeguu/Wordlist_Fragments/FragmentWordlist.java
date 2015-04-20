@@ -1,6 +1,7 @@
 package ch.unibe.scg.zeeguu.Wordlist_Fragments;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,6 +32,8 @@ public class FragmentWordlist extends ZeeguuFragment {
     //Listview
     private WordlistExpandableAdapter adapter;
     private ExpandableListView wordlist;
+    SwipeRefreshLayout swipeLayout;
+
     private ImageView btnListviewExpandCollapse;
     private ImageView btnListviewRefresh;
     private boolean listviewExpanded;
@@ -92,6 +95,14 @@ public class FragmentWordlist extends ZeeguuFragment {
 
         btnListviewRefresh = (ImageView) view.findViewById(R.id.listview_refresh);
         btnListviewRefresh.setOnClickListener(new RefreshListener());
+
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.wordlist_listview_swipe_refresh_layout);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshWordlist();
+            }
+        });
     }
 
 
@@ -158,6 +169,7 @@ public class FragmentWordlist extends ZeeguuFragment {
             //stop rotation
             btnListviewRefresh.clearAnimation();
             listviewRefreshing = false;
+            swipeLayout.setRefreshing(false);
         }
 
         public void notifyDataSetChanged() {
@@ -185,16 +197,20 @@ public class FragmentWordlist extends ZeeguuFragment {
 
         @Override
         public void onClick(View v) {
-            if(!connectionManager.loggedIn())
-                toast(getString(R.string.error_user_not_logged_in_yet));
-            else if (!listviewRefreshing) {
-                listviewRefreshing = true;
+            refreshWordlist();
+        }
+    }
 
-                //start refreshing
-                connectionManager.refreshWordlist();
-            } else {
-                toast(getString(R.string.error_refreshing_already_running));
-            }
+    private void refreshWordlist() {
+        if(!connectionManager.loggedIn())
+            toast(getString(R.string.error_user_not_logged_in_yet));
+        else if (!listviewRefreshing) {
+            listviewRefreshing = true;
+
+            //start refreshing
+            connectionManager.refreshWordlist();
+        } else {
+            toast(getString(R.string.error_refreshing_already_running));
         }
     }
 

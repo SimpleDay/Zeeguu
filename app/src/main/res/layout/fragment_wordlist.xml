@@ -10,45 +10,52 @@
     <RelativeLayout
         android:id="@+id/wordlist_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"  >
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/wordlist_empty"
-            android:text="@string/wordlist_empty"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/wordlist_empty"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
 
-        <ExpandableListView
-            android:id="@+id/wordlist_listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true" />
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/wordlist_listview_swipe_refresh_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ExpandableListView
+                android:id="@+id/wordlist_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <ImageView
             android:id="@+id/listview_expand_collapse"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:gravity="top"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="30dp"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="10dp" />
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="10dp"
+            android:gravity="top" />
 
         <ImageView
             android:id="@+id/listview_refresh"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:gravity="top"
-            android:src="@drawable/ic_action_refresh_holo_light"
             android:layout_alignTop="@+id/listview_expand_collapse"
             android:layout_toLeftOf="@+id/listview_expand_collapse"
-            android:layout_toStartOf="@+id/listview_expand_collapse" />
+            android:layout_toStartOf="@+id/listview_expand_collapse"
+            android:gravity="top"
+            android:src="@drawable/ic_action_refresh_holo_light" />
 
     </RelativeLayout>
 

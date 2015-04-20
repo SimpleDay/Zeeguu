@@ -293,8 +293,6 @@ public class ConnectionManager {
                 inputLanguage + "/" + outputLanguage + "?session=" + user.getSession_id();
         logging(TAG, url_translation);
 
-        createLoadingDialog();
-
         StringRequest strReq = new StringRequest(Request.Method.GET,
                 url_translation, new Response.Listener<String>() {
 
@@ -308,7 +306,6 @@ public class ConnectionManager {
             @Override
             public void onErrorResponse(VolleyError error) {
                 logging(TAG, error.toString());
-                dismissDialog();
             }
         });
 
