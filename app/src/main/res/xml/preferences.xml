@@ -2,13 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:key="category_login"
+        android:key="@string/category_user_information"
         android:title="@string/category_login_settings">
 
         <EditTextPreference
             android:inputType="textEmailAddress"
-            android:selectable="false"
             android:key="@string/preference_email"
+            android:selectable="false"
             android:summary="@string/email_info"
             android:title="@string/email" />
 
@@ -17,6 +17,16 @@
             android:selectable="false"
             android:summary="@string/unknown"
             android:title="@string/user_session_id" />
+
+        <Preference
+            android:key="@string/preference_logout"
+            android:summary="Logout from your Zeeguu Account"
+            android:title="Logout" />
+
+        <Preference
+            android:key="@string/preference_login"
+            android:summary="Connect with you Zeeguu Account"
+            android:title="Login" />
 
     </PreferenceCategory>
 

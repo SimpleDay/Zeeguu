@@ -129,12 +129,12 @@ public class ConnectionManager {
         return user.userHasSessionId();
     }
 
-    public void loginout() {
-        if (user.userHasSessionId()) {
-            user.logoutUser();
-        } else {
-            user.getLoginInformation();
-        }
+    public void showLoginScreen() {
+        user.getLoginInformation();
+    }
+
+    public void logout() {
+        user.logoutUser();
     }
 
     public void refreshWordlist() {
@@ -282,10 +282,7 @@ public class ConnectionManager {
     }
 
     public void getTranslation(String input, String inputLanguage, String outputLanguage, final FragmentText fragmentText) {
-        if (!user.userHasLoginInfo()) {
-            toast(activity.getString(R.string.error_user_not_logged_in_yet));
-            return;
-        } else if (input.equals("") || input == null || !isNetworkAvailable())
+        if (input.equals("") || input == null || !isNetworkAvailable())
             return;
 
         //parse string to URL

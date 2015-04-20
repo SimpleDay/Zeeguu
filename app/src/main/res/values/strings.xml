@@ -4,7 +4,6 @@
     <!-- app strings -->
     <string name="app_name">Zeeguu</string>
     <string name="menu_login_button">Login</string>
-    <string name="menu_logout_button">Logout</string>
 
     <!-- sliding menu strings -->
     <string name="action_settings">Settings</string>
@@ -36,15 +35,22 @@
     <string name="dialog_new_account_native_spinner">What is your native language?</string>
     <string name="dialog_new_account_learning_spinner">Which language do you want to improve?</string>
 
-
     <!-- preference tags  -->
+    <string name="category_user_information">category_user_information</string>
     <string name="preference_email">EMAIL</string>
     <string name="preference_password">PASSWORD</string>
     <string name="preference_user_session_id">SESSIONID</string>
+    <string name="preference_login">LOGIN</string>
     <string name="preference_app_design">APP_DESIGN</string>
     <string name="unknown">Unknown</string>
     <string name="preference_native_language">native_language</string> <!-- needs to be same tag as server URL -->
     <string name="preference_learning_language">learned_language</string> <!-- needs to be same tag as server URL -->
+
+    <!-- preference YesNoDialog tags-->
+    <string name="preference_logout">Logout</string>
+    <string name="dialog_logout_confirmation">Are you sure you want to logout?</string>
+    <string name="dialog_logout_button">Logout</string>
+
 
     <!-- contribution tags  -->
     <string name="contribution_url_code">android_application</string>
@@ -60,7 +66,7 @@
     <string name="learning_language">Language to learn</string>
     <string name="learning_language_dialog">Change the language you want to learn</string>
 
-    <string name="native_language">native Language</string>
+    <string name="native_language">Native Language</string>
     <string name="native_language_dialog">Change your native language</string>
 
     <string name="user_session_id">Used session ID</string>

@@ -53,15 +53,14 @@ public class ZeeguuActivity extends FragmentActivity {
     }
 
     public void updateMenuTitles() {
-        MenuItem item = menu.findItem(R.id.action_log_in_out);
-        item.setTitle(connectionManager.loggedIn()? getString(R.string.menu_logout_button)
-                : getString(R.string.menu_login_button));
+        MenuItem item = menu.findItem(R.id.action_log_in);
+        item.setVisible(!connectionManager.loggedIn());
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_log_in_out:
-                connectionManager.loginout();
+            case R.id.action_log_in:
+                connectionManager.showLoginScreen();
                 break;
 
             case R.id.action_settings:
