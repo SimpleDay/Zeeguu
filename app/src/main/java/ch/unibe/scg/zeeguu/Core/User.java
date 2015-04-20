@@ -117,12 +117,7 @@ public class User {
                         connectionManager.getSessionIdFromServer();
                     }
                 })
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                .setNegativeButton(R.string.button_cancel, null);
 
         aDialog = builder.create();
 
@@ -154,17 +149,15 @@ public class User {
                         String username = editTextUsername.getText().toString();
                         String email = editTextEmail.getText().toString();
                         String pw = editTextpw.getText().toString();
-                        //TODO: check input
 
-                        connectionManager.createAccountOnServer(username, email, pw);
+                        if (isEmailValid(email)) {
+                            connectionManager.createAccountOnServer(username, email, pw);
+                        } else {
+                            Toast.makeText(activity, R.string.error_email_not_valid , Toast.LENGTH_LONG).show();
+                        }
                     }
                 })
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                .setNegativeButton(R.string.button_cancel, null);
 
         aDialog = builder.create();
 
@@ -177,6 +170,12 @@ public class User {
             }
         });
         aDialog.show();
+    }
+
+    //// validation functions ////
+
+    boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     //// Getter and Setter ////

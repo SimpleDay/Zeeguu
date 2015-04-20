@@ -126,6 +126,8 @@
     <string name="error_contribution_delete">Ops! The contribution could not be deleted. Please try later again.</string>
     <string name="error_user_logged_out">You have been logged out. Please enter again valid account information in the settings.</string>
     <string name="error_user_not_logged_in_yet">Please log in first before you use these functions</string>
+    <string name="error_email_not_valid">Email address is not valid, please try again</string>
+
 
     <!-- success messages  -->
     <string name="successful_login">Successfully logged in</string>
