@@ -6,9 +6,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -145,31 +143,20 @@ public class User {
         LayoutInflater inflater = activity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_new_account, null);
 
-        final Spinner spinnerNativeLanguage = (Spinner) dialogView.findViewById(R.id.dialog_new_account_spinner_native);
-        final Spinner spinnerLearningLanguage = (Spinner) dialogView.findViewById(R.id.dialog_new_account_spinner_learning);
-
-        ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(activity,
-                R.array.languages, android.R.layout.simple_spinner_item);
-
-        spinnerNativeLanguage.setAdapter(languageAdapter);
-        spinnerLearningLanguage.setAdapter(languageAdapter);
-
         builder.setView(dialogView)
-                .setPositiveButton(R.string.button_sign_in, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.button_create_account, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        EditText editTextUsername = (EditText) aDialog.findViewById(R.id.dialog_username);
                         EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
                         EditText editTextpw = (EditText) aDialog.findViewById(R.id.dialog_password);
 
+                        String username = editTextUsername.getText().toString();
                         String email = editTextEmail.getText().toString();
                         String pw = editTextpw.getText().toString();
                         //TODO: check input
 
-                        //TODO: add languages to server creation
-                        String nativeLanguage = spinnerNativeLanguage.getSelectedItem().toString();
-                        String learningLanguage = spinnerLearningLanguage.getSelectedItem().toString();
-
-                        connectionManager.createAccountOnServer(email, pw);
+                        connectionManager.createAccountOnServer(username, email, pw);
                     }
                 })
                 .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {

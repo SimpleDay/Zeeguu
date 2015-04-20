@@ -199,8 +199,9 @@ public class ConnectionManager {
         this.addToRequestQueue(strReq, tag_contribute_Req);
     }
 
-    public void createAccountOnServer(final String email, final String pw) {
-        String url_create_account = API_URL + "adduser/" + email;
+    public void createAccountOnServer(final String username, final String email, final String pw) {
+        String url_create_account = API_URL + "add_user/" + email;
+        logging(TAG, url_create_account);
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -210,7 +211,6 @@ public class ConnectionManager {
             public void onResponse(String response) {
                 user.setEmail(email);
                 user.setPw(pw);
-                user.saveUserInformationLocally();
 
                 getSessionIDOutOfResponse(response);
             }
@@ -228,6 +228,7 @@ public class ConnectionManager {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
+                params.put("username", username);
                 params.put("password", pw);
                 return params;
             }

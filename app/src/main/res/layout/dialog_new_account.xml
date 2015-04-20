@@ -33,6 +33,13 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
+        <EditText
+            android:id="@+id/dialog_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:hint="@string/enter_name"
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/dialog_email"
@@ -52,70 +59,6 @@
             android:layout_marginTop="4dp"
             android:hint="@string/password"
             android:inputType="textPassword" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="4dp" >
-
-            <TextView
-                android:id="@+id/dialog_new_account_spinner_native_language"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/native_language"
-                android:textSize="20sp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_gravity="center_vertical" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Spinner
-                    android:id="@+id/dialog_new_account_spinner_native"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:prompt="@string/dialog_new_account_native_spinner"
-                    android:spinnerMode="dropdown"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="4dp" >
-
-            <TextView
-                android:id="@+id/dialog_new_account_spinner_learning_language"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/learning_language"
-                android:textSize="20sp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_gravity="center_vertical" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Spinner
-                    android:id="@+id/dialog_new_account_spinner_learning"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:prompt="@string/dialog_new_account_native_spinner"
-                    android:spinnerMode="dropdown"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
-            </RelativeLayout>
-
-        </LinearLayout>
 
     </LinearLayout>
 
