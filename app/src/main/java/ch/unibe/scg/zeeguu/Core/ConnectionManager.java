@@ -567,7 +567,7 @@ public class ConnectionManager {
     }
 
     private void logging(String message) {
-        logging(message);
+        logging(TAG, message);
     }
     
     private void logging(String tag, String message) {
