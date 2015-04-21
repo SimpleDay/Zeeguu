@@ -161,7 +161,7 @@ public class ConnectionManager {
 
         String urlContribution = API_URL + "contribute_with_context/" + inputLangauge + "/" + input + "/" +
                 translationLanguage + "/" + translation + "?session=" + user.getSession_id();
-        logging(TAG, urlContribution);
+        logging(urlContribution);
 
         createLoadingDialog();
 
@@ -171,7 +171,7 @@ public class ConnectionManager {
             @Override
             public void onResponse(String response) {
                 fragmentText.activateContribution();
-                logging(TAG, "successful contributed: " + response);
+                logging("successful contributed: " + response);
                 toast(activity.getString(R.string.successful_contribution));
                 getAllWordsFromServer(); //TODO: Not always get the whole list, just add word locally
             }
@@ -180,7 +180,7 @@ public class ConnectionManager {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                logging(TAG, error.toString());
+                logging(error.toString());
                 dismissDialog();
             }
         }) {
@@ -201,7 +201,7 @@ public class ConnectionManager {
 
     public void createAccountOnServer(final String username, final String email, final String pw) {
         String url_create_account = API_URL + "add_user/" + email;
-        logging(TAG, url_create_account);
+        logging(url_create_account);
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -219,7 +219,7 @@ public class ConnectionManager {
             @Override
             public void onErrorResponse(VolleyError error) {
                 toast(activity.getString(R.string.error_account_not_created));
-                logging(TAG, error.toString());
+                logging(error.toString());
                 dismissDialog();
                 user.createNewAccount();
             }
@@ -247,7 +247,7 @@ public class ConnectionManager {
             return;
 
         String url_session_ID = API_URL + "session/" + user.getEmail();
-        logging(TAG, url_session_ID);
+        logging(url_session_ID);
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -262,7 +262,7 @@ public class ConnectionManager {
             @Override
             public void onErrorResponse(VolleyError error) {
                 toast(activity.getString(R.string.error_user_login_wrong));
-                logging(TAG, error.toString());
+                logging(error.toString());
                 dismissDialog();
                 //reset user until relogged again successfully
                 user.logoutUser();
@@ -291,7 +291,7 @@ public class ConnectionManager {
 
         String url_translation = API_URL + "translate_from_to/" + input + "/" +
                 inputLanguage + "/" + outputLanguage + "?session=" + user.getSession_id();
-        logging(TAG, url_translation);
+        logging(url_translation);
 
         StringRequest strReq = new StringRequest(Request.Method.GET,
                 url_translation, new Response.Listener<String>() {
@@ -305,7 +305,7 @@ public class ConnectionManager {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                logging(TAG, error.toString());
+                logging(error.toString());
             }
         });
 
@@ -363,7 +363,7 @@ public class ConnectionManager {
         user.saveUserInformationLocally();
 
         toast(activity.getString(R.string.successful_login));
-        logging(TAG, user.getSession_id());
+        logging(user.getSession_id());
         dismissDialog();
 
         activity.updateMenuTitles();
@@ -380,13 +380,13 @@ public class ConnectionManager {
             wordlistListener.startRefreshingAction();
 
         String url_session_ID = API_URL + "contribs_by_day/with_context?session=" + user.getSession_id();
-        logging(TAG, url_session_ID);
+        logging(url_session_ID);
 
         JsonArrayRequest request = new JsonArrayRequest(url_session_ID, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
-                logging(TAG, response.toString());
+                logging(response.toString());
                 ArrayList<WordlistHeader> wordlist = user.getWordlist();
                 ArrayList<WordlistItem> wordlistItems = user.getWordlistItems();
                 wordlist.clear();
@@ -426,7 +426,7 @@ public class ConnectionManager {
 
                     toast(activity.getString(R.string.successful_wordlist_updated));
                 } catch (JSONException error) {
-                    logging(TAG, error.toString());
+                    logging(error.toString());
                 }
 
                 dismissDialog();
@@ -439,7 +439,7 @@ public class ConnectionManager {
             @Override
             public void onErrorResponse(VolleyError error) {
                 toast(activity.getString(R.string.error_server_not_online));
-                logging(TAG, error.toString());
+                logging(error.toString());
                 dismissDialog();
 
                 if (wordlistListener != null)
@@ -456,7 +456,7 @@ public class ConnectionManager {
             return;
 
         String url_delete_contribution = API_URL + "delete_contribution/" + ContributionId + "?session=" + user.getSession_id();
-        logging(TAG, url_delete_contribution);
+        logging(url_delete_contribution);
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -467,10 +467,10 @@ public class ConnectionManager {
                 String answer = response.toString();
                 if (answer.equals("OK")) {
                     toast(activity.getString(R.string.successful_contribution_deleted));
-                    logging(TAG, activity.getString(R.string.successful_contribution_deleted));
+                    logging(activity.getString(R.string.successful_contribution_deleted));
                 } else {
                     toast(activity.getString(R.string.error_contribution_delete));
-                    logging(TAG, activity.getString(R.string.error_contribution_delete));
+                    logging(activity.getString(R.string.error_contribution_delete));
                 }
                 dismissDialog();
             }
@@ -479,7 +479,7 @@ public class ConnectionManager {
             @Override
             public void onErrorResponse(VolleyError error) {
                 toast(activity.getString(R.string.error_server_not_online));
-                logging(TAG, error.toString());
+                logging(error.toString());
                 dismissDialog();
             }
 
@@ -504,13 +504,13 @@ public class ConnectionManager {
                             user.setNative_language(response.getString("native"));
                             user.setLearning_language(response.getString("learned"));
                             user.saveUserLanguagesLocally();
-                            logging(TAG, "native: " + response.getString("native") + ", learned: " + response.getString("learned"));
+                            logging("native: " + response.getString("native") + ", learned: " + response.getString("learned"));
 
 
                             activity.refreshLanguages(true);
 
                         } catch (JSONException error) {
-                            logging(TAG, error.toString());
+                            logging(error.toString());
                         }
                         dismissDialog();
                     }
@@ -518,7 +518,7 @@ public class ConnectionManager {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        logging(TAG, error.toString());
+                        logging(error.toString());
                         dismissDialog();
                     }
 
@@ -539,7 +539,7 @@ public class ConnectionManager {
 
                     @Override
                     public void onResponse(String response) {
-                        logging(TAG, response.toString());
+                        logging(response.toString());
 
                         //Save language
                         if (response.toString().equals("OK")) {
@@ -558,7 +558,7 @@ public class ConnectionManager {
             @Override
             public void onErrorResponse(VolleyError error) {
                 toast(activity.getString(R.string.error_server_not_online));
-                logging(TAG, error.toString());
+                logging(error.toString());
                 dismissDialog();
             }
         });
@@ -566,6 +566,10 @@ public class ConnectionManager {
         this.addToRequestQueue(strReq, tag_language_Req);
     }
 
+    private void logging(String message) {
+        logging(message);
+    }
+    
     private void logging(String tag, String message) {
         if (debugOn)
             Log.d(tag, message);

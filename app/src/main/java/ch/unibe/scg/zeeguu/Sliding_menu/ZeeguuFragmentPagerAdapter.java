@@ -43,6 +43,7 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
 
     /**
      * gets the fragment of the tab at position i
+     *
      * @param i is the position of tab
      * @return fragment for tab i
      */
@@ -68,6 +69,7 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
 
     /**
      * gets the title of the page
+     *
      * @param position of tab
      * @return the title of the tab
      */
@@ -78,7 +80,7 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public ArrayList<ZeeguuFragment> getAllFragments() {
         ArrayList<ZeeguuFragment> fragments = new ArrayList<>();
-        for(PagerFragmentTab i : tabs)
+        for (PagerFragmentTab i : tabs)
             fragments.add(i.getFragment());
 
         return fragments;

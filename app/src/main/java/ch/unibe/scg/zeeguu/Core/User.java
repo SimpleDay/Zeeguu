@@ -75,7 +75,9 @@ public class User {
 
     public void logoutUser() {
         //delete Session ID when connection Info is not right
-        session_id = ""; email = ""; pw = "";
+        session_id = "";
+        email = "";
+        pw = "";
         editor.remove(activity.getString(R.string.preference_email));
         editor.remove(activity.getString(R.string.preference_password));
         editor.remove(activity.getString(R.string.preference_user_session_id));
@@ -153,7 +155,7 @@ public class User {
                         if (isEmailValid(email)) {
                             connectionManager.createAccountOnServer(username, email, pw);
                         } else {
-                            Toast.makeText(activity, R.string.error_email_not_valid , Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.error_email_not_valid, Toast.LENGTH_LONG).show();
                         }
                     }
                 })

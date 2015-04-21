@@ -184,7 +184,7 @@ public class FragmentWordlist extends ZeeguuFragment {
 
         @Override
         public void onClick(View v) {
-            if(!connectionManager.loggedIn())
+            if (!connectionManager.loggedIn())
                 toast(getString(R.string.error_user_not_logged_in_yet));
             else if (listviewExpanded)
                 collapseWordlist();
@@ -202,7 +202,7 @@ public class FragmentWordlist extends ZeeguuFragment {
     }
 
     private void refreshWordlist() {
-        if(!connectionManager.loggedIn())
+        if (!connectionManager.loggedIn())
             toast(getString(R.string.error_user_not_logged_in_yet));
         else if (!listviewRefreshing) {
             listviewRefreshing = true;
@@ -225,7 +225,7 @@ public class FragmentWordlist extends ZeeguuFragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.item_delete:
-                    logging(TAG, "");
+                    logging("deleted contribution with id: " + id);
                     connectionManager.deleteContribution(id);
                     break;
             }

@@ -41,7 +41,7 @@ public class FragmentSettings extends PreferenceFragment {
         Preference preference_login_button = (Preference) findPreference(getString(R.string.preference_login));
         Preference preference_logout_button = (Preference) findPreference(getString(R.string.preference_logout));
 
-        if(connectionManager.loggedIn()) {
+        if (connectionManager.loggedIn()) {
             String email = connectionManager.getEmail();
             preference_email.setSummary(email);
             String session_id = connectionManager.getSessionId();

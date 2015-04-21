@@ -46,8 +46,7 @@ public class WordlistHeader {
 
     public View getView(LayoutInflater inflater, View convertView) {
         final ViewHolder holder;
-        if (convertView == null)
-        {
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.listview_header, null);
             holder = new ViewHolder();
 
@@ -61,7 +60,7 @@ public class WordlistHeader {
 
         holder.header_title.setText(name);
 
-        if(groupOpen)
+        if (groupOpen)
             holder.group_status.setImageResource(R.drawable.ic_action_close_list_holo_light);
         else
             holder.group_status.setImageResource(R.drawable.ic_action_open_list_holo_light);

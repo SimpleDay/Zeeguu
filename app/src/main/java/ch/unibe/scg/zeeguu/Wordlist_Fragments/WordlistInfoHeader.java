@@ -24,8 +24,7 @@ public class WordlistInfoHeader implements Item {
     @Override
     public View getView(LayoutInflater inflater, View convertView) {
         final ViewHolder holder;
-        if (convertView != null && convertView.getTag().getClass() == ViewHolder.class)
-        {
+        if (convertView != null && convertView.getTag().getClass() == ViewHolder.class) {
             holder = (ViewHolder) convertView.getTag();
         } else {
             convertView = inflater.inflate(R.layout.listview_info_header, null);

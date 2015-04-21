@@ -22,6 +22,7 @@ import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
 
 /**
  * New Preference List extended from ListPreference that allows to add flags in front of the language names.
+ *
  * @author Pascal
  */
 public class LanguageListPreference extends ListPreference {
@@ -72,15 +73,15 @@ public class LanguageListPreference extends ListPreference {
     public void showDialog(Activity activity, boolean nativeLanguage, FragmentText.FragmentTextListener fragmentTextListener) {
         entries = getEntries();
         entryValues = getEntryValues();
-        mKey = nativeLanguage? activity.getString(R.string.preference_native_language) : activity.getString(R.string.preference_learning_language);
+        mKey = nativeLanguage ? activity.getString(R.string.preference_native_language) : activity.getString(R.string.preference_learning_language);
         updateSelectedEntry();
 
-        if(iconListPreferenceAdapter == null)
+        if (iconListPreferenceAdapter == null)
             iconListPreferenceAdapter = new IconListPreferenceAdapter();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setAdapter(iconListPreferenceAdapter, null);
-        builder.setTitle(nativeLanguage? activity.getString(R.string.native_language_dialog) :
+        builder.setTitle(nativeLanguage ? activity.getString(R.string.native_language_dialog) :
                 activity.getString(R.string.learning_language_dialog));
 
         this.fragmentTextListener = fragmentTextListener;
@@ -100,7 +101,7 @@ public class LanguageListPreference extends ListPreference {
             throw new IllegalStateException("ListPreference requires an entries array and an entryValues array which are both the same length");
         }
 
-        if(iconListPreferenceAdapter == null)
+        if (iconListPreferenceAdapter == null)
             iconListPreferenceAdapter = new IconListPreferenceAdapter();
         builder.setAdapter(iconListPreferenceAdapter, null);
 
@@ -117,12 +118,12 @@ public class LanguageListPreference extends ListPreference {
     }
 
     protected void closeDialog() {
-        if(mDialog != null) {
+        if (mDialog != null) {
             mDialog.dismiss();
             mDialog = null;
         }
 
-        if(getDialog() != null)
+        if (getDialog() != null)
             getDialog().dismiss();
 
     }
@@ -178,7 +179,7 @@ public class LanguageListPreference extends ListPreference {
                 public void onClick(View v) {
                     v.requestFocus();
 
-                    if(mDialog == null) {
+                    if (mDialog == null) {
                         LanguageListPreference.this.callChangeListener(entryValues[p]);
                     } else {
                         fragmentTextListener.updateLanguage(entryValues[p].toString(), nativeLanguage);

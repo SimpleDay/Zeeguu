@@ -22,6 +22,7 @@ public abstract class ZeeguuFragment extends Fragment {
 
     //Functions that get called when a tab gets focused or swiped away
     public abstract void focusFragment();
+
     public abstract void defocusFragment();
 
     public abstract void refreshLanguages(boolean switchFlagsIfNeeded);
@@ -57,5 +58,7 @@ public abstract class ZeeguuFragment extends Fragment {
     }
 
 
-    public void onResume() { super.onResume(); }
+    public void onResume() {
+        super.onResume();
+    }
 }

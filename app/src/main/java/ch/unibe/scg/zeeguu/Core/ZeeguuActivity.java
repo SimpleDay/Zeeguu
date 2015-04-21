@@ -34,7 +34,7 @@ public class ZeeguuActivity extends FragmentActivity {
 
         //create slidemenu
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if(fragment == null)
+        if (fragment == null)
             fragment = new SlidingFragment();
         transaction.replace(R.id.fragment_menu, fragment);
         transaction.commit();
@@ -88,21 +88,21 @@ public class ZeeguuActivity extends FragmentActivity {
                 setTheme(R.style.AppThemeDark);
                 break;
         }
-        if(actualizeView)
+        if (actualizeView)
             recreate();
     }
 
     public void refreshLanguages(boolean switchFlagsIfNeeded) {
-        for(ZeeguuFragment f : fragment.getAllFragments())
+        for (ZeeguuFragment f : fragment.getAllFragments())
             f.refreshLanguages(switchFlagsIfNeeded);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
+        switch (requestCode) {
             case SETTINGSCHANGED:
-                if(resultCode == 1)
+                if (resultCode == 1)
                     setTheme(true);
                 break;
             default:

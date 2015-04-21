@@ -54,7 +54,7 @@
 
 
     <!-- contribution tags  -->
-    <string name="contribution_url_code">android_application</string>
+    <string name="contribution_url_code">android:zeeguu_app</string>
     <string name="contribution_title">Android Application</string>
 
     <!-- setting strings -->

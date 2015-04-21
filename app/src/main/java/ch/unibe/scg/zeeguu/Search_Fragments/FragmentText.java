@@ -346,7 +346,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
 
     private void contribute() {
-        if(!connectionManager.loggedIn())
+        if (!connectionManager.loggedIn())
             toast(getString(R.string.error_user_not_logged_in_yet));
         else if (edit_text_native.getText().length() != 0 && edit_text_translated.getText().length() != 0) {
             if (!contributed) {
@@ -403,7 +403,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     public class FragmentTextListener {
 
         public void updateLanguage(String languageCode, boolean nativeLanguage) {
-            if(nativeLanguage)
+            if (nativeLanguage)
                 connectionManager.setNativeLanguage(languageCode, false);
             else
                 connectionManager.setLearningLanguage(languageCode, false);
@@ -450,7 +450,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
             listPreference.setEntries(res.getStringArray(R.array.languages));
             listPreference.setEntryValues(res.getStringArray(R.array.language_keys));
 
-            listPreference.showDialog(activity, switchLanguage? !nativeLanguage : nativeLanguage, new FragmentTextListener());
+            listPreference.showDialog(activity, switchLanguage ? !nativeLanguage : nativeLanguage, new FragmentTextListener());
             return true;
         }
     }
