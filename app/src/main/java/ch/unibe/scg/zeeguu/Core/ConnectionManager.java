@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.Volley.NoConnectionError;
 import com.google.Volley.Request;
 import com.google.Volley.RequestQueue;
 import com.google.Volley.Response;
@@ -180,8 +181,7 @@ public class ConnectionManager {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                logging(error.toString());
-                dismissDialog();
+                checkErrorCode(error);
             }
         }) {
 
@@ -218,9 +218,7 @@ public class ConnectionManager {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                toast(activity.getString(R.string.error_account_not_created));
-                logging(error.toString());
-                dismissDialog();
+                checkErrorCode(error);
                 user.createNewAccount();
             }
         }) {
@@ -261,9 +259,8 @@ public class ConnectionManager {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                toast(activity.getString(R.string.error_user_login_wrong));
-                logging(error.toString());
-                dismissDialog();
+                checkErrorCode(error);
+
                 //reset user until relogged again successfully
                 user.logoutUser();
                 user.getLoginInformation();
@@ -305,7 +302,7 @@ public class ConnectionManager {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                logging(error.toString());
+                checkErrorCode(error);
             }
         });
 
@@ -438,9 +435,7 @@ public class ConnectionManager {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                toast(activity.getString(R.string.error_server_not_online));
-                logging(error.toString());
-                dismissDialog();
+                checkErrorCode(error);
 
                 if (wordlistListener != null)
                     wordlistListener.stopRefreshingAction();
@@ -478,9 +473,7 @@ public class ConnectionManager {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                toast(activity.getString(R.string.error_server_not_online));
-                logging(error.toString());
-                dismissDialog();
+                checkErrorCode(error);
             }
 
         });
@@ -510,7 +503,7 @@ public class ConnectionManager {
                             activity.refreshLanguages(true);
 
                         } catch (JSONException error) {
-                            logging(error.toString());
+                            logging("JSON could not been parsed in the getBothLanguageFromServer method");
                         }
                         dismissDialog();
                     }
@@ -518,8 +511,8 @@ public class ConnectionManager {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        logging(error.toString());
-                        dismissDialog();
+                        checkErrorCode(error);
+
                     }
 
                 });
@@ -557,19 +550,28 @@ public class ConnectionManager {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                toast(activity.getString(R.string.error_server_not_online));
-                logging(error.toString());
-                dismissDialog();
+                checkErrorCode(error);
             }
         });
 
         this.addToRequestQueue(strReq, tag_language_Req);
     }
 
+    private void checkErrorCode(VolleyError error) {
+        if (error instanceof NoConnectionError) {
+            toast(activity.getString(R.string.error_connection_unknown_error));
+        } else {
+            toast(activity.getString(R.string.error_unknown_error));
+        }
+        logging(error.toString());
+        dismissDialog();
+
+    }
+
     private void logging(String message) {
         logging(TAG, message);
     }
-    
+
     private void logging(String tag, String message) {
         if (debugOn)
             Log.d(tag, message);
