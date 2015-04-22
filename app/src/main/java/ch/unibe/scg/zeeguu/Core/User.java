@@ -90,6 +90,14 @@ public class User {
         Toast.makeText(activity, activity.getString(R.string.error_user_logged_out), Toast.LENGTH_LONG).show();
     }
 
+    public boolean isFirstLogin() {
+        if(settings.getBoolean("my_first_time", true)) {
+            settings.edit().putBoolean("my_first_time", false).apply();
+            return true;
+        }
+        return false;
+    }
+
     public boolean userHasLoginInfo() {
         return !email.equals("") && !pw.equals("");
     }

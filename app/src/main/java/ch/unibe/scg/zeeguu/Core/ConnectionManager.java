@@ -70,7 +70,6 @@ public class ConnectionManager {
         //initialise all variables
         this.activity = activity;
         this.user = new User(activity, this);
-
         this.instance = this;
 
         //try to get the users information
@@ -309,6 +308,9 @@ public class ConnectionManager {
         this.addToRequestQueue(strReq, tag_translation_Req);
     }
 
+    public boolean firstLogin() {
+        return user.isFirstLogin();
+    }
 
     //Getter und setter
 

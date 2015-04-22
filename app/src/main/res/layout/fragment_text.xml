@@ -1,172 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_text_layout"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_vertical"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout_text_to_translate"
-        android:layout_weight="0.4"
+    <LinearLayout
+        android:id="@+id/fragment_text_layout"
         android:layout_width="match_parent"
-        android:layout_height="236dp" >
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
 
 
-        <EditText
-            android:id="@+id/text_native"
-            android:layout_width="319dp"
-            android:layout_height="201dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/rounded_textfield"
-            android:gravity="top"
-            android:imeOptions="actionSearch"
-            android:maxLines="10"
-            android:padding="10dp" />
-
-        <ImageView
-            android:id="@+id/ic_flag_translate_from"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_alignBottom="@+id/text_native"
-            android:layout_alignEnd="@+id/text_native"
-            android:layout_alignRight="@+id/text_native"
-            android:layout_gravity="right|bottom"
-            android:layout_marginBottom="12dp"
-            android:layout_marginRight="15dp"
-            android:gravity="top" />
-
-        <ImageView
-            android:id="@+id/btn_microphone_search"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:layout_gravity="left"
-            android:clickable="true"
-            android:src="?attr/customIconVoice"
-            android:layout_alignTop="@+id/btn_camera_search"
-            android:layout_toRightOf="@+id/btn_paste"
-            android:layout_toEndOf="@+id/btn_paste" />
-
-        <ImageView
-            android:id="@+id/btn_camera_search"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:layout_alignBottom="@+id/ic_flag_translate_from"
-            android:layout_gravity="left"
-            android:layout_toEndOf="@+id/btn_microphone_search"
-            android:layout_toRightOf="@+id/btn_microphone_search"
-            android:clickable="true"
-            android:src="?attr/customIconCamera" />
-
-        <ImageView
-            android:id="@+id/btn_tts_native_language"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:src="?attr/customIconSound"
-            android:layout_alignBottom="@+id/ic_flag_translate_from"
-            android:layout_toLeftOf="@+id/ic_flag_translate_from"
-            android:layout_toStartOf="@+id/ic_flag_translate_from" />
-
-        <ImageView
-            android:id="@+id/btn_paste"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="10dp"
-            android:src="?attr/customIconPaste"
-            android:layout_alignTop="@+id/btn_microphone_search"
-            android:layout_alignLeft="@+id/text_native"
-            android:layout_alignStart="@+id/text_native" />
+        <RelativeLayout
+            android:id="@+id/relativeLayout_text_to_translate"
+            android:layout_width="match_parent"
+            android:layout_height="236dp"
+            android:layout_weight="0.4">
 
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/text_native"
+                android:layout_width="319dp"
+                android:layout_height="201dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/rounded_textfield"
+                android:gravity="top"
+                android:imeOptions="actionSearch"
+                android:maxLines="10"
+                android:padding="10dp" />
+
+            <ImageView
+                android:id="@+id/ic_flag_translate_from"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignBottom="@+id/text_native"
+                android:layout_alignEnd="@+id/text_native"
+                android:layout_alignRight="@+id/text_native"
+                android:layout_gravity="right|bottom"
+                android:layout_marginBottom="12dp"
+                android:layout_marginRight="15dp"
+                android:gravity="top" />
+
+            <ImageView
+                android:id="@+id/btn_microphone_search"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_alignTop="@+id/btn_camera_search"
+                android:layout_gravity="left"
+                android:layout_toEndOf="@+id/btn_paste"
+                android:layout_toRightOf="@+id/btn_paste"
+                android:clickable="true"
+                android:src="?attr/customIconVoice" />
+
+            <ImageView
+                android:id="@+id/btn_camera_search"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_alignBottom="@+id/ic_flag_translate_from"
+                android:layout_gravity="left"
+                android:layout_toEndOf="@+id/btn_microphone_search"
+                android:layout_toRightOf="@+id/btn_microphone_search"
+                android:clickable="true"
+                android:src="?attr/customIconCamera" />
+
+            <ImageView
+                android:id="@+id/btn_tts_native_language"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_alignBottom="@+id/ic_flag_translate_from"
+                android:layout_toLeftOf="@+id/ic_flag_translate_from"
+                android:layout_toStartOf="@+id/ic_flag_translate_from"
+                android:src="?attr/customIconSound" />
+
+            <ImageView
+                android:id="@+id/btn_paste"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_alignLeft="@+id/text_native"
+                android:layout_alignStart="@+id/text_native"
+                android:layout_alignTop="@+id/btn_microphone_search"
+                android:layout_marginLeft="10dp"
+                android:src="?attr/customIconPaste" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ic_menu_middle_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="54dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_weight="0.2">
+
+
+            <ImageButton
+                android:id="@+id/btn_translate"
+                android:layout_width="55dp"
+                android:layout_height="45dp"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="40dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/rounded_button"
+                android:gravity="right"
+                android:src="?attr/customIconTranslate" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout_text_translated"
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.4">
+
+            <EditText
+                android:id="@+id/text_translated"
+                android:layout_width="319dp"
+                android:layout_height="201dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/rounded_textfield"
+                android:clickable="false"
+                android:focusable="false"
+                android:gravity="top"
+                android:maxLines="10"
+                android:padding="15dp" />
+
+            <ImageView
+                android:id="@+id/ic_flag_translate_to"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignBottom="@+id/text_translated"
+                android:layout_alignEnd="@+id/text_translated"
+                android:layout_alignRight="@+id/text_translated"
+                android:layout_marginBottom="12dp"
+                android:layout_marginRight="15dp"
+                android:gravity="top" />
+
+            <ImageView
+                android:id="@+id/btn_contribute"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_alignBottom="@+id/ic_flag_translate_to"
+                android:layout_toEndOf="@+id/btn_copy"
+                android:layout_toRightOf="@+id/btn_copy"
+                android:src="@drawable/btn_bookmark" />
+
+            <ImageView
+                android:id="@+id/btn_tts_learning_language"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_alignBottom="@+id/ic_flag_translate_to"
+                android:layout_toLeftOf="@+id/ic_flag_translate_to"
+                android:layout_toStartOf="@+id/ic_flag_translate_to"
+                android:src="?attr/customIconSound" />
+
+            <ImageView
+                android:id="@+id/btn_copy"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_alignLeft="@+id/text_translated"
+                android:layout_alignStart="@+id/text_translated"
+                android:layout_alignTop="@+id/btn_contribute"
+                android:layout_marginLeft="10dp"
+                android:enabled="false"
+                android:src="?attr/customIconCopy" />
+
+        </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/ic_menu_middle_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="54dp"
-        android:layout_weight="0.2"
-        android:layout_gravity="center_horizontal|bottom">
-
-
-        <ImageButton
-            android:id="@+id/btn_translate"
-            android:layout_width="55dp"
-            android:layout_height="45dp"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="40dp"
-            android:layout_marginRight="40dp"
-            android:background="@drawable/rounded_button"
-            android:gravity="right"
-            android:src="?attr/customIconTranslate" />
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout_text_translated"
+        android:id="@+id/fragment_text_tutorial"
         android:layout_width="match_parent"
-        android:layout_height="210dp"
-        android:layout_weight="0.4"
-        android:layout_gravity="center">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
-        <EditText
-            android:id="@+id/text_translated"
-            android:layout_width="319dp"
-            android:layout_height="201dp"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You can swipe left and right to switch between the windows"
+            android:layout_marginTop="205dp"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/rounded_textfield"
-            android:clickable="false"
-            android:focusable="false"
-            android:gravity="top"
-            android:maxLines="10"
-            android:padding="15dp" />
-
-        <ImageView
-            android:id="@+id/ic_flag_translate_to"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_alignBottom="@+id/text_translated"
-            android:layout_alignEnd="@+id/text_translated"
-            android:layout_alignRight="@+id/text_translated"
-            android:layout_marginBottom="12dp"
-            android:layout_marginRight="15dp"
-            android:gravity="top" />
-
-        <ImageView
-            android:id="@+id/btn_contribute"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:src="@drawable/btn_bookmark"
-            android:layout_alignBottom="@+id/ic_flag_translate_to"
-            android:layout_toRightOf="@+id/btn_copy"
-            android:layout_toEndOf="@+id/btn_copy" />
-
-        <ImageView
-            android:id="@+id/btn_tts_learning_language"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:src="?attr/customIconSound"
-            android:layout_alignBottom="@+id/ic_flag_translate_to"
-            android:layout_toLeftOf="@+id/ic_flag_translate_to"
-            android:layout_toStartOf="@+id/ic_flag_translate_to" />
-
-        <ImageView
-            android:id="@+id/btn_copy"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:enabled="false"
-            android:layout_marginLeft="10dp"
-            android:src="?attr/customIconCopy"
-            android:layout_alignTop="@+id/btn_contribute"
-            android:layout_alignLeft="@+id/text_translated"
-            android:layout_alignStart="@+id/text_translated" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/editText" />
 
     </RelativeLayout>
-
-</LinearLayout>
+</FrameLayout>

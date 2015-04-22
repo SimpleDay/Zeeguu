@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -161,6 +162,12 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
             }
         });
         initButton(btn_tts_learning_language, !edit_text_translated.getText().toString().equals(""));
+
+        //Open tutorial when first opened
+        if(connectionManager.firstLogin()) {
+            RelativeLayout tutorial = (RelativeLayout) view.findViewById(R.id.fragment_text_tutorial);
+            tutorial.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
