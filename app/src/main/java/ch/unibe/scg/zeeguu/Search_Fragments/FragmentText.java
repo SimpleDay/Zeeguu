@@ -190,8 +190,10 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     @Override
     public void defocusFragment() {
         //Method that gets called when this fragment is not in focus anymore. Then we will close the keyboard
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(edit_text_native.getWindowToken(), 0);
+        if(activity != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(edit_text_native.getWindowToken(), 0);
+        }
     }
 
     @Override

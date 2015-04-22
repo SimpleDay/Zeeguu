@@ -1,5 +1,6 @@
 package ch.unibe.scg.zeeguu.Core;
 
+import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -33,10 +34,14 @@ public class ZeeguuActivity extends FragmentActivity {
         connectionManager = ConnectionManager.getConnectionManager(this);
 
         //create slidemenu
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragment = (SlidingFragment) fragmentManager.findFragmentByTag("slidingMenu");
+
         if (fragment == null)
             fragment = new SlidingFragment();
-        transaction.replace(R.id.fragment_menu, fragment);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_menu, fragment, "slidingMenu");
         transaction.commit();
 
         //TODO: Language change affects whole app
