@@ -8,27 +8,27 @@
         android:id="@+id/fragment_text_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_gravity="center_vertical">
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
 
 
         <RelativeLayout
             android:id="@+id/relativeLayout_text_to_translate"
             android:layout_width="match_parent"
-            android:layout_height="236dp"
+            android:layout_height="220dp"
             android:layout_weight="0.4">
 
 
             <EditText
                 android:id="@+id/text_native"
-                android:layout_width="319dp"
-                android:layout_height="201dp"
+                android:layout_width="320dp"
+                android:layout_height="200dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/rounded_textfield"
                 android:gravity="top"
                 android:imeOptions="actionSearch"
-                android:maxLines="10"
+                android:maxLines="8"
                 android:padding="10dp" />
 
             <ImageView
@@ -84,52 +84,50 @@
                 android:layout_marginLeft="10dp"
                 android:src="?attr/customIconPaste" />
 
-
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/ic_menu_middle_layout"
             android:layout_width="fill_parent"
             android:layout_height="54dp"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_weight="0.2">
+            android:layout_weight="0.2" >
 
 
-            <ImageButton
+            <TextView
                 android:id="@+id/btn_translate"
-                android:layout_width="55dp"
+                android:layout_width="80dp"
                 android:layout_height="45dp"
-                android:layout_alignParentEnd="false"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="40dp"
-                android:layout_marginRight="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="41dp"
+                android:layout_marginRight="41dp"
                 android:background="@drawable/rounded_button"
-                android:gravity="right"
-                android:src="?attr/customIconTranslate" />
-
+                android:gravity="center"
+                android:text="@string/text_view_translate_button"
+                android:textColor="@color/translation_language_textfield"
+                android:textStyle="bold" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/relativeLayout_text_translated"
             android:layout_width="match_parent"
-            android:layout_height="210dp"
-            android:layout_gravity="center"
-            android:layout_weight="0.4">
+            android:layout_height="220dp"
+            android:layout_weight=".4">
 
             <EditText
                 android:id="@+id/text_translated"
-                android:layout_width="319dp"
-                android:layout_height="201dp"
-                android:layout_alignParentTop="true"
+                android:layout_width="320dp"
+                android:layout_height="200dp"
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:background="@drawable/rounded_textfield"
                 android:clickable="false"
                 android:focusable="false"
                 android:gravity="top"
-                android:maxLines="10"
-                android:padding="15dp" />
+                android:maxLines="8"
+                android:padding="10dp" />
 
             <ImageView
                 android:id="@+id/ic_flag_translate_to"
@@ -181,14 +179,14 @@
         android:visibility="gone">
 
         <TextView
+            android:id="@+id/editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="You can swipe left and right to switch between the windows"
-            android:layout_marginTop="205dp"
-            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:id="@+id/editText" />
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="205dp"
+            android:text="You can swipe left and right to switch between the windows" />
 
     </RelativeLayout>
 </FrameLayout>

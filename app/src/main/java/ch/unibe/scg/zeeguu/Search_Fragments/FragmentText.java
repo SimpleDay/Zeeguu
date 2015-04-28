@@ -20,9 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -121,7 +121,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         ImageView btn_cam = (ImageView) view.findViewById(R.id.btn_camera_search);
         btn_cam.setOnClickListener(new CameraRecognitionListener());
 
-        ImageButton btn_transl = (ImageButton) view.findViewById(R.id.btn_translate);
+        TextView btn_transl = (TextView) view.findViewById(R.id.btn_translate);
         btn_transl.setOnClickListener(new TranslationListener());
 
         btn_contribute = (ImageView) view.findViewById(R.id.btn_contribute);
@@ -329,7 +329,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     private void  translate() {
         String input = getEditTextTrimmed(edit_text_native);
-        logging("|" + input + "|");
         String wordlistSearch = checkWordlist(input);
 
         if (wordlistSearch == null)
