@@ -282,7 +282,7 @@ public class ConnectionManager {
             return;
 
         String url_translation = API_URL + "translate/"  + inputLanguage + "/" + outputLanguage + "?session=" + user.getSession_id();
-        logging(url_translation + ", POST word Variable: \"" + Uri.encode(input) + "\"");
+        logging(url_translation + ", POST word Variable: \"" + input + "\"");
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 url_translation, new Response.Listener<String>() {

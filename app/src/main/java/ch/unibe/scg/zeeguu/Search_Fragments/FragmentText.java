@@ -164,7 +164,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         initButton(btn_tts_learning_language, !edit_text_translated.getText().toString().equals(""));
 
         //Open tutorial when first opened
-        if(connectionManager.firstLogin()) {
+        if (connectionManager.firstLogin()) {
             RelativeLayout tutorial = (RelativeLayout) view.findViewById(R.id.fragment_text_tutorial);
             tutorial.setVisibility(View.VISIBLE);
         }
@@ -190,10 +190,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     @Override
     public void defocusFragment() {
         //Method that gets called when this fragment is not in focus anymore. Then we will close the keyboard
-        if(activity != null) {
-            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(edit_text_native.getWindowToken(), 0);
-        }
+        closeKeyboard();
     }
 
     @Override
@@ -220,7 +217,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        //TODO: NOT YET WORKING
         savedInstanceState.putString(getString(R.string.preference_native_language), edit_text_native.getText().toString());
         savedInstanceState.putString(getString(R.string.preference_learning_language), edit_text_translated.getText().toString());
 
@@ -246,7 +242,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         //Save if langauge is switched
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("switchLanguage", switchLanguage);
-        editor.commit();
+        editor.apply();
     }
 
     @Override
@@ -331,14 +327,15 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         return clipboard.hasPrimaryClip() && !clipboard.getPrimaryClip().getItemAt(0).getText().equals("");
     }
 
-    private void translate() {
-        String input = edit_text_native.getText().toString();
+    private void  translate() {
+        String input = getEditTextTrimmed(edit_text_native);
+        logging("|" + input + "|");
         String wordlistSearch = checkWordlist(input);
 
         if (wordlistSearch == null)
             connectionManager.getTranslation(input, getInputLanguage(), getOutputLanguage(), this);
         else {
-            edit_text_translated.setText(wordlistSearch);
+            setTranslatedText(wordlistSearch);
             activateContribution();
         }
         closeKeyboard();
@@ -355,14 +352,18 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         return null;
     }
 
+    private String getEditTextTrimmed(EditText editText) {
+        return editText.getText().toString().replaceAll("[ ]+", " ").trim();
+    }
+
 
     private void contribute() {
         if (!connectionManager.loggedIn())
             toast(getString(R.string.error_user_not_logged_in_yet));
         else if (edit_text_native.getText().length() != 0 && edit_text_translated.getText().length() != 0) {
             if (!contributed) {
-                String input = edit_text_native.getText().toString();
-                String translation = edit_text_translated.getText().toString();
+                String input = getEditTextTrimmed(edit_text_native);
+                String translation = getEditTextTrimmed(edit_text_translated);
 
                 connectionManager.contributeToServer(input, getInputLanguage(), translation, getOutputLanguage(), this);
                 contributed = true;
@@ -386,8 +387,8 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         switchLanguage = !switchLanguage;
         setLanguagesTextFields();
 
-        String tmpText = edit_text_native.getText().toString();
-        String textLearning = edit_text_translated.getText().toString();
+        String tmpText = getEditTextTrimmed(edit_text_native);
+        String textLearning = getEditTextTrimmed(edit_text_translated);
         if (textLearning.equals(""))
             edit_text_native.setText(switchedText);
         else
@@ -404,8 +405,10 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     private void closeKeyboard() {
-        InputMethodManager iMM = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        iMM.hideSoftInputFromWindow(edit_text_native.getWindowToken(), 0);
+        if (activity != null) {
+            InputMethodManager iMM = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            iMM.hideSoftInputFromWindow(edit_text_native.getWindowToken(), 0);
+        }
     }
 
 
