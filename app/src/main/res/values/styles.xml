@@ -10,7 +10,6 @@
         <item name="customIconVoice">@drawable/btn_mic_holo_light</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_light</item>
         <item name="customIconSettings">@drawable/ab_settings_holo_dark</item>
-        <item name="customIconTranslate">@drawable/btn_translate_holo_light</item>
         <item name="customIconClock">@drawable/ic_calendar_holo_light</item>
         <item name="customIconSave">@drawable/btn_contribute_holo_light</item>
         <item name="customIconSound">@drawable/btn_tts_holo_light</item>
@@ -23,7 +22,6 @@
         <item name="customIconVoice">@drawable/btn_mic_holo_light</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_light</item>
         <item name="customIconSettings">@drawable/ab_settings_holo_light</item>
-        <item name="customIconTranslate">@drawable/btn_translate_holo_light</item>
         <item name="customIconClock">@drawable/ic_calendar_holo_light</item>
         <item name="customIconSave">@drawable/btn_contribute_holo_light</item>
         <item name="customIconSound">@drawable/btn_tts_holo_light</item>
@@ -37,7 +35,6 @@
         <item name="customIconVoice">@drawable/btn_mic_holo_dark</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_dark</item>
         <item name="customIconSettings">@drawable/ab_settings_holo_dark</item>
-        <item name="customIconTranslate">@drawable/btn_translate_holo_dark</item>
         <item name="customIconClock">@drawable/ic_calendar_holo_dark</item>
         <item name="customIconSave">@drawable/btn_contribute_holo_dark</item>
         <item name="customIconSound">@drawable/btn_tts_holo_dark</item>

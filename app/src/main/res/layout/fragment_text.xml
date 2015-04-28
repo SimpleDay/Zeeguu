@@ -16,7 +16,7 @@
             android:id="@+id/relativeLayout_text_to_translate"
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:layout_weight="0.4">
+            android:layout_weight="61">
 
 
             <EditText
@@ -90,7 +90,7 @@
             android:id="@+id/ic_menu_middle_layout"
             android:layout_width="fill_parent"
             android:layout_height="54dp"
-            android:layout_weight="0.2" >
+            android:layout_weight="1" >
 
 
             <TextView
@@ -114,7 +114,7 @@
             android:id="@+id/relativeLayout_text_translated"
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:layout_weight=".4">
+            android:layout_weight="61">
 
             <EditText
                 android:id="@+id/text_translated"
