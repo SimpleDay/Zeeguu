@@ -5,14 +5,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,20 +24,18 @@ import ch.unibe.scg.zeeguu.R;
  * Created by Pascal on 12/01/15.
  */
 public class FragmentWordlist extends ZeeguuFragment {
-    private ArrayList<WordlistHeader> list;
     private ConnectionManager connectionManager;
 
-    //Listview
+    //Listview variables
     private WordlistExpandableAdapter adapter;
     private ExpandableListView wordlist;
     SwipeRefreshLayout swipeLayout;
 
-    private ImageView btnListviewExpandCollapse;
-    private ImageView btnListviewRefresh;
     private boolean listviewExpanded;
     private boolean listviewRefreshing;
 
     private ActionMode mode;
+    private MenuItem menuItem;
     private View lastSelectedView;
 
 
@@ -54,10 +50,10 @@ public class FragmentWordlist extends ZeeguuFragment {
         //getWordlist from server
         connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) getActivity());
         connectionManager.setWordlistListener(new WordlistListener());
-        list = connectionManager.getWordlist();
         listviewRefreshing = false;
 
         //create listview for wordlist and customize it
+        ArrayList<WordlistHeader> list = connectionManager.getWordlist();
         adapter = new WordlistExpandableAdapter(getActivity(), list);
         wordlist = (ExpandableListView) view.findViewById(R.id.wordlist_listview);
         wordlist.setAdapter(adapter);
@@ -90,12 +86,6 @@ public class FragmentWordlist extends ZeeguuFragment {
         TextView emptyText = (TextView) view.findViewById(R.id.wordlist_empty);
         wordlist.setEmptyView(emptyText);
 
-        btnListviewExpandCollapse = (ImageView) view.findViewById(R.id.listview_expand_collapse);
-        btnListviewExpandCollapse.setOnClickListener(new ExpandAndCollapseListener());
-
-        btnListviewRefresh = (ImageView) view.findViewById(R.id.listview_refresh);
-        btnListviewRefresh.setOnClickListener(new RefreshListener());
-
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.wordlist_listview_swipe_refresh_layout);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -103,15 +93,45 @@ public class FragmentWordlist extends ZeeguuFragment {
                 refreshWordlist();
             }
         });
+
+        //activate the menu for fragments
+        setHasOptionsMenu(true);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_wordlist, menu);
+        super.onCreateOptionsMenu(menu, inflater);
 
-    //Public functions
+        menuItem = menu.findItem(R.id.listview_expand_collapse);
+        updateOptionMenuItemsIcons();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.listview_refresh:
+                refreshWordlist();
+                return true;
+
+            case R.id.listview_expand_collapse:
+                if (!connectionManager.loggedIn())
+                    toast(getString(R.string.error_user_not_logged_in_yet));
+                else if (listviewExpanded)
+                    collapseWordlist();
+                else
+                    expandWordlist();
+                return true;
+        }
+        return false;
+    }
+
+    //// Public functions ////
 
     @Override
     public void focusFragment() {
-        adapter.notifyDataSetChanged();
-        expandWordlist();
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -126,88 +146,50 @@ public class FragmentWordlist extends ZeeguuFragment {
         //maybe integrate a filter here which only shows words of the selected language pair
     }
 
-    //private functions
-
-    private void expandWordlist() {
-        for (int i = 0; i < adapter.getGroupCount(); i++)
-            wordlist.expandGroup(i);
-
-        listviewExpanded = true;
-        btnListviewExpandCollapse.setImageResource(R.drawable.ic_action_collapse_holo_light);
-    }
-
-    private void collapseWordlist() {
-        for (int i = 0; i < adapter.getGroupCount(); i++)
-            wordlist.collapseGroup(i);
-
-        listviewExpanded = false;
-        btnListviewExpandCollapse.setImageResource(R.drawable.ic_action_expand_holo_light);
-    }
-
-
-    //Listener
+    //// Listener ////
 
     public class WordlistListener {
 
-        public void startRefreshingAction() {
-            if (btnListviewRefresh.getAnimation() == null) {
-                //start animation
-                final int startRotationDegree = 0;
-                final int endRotationDegree = 360;
-                final long miliSecsForOneRotation = 1000;
-
-                RotateAnimation rotateAnimation = new RotateAnimation(startRotationDegree, endRotationDegree,
-                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                rotateAnimation.setRepeatCount(Animation.INFINITE);
-                rotateAnimation.setDuration(miliSecsForOneRotation);
-
-                btnListviewRefresh.startAnimation(rotateAnimation);
-            }
-        }
-
-        public void stopRefreshingAction() {
-            //stop rotation
-            btnListviewRefresh.clearAnimation();
-            listviewRefreshing = false;
-            swipeLayout.setRefreshing(false);
-        }
-
         public void notifyDataSetChanged() {
             adapter.notifyDataSetChanged();
+            listviewRefreshing = false;
             expandWordlist();
         }
     }
 
-    //private classes
+    //// private classes ////
+    private void expandWordlist() {
+        listviewExpanded = true;
+        for (int i = 0; i < adapter.getGroupCount(); i++)
+            wordlist.expandGroup(i);
 
-    private class ExpandAndCollapseListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            if (!connectionManager.loggedIn())
-                toast(getString(R.string.error_user_not_logged_in_yet));
-            else if (listviewExpanded)
-                collapseWordlist();
-            else
-                expandWordlist();
-        }
+        updateOptionMenuItemsIcons();
     }
 
-    private class RefreshListener implements View.OnClickListener {
+    private void collapseWordlist() {
+        listviewExpanded = false;
+        for (int i = 0; i < adapter.getGroupCount(); i++)
+            wordlist.collapseGroup(i);
 
-        @Override
-        public void onClick(View v) {
-            refreshWordlist();
+        updateOptionMenuItemsIcons();
+    }
+
+    private void updateOptionMenuItemsIcons() {
+        if (menuItem != null) {
+            if (listviewExpanded)
+                menuItem.setTitle(R.string.wordlist_collapse)
+                        .setIcon(R.drawable.ic_action_collapse_holo_light);
+            else
+                menuItem.setTitle(R.string.wordlist_expand)
+                        .setIcon(R.drawable.ic_action_expand_holo_light);
         }
     }
 
     private void refreshWordlist() {
-        if (!connectionManager.loggedIn())
+        if (!connectionManager.loggedIn()) {
             toast(getString(R.string.error_user_not_logged_in_yet));
-        else if (!listviewRefreshing) {
+        } else if (!listviewRefreshing) {
             listviewRefreshing = true;
-
-            //start refreshing
             connectionManager.refreshWordlist();
         } else {
             toast(getString(R.string.error_refreshing_already_running));
@@ -234,7 +216,7 @@ public class FragmentWordlist extends ZeeguuFragment {
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.menu_wordlist, menu);
+            mode.getMenuInflater().inflate(R.menu.menu_wordlist_actionmode, menu);
             return true;
         }
 

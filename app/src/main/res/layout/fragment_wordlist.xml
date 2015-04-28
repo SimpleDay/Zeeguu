@@ -35,28 +35,6 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <ImageView
-            android:id="@+id/listview_expand_collapse"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="10dp"
-            android:gravity="top" />
-
-        <ImageView
-            android:id="@+id/listview_refresh"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_alignTop="@+id/listview_expand_collapse"
-            android:layout_toLeftOf="@+id/listview_expand_collapse"
-            android:layout_toStartOf="@+id/listview_expand_collapse"
-            android:gravity="top"
-            android:src="@drawable/ic_action_refresh_holo_light" />
-
     </RelativeLayout>
 
 </LinearLayout>

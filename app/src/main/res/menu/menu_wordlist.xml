@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/item_delete"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/delete_contribution"
-        android:titleCondensed="Delete">
-    </item>
+    <item android:id="@+id/listview_refresh"
+        android:icon="@drawable/ic_action_refresh_holo_light"
+        android:title="@string/wordlist_refresh" />
+
+    <item android:id="@+id/listview_expand_collapse"
+        android:icon="@drawable/ic_action_collapse_holo_light"
+        android:title="@string/wordlist_collapse" />
+
 
 </menu>

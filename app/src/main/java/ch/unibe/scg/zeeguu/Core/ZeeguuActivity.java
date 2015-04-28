@@ -7,8 +7,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+
+import java.lang.reflect.Method;
 
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Settings.SettingsActivity;
@@ -53,11 +57,30 @@ public class ZeeguuActivity extends FragmentActivity {
         getMenuInflater().inflate(R.menu.menu_zeeguu, menu);
         this.menu = menu;
 
-        updateMenuTitles();
+        showLoginButtonIfNotLoggedIn();
         return true;
     }
 
-    public void updateMenuTitles() {
+    // used to display the icons in the options menu //
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (featureId == Window.FEATURE_OPTIONS_PANEL && menu != null) {
+            try {
+                Method m = menu.getClass().getDeclaredMethod(
+                        "setOptionalIconsVisible", Boolean.TYPE);
+                m.setAccessible(true);
+                m.invoke(menu, true);
+            } catch (NoSuchMethodException e) {
+                Log.e("logging", "onMenuOpened", e);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return super.onMenuOpened(featureId, menu);
+    }
+
+    public void showLoginButtonIfNotLoggedIn() {
         MenuItem item = menu.findItem(R.id.action_log_in);
         item.setVisible(!connectionManager.loggedIn());
     }
@@ -66,17 +89,16 @@ public class ZeeguuActivity extends FragmentActivity {
         switch (item.getItemId()) {
             case R.id.action_log_in:
                 connectionManager.showLoginScreen();
-                break;
+                return true;
 
             case R.id.action_settings:
                 Intent settingIntent = new Intent(this, SettingsActivity.class);
                 startActivityForResult(settingIntent, SETTINGSCHANGED);
-                break;
-            default:
-                break;
-        }
+                return true;
 
-        return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void setTheme(boolean actualizeView) {

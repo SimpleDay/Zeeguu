@@ -263,7 +263,7 @@ public class ConnectionManager {
                 //reset user until relogged again successfully
                 user.logoutUser();
                 user.getLoginInformation();
-                activity.updateMenuTitles();
+                activity.showLoginButtonIfNotLoggedIn();
             }
         }) {
 
@@ -278,18 +278,14 @@ public class ConnectionManager {
         this.addToRequestQueue(strReq, tag_SessionID_Req);
     }
 
-    public void getTranslation(String input, String inputLanguage, String outputLanguage, final FragmentText fragmentText) {
+    public void getTranslation(final String input, String inputLanguage, String outputLanguage, final FragmentText fragmentText) {
         if (input.equals("") || input == null || !isNetworkAvailable())
             return;
 
-        //parse string to URL
-        input = Uri.encode(input);
+        String url_translation = API_URL + "translate/"  + inputLanguage + "/" + outputLanguage + "?session=" + user.getSession_id();
+        logging(url_translation + ", POST word Variable: \"" + Uri.encode(input) + "\"");
 
-        String url_translation = API_URL + "translate_from_to/" + input + "/" +
-                inputLanguage + "/" + outputLanguage + "?session=" + user.getSession_id();
-        logging(url_translation);
-
-        StringRequest strReq = new StringRequest(Request.Method.GET,
+        StringRequest strReq = new StringRequest(Request.Method.POST,
                 url_translation, new Response.Listener<String>() {
 
             @Override
@@ -303,7 +299,19 @@ public class ConnectionManager {
             public void onErrorResponse(VolleyError error) {
                 checkErrorCode(error);
             }
-        });
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // parse string for Zeeguu API //
+                String parsedInput = Uri.encode(input); //TODO!
+
+                Map<String, String> params = new HashMap<>();
+                params.put("word", parsedInput);
+                return params;
+            }
+
+        };
 
         this.addToRequestQueue(strReq, tag_translation_Req);
     }
@@ -365,7 +373,7 @@ public class ConnectionManager {
         logging(user.getSession_id());
         dismissDialog();
 
-        activity.updateMenuTitles();
+        activity.showLoginButtonIfNotLoggedIn();
         getAllWordsFromServer();
         getBothUserLanguageFromServer();
     }
@@ -373,10 +381,6 @@ public class ConnectionManager {
     private void getAllWordsFromServer() {
         if (!user.userHasSessionId() || !isNetworkAvailable())
             return;
-
-        //show that wordlist is refreshing
-        if (wordlistListener != null)
-            wordlistListener.startRefreshingAction();
 
         String url_session_ID = API_URL + "contribs_by_day/with_context?session=" + user.getSession_id();
         logging(url_session_ID);
@@ -431,16 +435,12 @@ public class ConnectionManager {
                 dismissDialog();
                 if (wordlistListener != null) {
                     wordlistListener.notifyDataSetChanged();
-                    wordlistListener.stopRefreshingAction();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 checkErrorCode(error);
-
-                if (wordlistListener != null)
-                    wordlistListener.stopRefreshingAction();
             }
         });
 

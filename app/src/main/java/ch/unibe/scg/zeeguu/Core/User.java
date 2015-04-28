@@ -86,7 +86,7 @@ public class User {
         wordlist.clear();
         wordlistItems.clear();
         connectionManager.notifyWordlistChange();
-        activity.updateMenuTitles();
+        activity.showLoginButtonIfNotLoggedIn();
         Toast.makeText(activity, activity.getString(R.string.error_user_logged_out), Toast.LENGTH_LONG).show();
     }
 
