@@ -148,7 +148,6 @@ public class ConnectionManager {
 
     public void deleteContribution(long ContributionId) {
         deleteContributionFromServer(ContributionId);
-        getAllWordsFromServer(); //Get new wordlist TODO: delete word local
     }
 
     public void contributeToServer(String input, String inputLangauge, String translation, String translationLanguage, final FragmentText fragmentText) {
@@ -304,10 +303,9 @@ public class ConnectionManager {
             @Override
             protected Map<String, String> getParams() {
                 // parse string for Zeeguu API //
-                String parsedInput = Uri.encode(input); //TODO!
 
                 Map<String, String> params = new HashMap<>();
-                params.put("word", parsedInput);
+                params.put("word", Uri.encode(input));
                 return params;
             }
 
@@ -465,6 +463,7 @@ public class ConnectionManager {
                 if (answer.equals("OK")) {
                     toast(activity.getString(R.string.successful_contribution_deleted));
                     logging(activity.getString(R.string.successful_contribution_deleted));
+                    getAllWordsFromServer(); //Get new wordlist TODO: delete word local
                 } else {
                     toast(activity.getString(R.string.error_contribution_delete));
                     logging(activity.getString(R.string.error_contribution_delete));

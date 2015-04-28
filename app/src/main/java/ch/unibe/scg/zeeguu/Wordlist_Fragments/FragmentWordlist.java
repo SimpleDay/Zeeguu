@@ -153,11 +153,14 @@ public class FragmentWordlist extends ZeeguuFragment {
         public void notifyDataSetChanged() {
             adapter.notifyDataSetChanged();
             listviewRefreshing = false;
+            listviewRefreshing = false;
+            swipeLayout.setRefreshing(false);
             expandWordlist();
         }
     }
 
     //// private classes ////
+
     private void expandWordlist() {
         listviewExpanded = true;
         for (int i = 0; i < adapter.getGroupCount(); i++)
