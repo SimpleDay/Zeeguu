@@ -10,6 +10,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -150,53 +151,6 @@ public class ConnectionManager {
         deleteContributionFromServer(ContributionId);
     }
 
-    public void contributeToServer(String input, String inputLangauge, String translation, String translationLanguage, final FragmentText fragmentText) {
-        if (!user.userHasLoginInfo() || input.equals("") || translation.equals("") || !isNetworkAvailable())
-            return;
-
-        //parse string to URL
-        input = Uri.encode(input);
-        translation = Uri.encode(translation);
-
-        String urlContribution = API_URL + "contribute_with_context/" + inputLangauge + "/" + input + "/" +
-                translationLanguage + "/" + translation + "?session=" + user.getSession_id();
-        logging(urlContribution);
-
-        createLoadingDialog();
-
-        StringRequest strReq = new StringRequest(Request.Method.POST,
-                urlContribution, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                fragmentText.activateContribution();
-                logging("successful contributed: " + response);
-                toast(activity.getString(R.string.successful_contribution));
-                getAllWordsFromServer(); //TODO: Not always get the whole list, just add word locally
-            }
-
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                checkErrorCode(error);
-            }
-        }) {
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("title", activity.getString(R.string.contribution_title));
-                params.put("url", activity.getString(R.string.contribution_url_code));
-                params.put("context", "");
-
-                return params;
-            }
-        };
-
-        this.addToRequestQueue(strReq, tag_contribute_Req);
-    }
-
     public void createAccountOnServer(final String username, final String email, final String pw) {
         String url_create_account = API_URL + "add_user/" + email;
         logging(url_create_account);
@@ -277,9 +231,13 @@ public class ConnectionManager {
         this.addToRequestQueue(strReq, tag_SessionID_Req);
     }
 
-    public void getTranslation(final String input, String inputLanguage, String outputLanguage, final FragmentText fragmentText) {
-        if (input.equals("") || input == null || !isNetworkAvailable())
+    public void getTranslation(@NonNull final String input, String inputLanguage, String outputLanguage, final FragmentText fragmentText) {
+        if (inputLanguage.equals(outputLanguage)) {
+            toast(activity.getString(R.string.error_same_language));
             return;
+        } else if (input.equals("") || !isNetworkAvailable()) {
+            return;
+        }
 
         String url_translation = API_URL + "translate/"  + inputLanguage + "/" + outputLanguage + "?session=" + user.getSession_id();
         logging(url_translation + ", POST word Variable: \"" + input + "\"");
@@ -313,6 +271,54 @@ public class ConnectionManager {
 
         this.addToRequestQueue(strReq, tag_translation_Req);
     }
+
+    public void contributeToServer(String input, String inputLangauge, String translation, String translationLanguage, final FragmentText fragmentText) {
+        if (!user.userHasLoginInfo() || input.equals("") || translation.equals("") || !isNetworkAvailable())
+            return;
+
+        //parse string to URL
+        input = Uri.encode(input);
+        translation = Uri.encode(translation);
+
+        String urlContribution = API_URL + "contribute_with_context/" + inputLangauge + "/" + input + "/" +
+                translationLanguage + "/" + translation + "?session=" + user.getSession_id();
+        logging(urlContribution);
+
+        createLoadingDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                urlContribution, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                fragmentText.activateContribution();
+                logging("successful contributed: " + response);
+                toast(activity.getString(R.string.successful_contribution));
+                getAllWordsFromServer(); //TODO: Not always get the whole list, just add word locally
+            }
+
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                checkErrorCode(error);
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("title", activity.getString(R.string.contribution_title));
+                params.put("url", activity.getString(R.string.contribution_url_code));
+                params.put("context", "");
+
+                return params;
+            }
+        };
+
+        this.addToRequestQueue(strReq, tag_contribute_Req);
+    }
+
 
     public boolean firstLogin() {
         return user.isFirstLogin();
