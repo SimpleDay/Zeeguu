@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <ch.unibe.scg.zeeguu.Search_Fragments.MainLinearLayout
         android:id="@+id/fragment_text_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -170,7 +170,7 @@
                 android:src="?attr/customIconCopy" />
 
         </RelativeLayout>
-    </LinearLayout>
+    </ch.unibe.scg.zeeguu.Search_Fragments.MainLinearLayout>
 
     <RelativeLayout
         android:id="@+id/fragment_text_tutorial"
