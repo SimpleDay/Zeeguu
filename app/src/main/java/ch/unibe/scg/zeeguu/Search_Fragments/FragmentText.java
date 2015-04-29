@@ -166,7 +166,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         //Open tutorial when first opened
         if (connectionManager.firstLogin()) {
             RelativeLayout tutorial = (RelativeLayout) view.findViewById(R.id.fragment_text_tutorial);
-            tutorial.setVisibility(View.VISIBLE);
+            tutorial.setVisibility(View.GONE); //TODO only for usability testing, otherwise visible
         }
 
         return view;

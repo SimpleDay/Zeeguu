@@ -132,6 +132,7 @@
     <string name="error_email_not_valid">Email address is not valid, please try again</string>
     <string name="error_connection_unknown_error">Ops! There has been a problem with the connection to the server, please check if you are online and try it later again </string>
     <string name="error_same_language">Ops! You have two times the same language, please change one </string>
+    <string name="error_userinfo_invalid">Ops! You have entered invalid user information, please try again </string>
 
 
     <!-- success messages  -->

@@ -182,11 +182,22 @@
             android:id="@+id/editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_marginTop="211dp"
+            android:text="You can swipe left and right to switch between the windows"
+            android:textStyle="bold"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="205dp"
-            android:text="You can swipe left and right to switch between the windows" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:src="@drawable/double_headed_arrow"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:id="@+id/tutorial_arrow"
+            android:layout_below="@+id/editText"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 </FrameLayout>

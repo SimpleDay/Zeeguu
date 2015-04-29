@@ -91,7 +91,7 @@ public class User {
     }
 
     public boolean isFirstLogin() {
-        if(settings.getBoolean("my_first_time", true)) {
+        if (settings.getBoolean("my_first_time", true)) {
             settings.edit().putBoolean("my_first_time", false).apply();
             return true;
         }
@@ -124,7 +124,16 @@ public class User {
                         email = editTextEmail.getText().toString();
                         pw = editTextPW.getText().toString();
 
-                        connectionManager.getSessionIdFromServer();
+                        if (!userHasLoginInfo()) {
+                            Toast.makeText(activity, activity.getString(R.string.error_userinfo_invalid), Toast.LENGTH_LONG).show();
+                            getLoginInformation();
+                        } else if(!isEmailValid(email)) {
+                            Toast.makeText(activity, R.string.error_email_not_valid, Toast.LENGTH_LONG).show();
+                            getLoginInformation();
+                        } else {
+                            connectionManager.getSessionIdFromServer();
+                        }
+
                     }
                 })
                 .setNegativeButton(R.string.button_cancel, null);
@@ -160,10 +169,14 @@ public class User {
                         String email = editTextEmail.getText().toString();
                         String pw = editTextpw.getText().toString();
 
-                        if (isEmailValid(email)) {
-                            connectionManager.createAccountOnServer(username, email, pw);
-                        } else {
+                        if (!userHasLoginInfo()) {
+                            Toast.makeText(activity, activity.getString(R.string.error_userinfo_invalid), Toast.LENGTH_LONG).show();
+                            createNewAccount();
+                        } else if (!isEmailValid(email)) {
                             Toast.makeText(activity, R.string.error_email_not_valid, Toast.LENGTH_LONG).show();
+                            createNewAccount();
+                        } else {
+                            connectionManager.createAccountOnServer(username, email, pw);
                         }
                     }
                 })

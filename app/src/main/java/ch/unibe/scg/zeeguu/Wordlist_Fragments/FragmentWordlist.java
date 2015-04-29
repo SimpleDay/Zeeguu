@@ -212,6 +212,7 @@ public class FragmentWordlist extends ZeeguuFragment {
                 case R.id.item_delete:
                     logging("deleted contribution with id: " + id);
                     connectionManager.deleteContribution(id);
+                    mode.finish();
                     break;
             }
             return false;
