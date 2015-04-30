@@ -47,6 +47,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     //TTS
     private TextToSpeech textToSpeechNativeLanguage;
     private TextToSpeech textToSpeechOtherLanguage;
+    private TextToSpeech activeTextToSpeech;
 
     //flags
     private ImageView flag_translate_from;
@@ -85,6 +86,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         //TTS
         textToSpeechNativeLanguage = new TextToSpeech(activity, this);
         textToSpeechOtherLanguage = new TextToSpeech(activity, this);
+        activeTextToSpeech = null;
 
         //Set done button to translate
         edit_text_native.setOnKeyListener(new TranslationListenerKeyboard());
@@ -305,10 +307,17 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     private void speak(TextToSpeech tts, EditText edit_text) {
+
         String text = edit_text.getText().toString();
-        if (text != null && !text.equals(""))
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-        else
+        if (text != null && !text.equals("")) {
+            if (activeTextToSpeech != null) {
+                activeTextToSpeech.stop();
+                activeTextToSpeech = null;
+            } else {
+                activeTextToSpeech = tts;
+                activeTextToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        } else
             toast(getString(R.string.error_no_text_to_read));
     }
 
@@ -327,7 +336,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         return clipboard.hasPrimaryClip() && !clipboard.getPrimaryClip().getItemAt(0).getText().equals("");
     }
 
-    private void  translate() {
+    private void translate() {
         String input = getEditTextTrimmed(edit_text_native);
         String wordlistSearch = checkWordlist(input);
 
@@ -473,6 +482,11 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         public void onClick(View v) {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getInputLanguage());
+
+            if (activeTextToSpeech != null) {
+                activeTextToSpeech.stop();
+                activeTextToSpeech = null;
+            }
 
             try {
                 startActivityForResult(intent, RESULT_SPEECH);

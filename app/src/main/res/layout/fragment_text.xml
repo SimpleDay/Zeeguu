@@ -21,6 +21,7 @@
 
             <EditText
                 android:id="@+id/text_native"
+                android:textSize="22sp"
                 android:layout_width="320dp"
                 android:layout_height="200dp"
                 android:layout_centerHorizontal="true"
@@ -28,7 +29,7 @@
                 android:background="@drawable/rounded_textfield"
                 android:gravity="top"
                 android:imeOptions="actionSearch"
-                android:maxLines="8"
+                android:maxLines="6"
                 android:padding="10dp" />
 
             <ImageView
@@ -118,6 +119,7 @@
 
             <EditText
                 android:id="@+id/text_translated"
+                android:textSize="22sp"
                 android:layout_width="320dp"
                 android:layout_height="200dp"
                 android:layout_centerHorizontal="true"
@@ -126,7 +128,7 @@
                 android:clickable="false"
                 android:focusable="false"
                 android:gravity="top"
-                android:maxLines="8"
+                android:maxLines="6"
                 android:padding="10dp" />
 
             <ImageView
