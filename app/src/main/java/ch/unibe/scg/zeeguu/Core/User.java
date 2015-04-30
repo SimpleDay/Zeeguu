@@ -108,7 +108,7 @@ public class User {
 
     //// information Dialogs ////
 
-    public void getLoginInformation() {
+    public void getLoginInformation(String tmpEmail) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -126,10 +126,10 @@ public class User {
 
                         if (!userHasLoginInfo()) {
                             Toast.makeText(activity, activity.getString(R.string.error_userinfo_invalid), Toast.LENGTH_LONG).show();
-                            getLoginInformation();
+                            getLoginInformation(email);
                         } else if(!isEmailValid(email)) {
                             Toast.makeText(activity, R.string.error_email_not_valid, Toast.LENGTH_LONG).show();
-                            getLoginInformation();
+                            getLoginInformation(email);
                         } else {
                             connectionManager.getSessionIdFromServer();
                         }
@@ -145,13 +145,20 @@ public class User {
             @Override
             public void onClick(View v) {
                 aDialog.cancel();
-                createNewAccount();
+                EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
+                createNewAccount(editTextEmail.getText().toString(), "");
             }
         });
         aDialog.show();
+
+        //if email address info available, put it in
+        if(!tmpEmail.isEmpty()) {
+            EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
+            editTextEmail.setText(tmpEmail);
+        }
     }
 
-    public void createNewAccount() {
+    public void createNewAccount(String tmpEmail, String tmpUsername) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -171,10 +178,10 @@ public class User {
 
                         if (!userHasLoginInfo()) {
                             Toast.makeText(activity, activity.getString(R.string.error_userinfo_invalid), Toast.LENGTH_LONG).show();
-                            createNewAccount();
+                            createNewAccount(email, username);
                         } else if (!isEmailValid(email)) {
                             Toast.makeText(activity, R.string.error_email_not_valid, Toast.LENGTH_LONG).show();
-                            createNewAccount();
+                            createNewAccount(email, username);
                         } else {
                             connectionManager.createAccountOnServer(username, email, pw);
                         }
@@ -189,10 +196,22 @@ public class User {
             @Override
             public void onClick(View v) {
                 aDialog.cancel();
-                getLoginInformation();
+                //open login screen with last entered email address
+                EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
+                getLoginInformation(editTextEmail.getText().toString());
             }
         });
         aDialog.show();
+
+        //if email or username already entered, reload them
+        if(!tmpEmail.isEmpty()) {
+            EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
+            editTextEmail.setText(tmpEmail);
+        }
+        if(!tmpUsername.isEmpty()) {
+            EditText editTextUsername = (EditText) aDialog.findViewById(R.id.dialog_username);
+            editTextUsername.setText(tmpUsername);
+        }
     }
 
     //// validation functions ////

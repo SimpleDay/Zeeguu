@@ -78,7 +78,7 @@ public class ConnectionManager {
 
         //get the information that is missing from start point
         if (!user.userHasLoginInfo())
-            user.getLoginInformation();
+            user.getLoginInformation("");
         else if (!user.userHasSessionId())
             getSessionIdFromServer();
         else {
@@ -131,7 +131,7 @@ public class ConnectionManager {
     }
 
     public void showLoginScreen() {
-        user.getLoginInformation();
+        user.getLoginInformation("");
     }
 
     public void logout() {
@@ -171,7 +171,7 @@ public class ConnectionManager {
             @Override
             public void onErrorResponse(VolleyError error) {
                 checkErrorCode(error);
-                user.createNewAccount();
+                user.createNewAccount(email, username);
             }
         }) {
 
@@ -211,11 +211,14 @@ public class ConnectionManager {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                checkErrorCode(error);
+                toast(activity.getString(R.string.error_user_login_wrong));
+                logging(error.getMessage());
+                dismissDialog();
 
                 //reset user until relogged again successfully
+                String tmpEmail = user.getEmail();
                 user.logoutUser();
-                user.getLoginInformation();
+                user.getLoginInformation(tmpEmail);
                 activity.showLoginButtonIfNotLoggedIn();
             }
         }) {
@@ -239,7 +242,7 @@ public class ConnectionManager {
             return;
         }
 
-        String url_translation = API_URL + "translate/"  + inputLanguage + "/" + outputLanguage + "?session=" + user.getSession_id();
+        String url_translation = API_URL + "translate/" + inputLanguage + "/" + outputLanguage + "?session=" + user.getSession_id();
         logging(url_translation + ", POST word Variable: \"" + input + "\"");
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -565,11 +568,11 @@ public class ConnectionManager {
     }
 
     private void checkErrorCode(VolleyError error) {
-        if (error instanceof NoConnectionError) {
+        if (error instanceof NoConnectionError)
             toast(activity.getString(R.string.error_connection_unknown_error));
-        } else {
+        else
             toast(activity.getString(R.string.error_unknown_error));
-        }
+
         logging(error.toString());
         dismissDialog();
 
