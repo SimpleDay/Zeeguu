@@ -37,15 +37,13 @@ public class FragmentSettings extends PreferenceFragment {
         //add Email and Session ID to info box when logged in or not show at all
         PreferenceCategory preference_loginInfo = (PreferenceCategory) findPreference(getString(R.string.category_user_information));
         Preference preference_email = findPreference(getString(R.string.preference_email));
-        Preference preference_session_id = findPreference(getString(R.string.preference_user_session_id));
-        Preference preference_login_button = (Preference) findPreference(getString(R.string.preference_login));
-        Preference preference_logout_button = (Preference) findPreference(getString(R.string.preference_logout));
+        Preference preference_login_button = findPreference(getString(R.string.preference_login));
+        Preference preference_logout_button = findPreference(getString(R.string.preference_logout));
 
         if (connectionManager.loggedIn()) {
             String email = connectionManager.getEmail();
             preference_email.setSummary(email);
-            String session_id = connectionManager.getSessionId();
-            preference_session_id.setSummary(session_id);
+            preference_email.setEnabled(false);
 
             preference_loginInfo.removePreference(preference_login_button);
 
@@ -60,7 +58,6 @@ public class FragmentSettings extends PreferenceFragment {
             });
         } else {
             preference_loginInfo.removePreference(preference_email);
-            preference_loginInfo.removePreference(preference_session_id);
             preference_loginInfo.removePreference(preference_logout_button);
 
             //Login button

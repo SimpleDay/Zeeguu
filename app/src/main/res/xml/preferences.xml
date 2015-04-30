@@ -12,12 +12,6 @@
             android:summary="@string/email_info"
             android:title="@string/email" />
 
-        <EditTextPreference
-            android:key="@string/preference_user_session_id"
-            android:selectable="false"
-            android:summary="@string/unknown"
-            android:title="@string/user_session_id" />
-
         <Preference
             android:key="@string/preference_logout"
             android:summary="Logout from your Zeeguu Account"
