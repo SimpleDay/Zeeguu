@@ -25,10 +25,10 @@ public class MainLinearLayout extends LinearLayout {
         final int proposedheight = MeasureSpec.getSize(heightMeasureSpec);
         final int actualHeight = getHeight();
 
-        if (actualHeight > proposedheight){
+        if (actualHeight > proposedheight) {
             //when keyboard is closed
             findViewById(R.id.relativeLayout_text_translated).setVisibility(GONE);
-        } else {
+        } else if (actualHeight < proposedheight) {
             //when keyboard is opened
             findViewById(R.id.relativeLayout_text_translated).setVisibility(VISIBLE);
         }

@@ -374,7 +374,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
                 String translation = getEditTextTrimmed(edit_text_translated);
 
                 connectionManager.contributeToServer(input, getInputLanguage(), translation, getOutputLanguage(), this);
-                contributed = true;
             } else {
                 toast(getString(R.string.error_contributed_already)); //TODO: press it again when filled deletes contribution
             }
@@ -408,8 +407,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     private void resetTextFields() {
-        edit_text_translated.setText("");
         edit_text_native.setText("");
+        edit_text_translated.setText("");
+        initButton(btn_copy, false);
     }
 
     private void closeKeyboard() {
@@ -519,7 +519,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //also do nothing
+            //Do nothing
         }
 
         @Override
