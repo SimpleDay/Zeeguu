@@ -87,7 +87,7 @@ public class WordlistHeader implements IO {
     public void write(DataOutputStream out) throws IOException {
         out.writeInt(children.size());
         for (Item r : children) {
-            if(r.getItemId() != 0 ) {
+            if (r.getItemId() != 0) {
                 out.writeLong(r.getItemId());
 
                 WordlistItem w = (WordlistItem) r;
@@ -149,6 +149,17 @@ public class WordlistHeader implements IO {
                 children.add(new WordlistInfoHeader(new String(nameData, "UTF-8")));
             }
         }
+    }
+
+    //// search all words in the WordListHeader for a valid translation ////
+
+    public WordlistItem checkWordlistForTranslation(String input, String inputLanguage, String outputLanguage) {
+        for (Item i : children) {
+            WordlistItem result = i.isTranslation(input, inputLanguage, outputLanguage);
+            if (result != null)
+                return result;
+        }
+        return null;
     }
 
     //// View holder for the list elements so that they can be reused ////

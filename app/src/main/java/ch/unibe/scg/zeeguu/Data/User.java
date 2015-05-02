@@ -10,8 +10,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -35,8 +40,7 @@ public class User implements IO{
 
     //User words
     private ArrayList<WordlistHeader> wordlist;
-    private ArrayList<WordlistItem> wordlistItems; //used to make local search, not nice, is a small hack at the moment //TODO: remove
-
+    private String ZEEGUUMYWORDSPATH = "/home/zeeguu/mywords.bin";
 
     private ZeeguuActivity activity;
     private ConnectionManager connectionManager;
@@ -53,7 +57,6 @@ public class User implements IO{
         this.editor = settings.edit();
 
         this.wordlist = new ArrayList<>();
-        this.wordlistItems = new ArrayList<>();
     }
 
     public void loadAllUserInformationLocally() {
@@ -89,7 +92,6 @@ public class User implements IO{
         editor.apply();
 
         wordlist.clear();
-        wordlistItems.clear();
         connectionManager.notifyWordlistChange();
         activity.showLoginButtonIfNotLoggedIn();
         Toast.makeText(activity, activity.getString(R.string.error_user_logged_out), Toast.LENGTH_LONG).show();
@@ -219,10 +221,15 @@ public class User implements IO{
         }
     }
 
-    //// validation functions ////
+    //// search my words for a valid translation ////
 
-    boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    public WordlistItem checkWordlistForTranslation(String input, String inputLanguage, String outputLanguage) {
+        for (WordlistHeader i : wordlist) {
+            WordlistItem result = i.checkWordlistForTranslation(input, inputLanguage, outputLanguage);
+            if (result != null)
+                return result;
+        }
+        return null;
     }
 
     //// Getter and Setter ////
@@ -275,16 +282,22 @@ public class User implements IO{
         this.wordlist = wordlist;
     }
 
-    public ArrayList<WordlistItem> getWordlistItems() {
-        return wordlistItems;
-    }
-
-    public void setWordlistItems(ArrayList<WordlistItem> wordlistItems) {
-        this.wordlistItems = wordlistItems;
-    }
-
 
     //// loading and writing my words from and to memory, IO interface  ////
+
+    public void saveMyWordsLocally() throws IOException {
+        File out = new File(ZEEGUUMYWORDSPATH);
+        DataOutputStream dataOut = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(out)));
+        write(dataOut);
+        dataOut.close();
+    }
+
+    public void loadMyWordsLocally() throws IOException {
+        File out = new File(ZEEGUUMYWORDSPATH);
+        DataInputStream dataIn = new DataInputStream(new BufferedInputStream(new FileInputStream(out)));
+        read(dataIn);
+        dataIn.close();
+    }
 
     @Override
     public void write(DataOutputStream out) throws IOException {
@@ -310,5 +323,11 @@ public class User implements IO{
             r.read(in);
             wordlist.add(r);
         }
+    }
+
+    //// validation functions ////
+
+    private boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }

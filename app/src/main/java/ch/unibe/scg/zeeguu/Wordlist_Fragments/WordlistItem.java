@@ -116,13 +116,15 @@ public class WordlistItem implements Item {
         return id;
     }
 
-    public String isTranslation(String input, String fromLanguage, String toLanguage) {
+    //// to see if an item is a translation from a word we are searching ////
+
+    public WordlistItem isTranslation(String input, String fromLanguage, String toLanguage) {
         if (fromLanguage.equals(this.fromLanguage) && toLanguage.equals(this.toLanguage)) {
             if (input.equals(nativeWord))
-                return translationedWord;
+                return this;
         } else if (fromLanguage.equals(this.toLanguage) && toLanguage.equals(this.fromLanguage)) {
             if (input.equals(translationedWord))
-                return nativeWord;
+                return this;
         }
         return null;
     }

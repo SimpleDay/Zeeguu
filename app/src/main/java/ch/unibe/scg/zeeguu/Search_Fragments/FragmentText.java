@@ -338,26 +338,19 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     private void translate() {
         String input = getEditTextTrimmed(edit_text_native);
-        String wordlistSearch = checkWordlist(input);
+        WordlistItem wordlistSearch = connectionManager.checkWordlistForTranslation(input, getInputLanguage(), getOutputLanguage());
 
         if (wordlistSearch == null)
             connectionManager.getTranslation(input, getInputLanguage(), getOutputLanguage(), this);
         else {
-            setTranslatedText(wordlistSearch);
+            if(wordlistSearch.getFromLanguage().equals(getInputLanguage()))
+                setTranslatedText(wordlistSearch.getTranslationedWord());
+            else
+                setTranslatedText(wordlistSearch.getNativeWord());
+
             activateContribution();
         }
         closeKeyboard();
-    }
-
-    private String checkWordlist(String input) {
-        ArrayList<WordlistItem> wordlist = connectionManager.getWordlistItems();
-        //TODO: make it nice as soon as the database is integrated
-        for (WordlistItem i : wordlist) {
-            String result = i.isTranslation(input, getInputLanguage(), getOutputLanguage());
-            if (result != null)
-                return result;
-        }
-        return null;
     }
 
     private String getEditTextTrimmed(EditText editText) {

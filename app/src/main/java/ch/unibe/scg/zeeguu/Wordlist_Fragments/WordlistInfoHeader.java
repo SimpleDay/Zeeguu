@@ -45,6 +45,11 @@ public class WordlistInfoHeader implements Item {
         return 0;
     }
 
+    @Override
+    public WordlistItem isTranslation(String input, String inputLanguage, String outputLanguage) {
+        return null; //because a WordListHeader cannot be a translation of a word
+    }
+
     static class ViewHolder {
         TextView header_title;
     }

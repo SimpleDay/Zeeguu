@@ -342,10 +342,6 @@ public class ConnectionManager {
         return user.getWordlist();
     }
 
-    public ArrayList<WordlistItem> getWordlistItems() {
-        return user.getWordlistItems();
-    }
-
     public String getNativeLanguage() {
         return user.getNative_language();
     }
@@ -399,9 +395,7 @@ public class ConnectionManager {
             public void onResponse(JSONArray response) {
                 logging(response.toString());
                 ArrayList<WordlistHeader> wordlist = user.getWordlist();
-                ArrayList<WordlistItem> wordlistItems = user.getWordlistItems();
                 wordlist.clear();
-                wordlistItems.clear();
 
                 //ToDo: optimization that not everytime the whole list is sent
                 try {
@@ -428,12 +422,10 @@ public class ConnectionManager {
                             String context = translation.getString("context");
 
                             header.addChild(new WordlistItem(id, nativeWord, translatedWord, context, fromLanguage, toLanguage));
-                            wordlistItems.add(new WordlistItem(id, nativeWord, translatedWord, context, fromLanguage, toLanguage));
                         }
                     }
 
                     user.setWordlist(wordlist);
-                    user.setWordlistItems(wordlistItems);
 
                     toast(activity.getString(R.string.successful_wordlist_updated));
                 } catch (JSONException error) {
@@ -616,5 +608,11 @@ public class ConnectionManager {
         }
 
         return true;
+    }
+
+    //// Checking if a word we are searching is already in the WordList of the user ////
+
+    public WordlistItem checkWordlistForTranslation(String input, String inputLanguage, String outputLanguage) {
+        return user.checkWordlistForTranslation(input, inputLanguage, outputLanguage);
     }
 }
