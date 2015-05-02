@@ -375,10 +375,10 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
                 connectionManager.contributeToServer(input, getInputLanguage(), translation, getOutputLanguage(), this);
             } else {
-                toast(getString(R.string.error_contributed_already)); //TODO: press it again when filled deletes contribution
+                toast(getString(R.string.error_bookmarked_already)); //TODO: press it again when filled deletes contribution
             }
         } else {
-            toast(getString(R.string.error_no_text_to_contribute));
+            toast(getString(R.string.error_no_text_to_bookmark));
         }
     }
 

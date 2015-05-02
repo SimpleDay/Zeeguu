@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Core;
+package ch.unibe.scg.zeeguu.Data;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,8 +10,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import ch.unibe.scg.zeeguu.Core.ConnectionManager;
+import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
@@ -20,7 +25,7 @@ import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
  * Zeeguu Application
  * Created by Pascal on 16/04/15.
  */
-public class User {
+public class User implements IO{
     //user login information
     private String email;
     private String pw;
@@ -278,4 +283,32 @@ public class User {
         this.wordlistItems = wordlistItems;
     }
 
+
+    //// loading and writing my words from and to memory, IO interface  ////
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        out.writeInt(wordlist.size());
+        for (WordlistHeader r : wordlist) {
+            out.writeChars(r.getName());
+            r.write(out);
+        }
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        int size = in.readInt();
+        wordlist = new ArrayList<WordlistHeader>(size);
+        for (int i = 0; i < size; i++) {
+            //get the name of the header group and create it
+            int headerNameSize = in.readInt();
+            byte[] nameData = new byte[headerNameSize];
+            in.readFully(nameData);
+            WordlistHeader r = new WordlistHeader(new String(nameData, "UTF-8"));
+
+            //read all entries from the group and add it to the list
+            r.read(in);
+            wordlist.add(r);
+        }
+    }
 }

@@ -14,7 +14,7 @@ import ch.unibe.scg.zeeguu.R;
  */
 public class WordlistItem implements Item {
 
-    int id;
+    private long id;
     private String nativeWord;
     private String fromLanguage;
     private String translationedWord;
@@ -22,7 +22,7 @@ public class WordlistItem implements Item {
     private String context;
 
 
-    public WordlistItem(int id, String nativeWord, String translationedWord, String context, String fromLanguage, String toLanguage) {
+    public WordlistItem(long id, String nativeWord, String translationedWord, String context, String fromLanguage, String toLanguage) {
         this.id = id;
         this.nativeWord = nativeWord;
         this.translationedWord = translationedWord;
@@ -127,6 +127,7 @@ public class WordlistItem implements Item {
         return null;
     }
 
+    //// View holder for the list elements so that they can be reused ////
 
     static class ViewHolder {
         TextView native_language;

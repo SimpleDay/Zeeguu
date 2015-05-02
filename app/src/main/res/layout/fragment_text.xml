@@ -129,6 +129,7 @@
                 android:focusable="false"
                 android:gravity="top"
                 android:maxLines="6"
+                android:enabled="false"
                 android:padding="10dp" />
 
             <ImageView

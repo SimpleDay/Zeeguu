@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.unibe.scg.zeeguu.Data.User;
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.FragmentWordlist;
@@ -296,7 +297,7 @@ public class ConnectionManager {
             public void onResponse(String response) {
                 fragmentText.activateContribution();
                 logging("successful contributed: " + response);
-                toast(activity.getString(R.string.successful_contribution));
+                toast(activity.getString(R.string.successful_bookmarked));
                 getAllWordsFromServer(); //TODO: Not always get the whole list, just add word locally
             }
 
@@ -311,8 +312,8 @@ public class ConnectionManager {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("title", activity.getString(R.string.contribution_title));
-                params.put("url", activity.getString(R.string.contribution_url_code));
+                params.put("title", activity.getString(R.string.bookmark_title));
+                params.put("url", activity.getString(R.string.bookmark_url_code));
                 params.put("context", "");
 
                 return params;
@@ -470,12 +471,12 @@ public class ConnectionManager {
             public void onResponse(String response) {
                 String answer = response.toString();
                 if (answer.equals("OK")) {
-                    toast(activity.getString(R.string.successful_contribution_deleted));
-                    logging(activity.getString(R.string.successful_contribution_deleted));
+                    toast(activity.getString(R.string.successful_bookmark_deleted));
+                    logging(activity.getString(R.string.successful_bookmark_deleted));
                     getAllWordsFromServer(); //Get new wordlist TODO: delete word local
                 } else {
-                    toast(activity.getString(R.string.error_contribution_delete));
-                    logging(activity.getString(R.string.error_contribution_delete));
+                    toast(activity.getString(R.string.error_bookmark_delete));
+                    logging(activity.getString(R.string.error_bookmark_delete));
                 }
                 dismissDialog();
             }
@@ -569,7 +570,7 @@ public class ConnectionManager {
 
     private void checkErrorCode(VolleyError error) {
         if (error instanceof NoConnectionError)
-            toast(activity.getString(R.string.error_connection_unknown_error));
+            toast(activity.getString(R.string.error_connection_error));
         else
             toast(activity.getString(R.string.error_unknown_error));
 

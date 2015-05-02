@@ -5,15 +5,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import ch.unibe.scg.zeeguu.Data.IO;
 import ch.unibe.scg.zeeguu.R;
 
 /**
  * Zeeguu Application
  * Created by Pascal on 24/01/15.
  */
-public class WordlistHeader {
+public class WordlistHeader implements IO {
     private final String name;
     private ArrayList<Item> children;
     private boolean groupOpen;
@@ -75,6 +79,79 @@ public class WordlistHeader {
     public void setGroupOpen(boolean groupOpen) {
         this.groupOpen = groupOpen;
     }
+
+
+    //// loading and writing my words from and to memory, IO interface  ////
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        out.writeInt(children.size());
+        for (Item r : children) {
+            if(r.getItemId() != 0 ) {
+                out.writeLong(r.getItemId());
+
+                WordlistItem w = (WordlistItem) r;
+                //native word saving
+                out.writeInt(w.getNativeWord().length());
+                out.writeChars(w.getNativeWord());
+                //translation word saving
+                out.writeInt(w.getTranslationedWord().length());
+                out.writeChars(w.getTranslationedWord());
+                //context saving
+                out.writeInt(w.getContext().length());
+                out.writeChars(w.getContext());
+                //fromLanguage saving
+                out.writeInt(w.getFromLanguage().length());
+                out.writeChars(w.getFromLanguage());
+                //toLanguage saving
+                out.writeInt(w.getToLanguage().length());
+                out.writeChars(w.getToLanguage());
+            } else {
+                out.writeLong(0);
+
+                //saving name of info header
+                WordlistInfoHeader w = (WordlistInfoHeader) r;
+                out.writeInt(w.getName().length());
+                out.writeChars(w.getName());
+            }
+        }
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        int size = in.readInt();
+        children = new ArrayList<Item>(size);
+        for (int i = 0; i < size; i++) {
+            //read all entries from the group and add it to the list
+            long id = in.readInt();
+            if (id != 0) {
+                //load native word
+                byte[] nativeWordData = new byte[in.readInt()];
+                in.readFully(nativeWordData);
+                //load translated word
+                byte[] translatedWordData = new byte[in.readInt()];
+                in.readFully(translatedWordData);
+                //load context
+                byte[] contextData = new byte[in.readInt()];
+                in.readFully(contextData);
+                //load from language
+                byte[] fromLanguageData = new byte[in.readInt()];
+                in.readFully(fromLanguageData);
+                //load to language
+                byte[] toLanguageData = new byte[in.readInt()];
+                in.readFully(toLanguageData);
+                //add wordlist item to the list
+                children.add(new WordlistItem(id, new String(nativeWordData, "UTF-8"), new String(translatedWordData, "UTF-8"),
+                        new String(contextData, "UTF-8"), new String(fromLanguageData, "UTF-8"), new String(toLanguageData, "UTF-8")));
+            } else {
+                byte[] nameData = new byte[in.readInt()];
+                in.readFully(nameData);
+                children.add(new WordlistInfoHeader(new String(nameData, "UTF-8")));
+            }
+        }
+    }
+
+    //// View holder for the list elements so that they can be reused ////
 
     static class ViewHolder {
         TextView header_title;

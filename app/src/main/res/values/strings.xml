@@ -14,7 +14,7 @@
     <string name="search_text_title">Text search</string>
     <string name="wordlist_title">The words you learned</string>
     <string name="wordlist_empty">You do not have any words in your library yet, please log in or save your words to retrieve them.</string>
-    <string name="wordlist_delete_contribution">Delete</string>
+    <string name="wordlist_delete_bookmark">Delete</string>
     <string name="wordlist_expand">Expand list</string>
     <string name="wordlist_collapse">Collapse list</string>
     <string name="wordlist_refresh">Refresh list</string>
@@ -56,9 +56,9 @@
     <string name="dialog_logout_button">Logout</string>
 
 
-    <!-- contribution tags  -->
-    <string name="contribution_url_code">android:zeeguu_app</string>
-    <string name="contribution_title">Android Application</string>
+    <!-- bookmark tags  -->
+    <string name="bookmark_url_code">android:zeeguu_app</string>
+    <string name="bookmark_title">Android Application</string>
 
     <!-- setting strings -->
     <string name="title_activity_settings">Settings</string>
@@ -120,17 +120,17 @@
     <string name="error_account_not_created">Ops! Account could not be created, please try later again</string>
     <string name="error_language_speaking_not_supported">Ops! The language you choose cannot be read</string>
     <string name="error_TTS_not_inititalized">Ops! There occurred a problem with the text to speech software. </string>
-    <string name="error_contributed_already">Ops! It was already contributed, it cannot be done twice. </string>
-    <string name="error_no_text_to_contribute">Ops! One or both text fields are empty. Not possible to contribute </string>
+    <string name="error_bookmarked_already">Ops! It was already bookmarked, it cannot be done twice. </string>
+    <string name="error_no_text_to_bookmark">Ops! One or both text fields are empty. Not possible to bookmark </string>
     <string name="error_no_text_to_read">Ops! There is no text that could be read. Please enter first the text and then try it again </string>
     <string name="error_refreshing_already_running">Ops! There is already one refreshing operation running </string>
     <string name="error_listpreference_array">ListPreference requires an entries array and an entryValues array which are both the same length</string>
-    <string name="error_contribution_delete">Ops! The contribution could not be deleted. Please try later again.</string>
+    <string name="error_bookmark_delete">Ops! The bookmark could not be deleted. Please try later again.</string>
     <string name="error_user_logged_out">You have been logged out. Please enter again valid account information in the settings.</string>
     <string name="error_user_not_logged_in_yet">Please log in first before you use these functions</string>
     <string name="error_email_not_valid">Email address is not valid, please try again</string>
-    <string name="error_unknown_error">Ops! There occured an unknown error, please try later again</string>
-    <string name="error_connection_unknown_error">Ops! There has been a problem with the connection to the server, please check if you are online and try it later again </string>
+    <string name="error_unknown_error">Ops! An error has occurred. Please try again later</string>
+    <string name="error_connection_error">Ops! There has been a problem with the connection to the server, please check if you are online and try it later again </string>
     <string name="error_same_language">Ops! You have two times the same language, please change one </string>
     <string name="error_userinfo_invalid">Ops! You have entered invalid user information, please try again </string>
 
@@ -141,8 +141,8 @@
     <string name="successful_language_learning_changed">Successfully changed your learning language on the server to: </string>
     <string name="successful_text_copied">Text has been copied </string>
     <string name="successful_wordlist_updated">wordlist updated </string>
-    <string name="successful_contribution">Contribution was successful! </string>
-    <string name="successful_contribution_deleted">Contribution was deleted successfully! </string>
+    <string name="successful_bookmarked">Successful bookmarked! </string>
+    <string name="successful_bookmark_deleted">Bookmark deleted successfully! </string>
 
 
 </resources>
