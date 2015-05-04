@@ -88,9 +88,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         textToSpeechOtherLanguage = new TextToSpeech(activity, this);
         activeTextToSpeech = null;
 
-        //Set done button to translate
-        edit_text_native.setOnKeyListener(new TranslationListenerKeyboard());
-
         //initialize flags
         flag_translate_from = (ImageView) view.findViewById(R.id.ic_flag_translate_from);
         flag_translate_to = (ImageView) view.findViewById(R.id.ic_flag_translate_to);
@@ -130,6 +127,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         btn_contribute.setOnClickListener(new ContributionListener());
         contributed = false;
 
+        //Set done button to translate
+        edit_text_native.setOnKeyListener(new TranslationListenerKeyboard());
+
         edit_text_native.addTextChangedListener(new EditTextNativeLanguageListener());
         edit_text_translated.addTextChangedListener(new EditTextLearningLanguageListener());
 
@@ -165,7 +165,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         });
         initButton(btn_tts_learning_language, !edit_text_translated.getText().toString().equals(""));
 
-        //Open tutorial when first opened
+        //Open tutorial when the app is first opened
         if (connectionManager.firstLogin()) {
             RelativeLayout tutorial = (RelativeLayout) view.findViewById(R.id.fragment_text_tutorial);
             tutorial.setVisibility(View.GONE); //TODO only for usability testing, otherwise visible
@@ -269,7 +269,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
 
-    //private Methods
+    //// private Methods ////
 
     private void setLanguagesTextFields() {
         setFlag(flag_translate_from, getInputLanguage());
@@ -338,6 +338,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     private void translate() {
         String input = getEditTextTrimmed(edit_text_native);
+        //search in MyWords if i already bookmarked that word
         WordlistItem wordlistSearch = connectionManager.checkWordlistForTranslation(input, getInputLanguage(), getOutputLanguage());
 
         if (wordlistSearch == null)

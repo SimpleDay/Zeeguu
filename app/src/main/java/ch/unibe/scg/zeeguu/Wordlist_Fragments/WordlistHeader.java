@@ -36,6 +36,10 @@ public class WordlistHeader implements IO {
         children.add(item);
     }
 
+    public Item removeChild(int position) {
+        return children.remove(position);
+    }
+
     public Item getChild(int position) {
         return children.get(position);
     }

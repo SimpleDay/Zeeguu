@@ -1,6 +1,7 @@
 package ch.unibe.scg.zeeguu.Data;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,15 +15,13 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import ch.unibe.scg.zeeguu.Core.ConnectionManager;
 import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguu.R;
+import ch.unibe.scg.zeeguu.Wordlist_Fragments.Item;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
 import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
 
@@ -30,7 +29,7 @@ import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
  * Zeeguu Application
  * Created by Pascal on 16/04/15.
  */
-public class User implements IO{
+public class User implements IO {
     //user login information
     private String email;
     private String pw;
@@ -40,7 +39,6 @@ public class User implements IO{
 
     //User words
     private ArrayList<WordlistHeader> wordlist;
-    private String ZEEGUUMYWORDSPATH = "/home/zeeguu/mywords.bin";
 
     private ZeeguuActivity activity;
     private ConnectionManager connectionManager;
@@ -58,6 +56,9 @@ public class User implements IO{
 
         this.wordlist = new ArrayList<>();
     }
+
+
+    //// User management functions ////
 
     public void loadAllUserInformationLocally() {
         //only need to load all information once during start up
@@ -113,6 +114,7 @@ public class User implements IO{
         return !session_id.equals("");
     }
 
+
     //// information Dialogs ////
 
     public void getLoginInformation(String tmpEmail) {
@@ -134,7 +136,7 @@ public class User implements IO{
                         if (!userHasLoginInfo()) {
                             Toast.makeText(activity, activity.getString(R.string.error_userinfo_invalid), Toast.LENGTH_LONG).show();
                             getLoginInformation(email);
-                        } else if(!isEmailValid(email)) {
+                        } else if (!isEmailValid(email)) {
                             Toast.makeText(activity, R.string.error_email_not_valid, Toast.LENGTH_LONG).show();
                             getLoginInformation(email);
                         } else {
@@ -159,7 +161,7 @@ public class User implements IO{
         aDialog.show();
 
         //if email address info available, put it in
-        if(!tmpEmail.isEmpty()) {
+        if (!tmpEmail.isEmpty()) {
             EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
             editTextEmail.setText(tmpEmail);
         }
@@ -211,26 +213,16 @@ public class User implements IO{
         aDialog.show();
 
         //if email or username already entered, reload them
-        if(!tmpEmail.isEmpty()) {
+        if (!tmpEmail.isEmpty()) {
             EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
             editTextEmail.setText(tmpEmail);
         }
-        if(!tmpUsername.isEmpty()) {
+        if (!tmpUsername.isEmpty()) {
             EditText editTextUsername = (EditText) aDialog.findViewById(R.id.dialog_username);
             editTextUsername.setText(tmpUsername);
         }
     }
 
-    //// search my words for a valid translation ////
-
-    public WordlistItem checkWordlistForTranslation(String input, String inputLanguage, String outputLanguage) {
-        for (WordlistHeader i : wordlist) {
-            WordlistItem result = i.checkWordlistForTranslation(input, inputLanguage, outputLanguage);
-            if (result != null)
-                return result;
-        }
-        return null;
-    }
 
     //// Getter and Setter ////
 
@@ -280,29 +272,64 @@ public class User implements IO{
 
     public void setWordlist(ArrayList<WordlistHeader> wordlist) {
         this.wordlist = wordlist;
+        saveMyWordsLocally();
+    }
+
+
+    //// interaction with MyWords  ////
+
+    public boolean isMyWordsEmpty() {
+        return wordlist.isEmpty();
+    }
+
+    public Item deleteWord(long id) {
+        for (WordlistHeader wordlistHeader : wordlist) {
+            for (int itemPosition = 0; itemPosition < wordlistHeader.getChildrenSize(); itemPosition++) {
+                if (id == wordlistHeader.getChild(itemPosition).getItemId()) {
+                    return wordlistHeader.removeChild(itemPosition);
+                }
+            }
+        }
+        return null;
+    }
+
+    public WordlistItem checkMyWordsForTranslation(String input, String inputLanguage, String outputLanguage) {
+        for (WordlistHeader wordlistHeader : wordlist) {
+            WordlistItem result = wordlistHeader.checkWordlistForTranslation(input, inputLanguage, outputLanguage);
+            if (result != null)
+                return result;
+        }
+        return null;
     }
 
 
     //// loading and writing my words from and to memory, IO interface  ////
 
-    public void saveMyWordsLocally() throws IOException {
-        File out = new File(ZEEGUUMYWORDSPATH);
-        DataOutputStream dataOut = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(out)));
-        write(dataOut);
-        dataOut.close();
+    public void saveMyWordsLocally() {
+        try {
+            DataOutputStream dataOut = new DataOutputStream(new BufferedOutputStream(activity.openFileOutput("MyZeeguuWords.bin", Context.MODE_PRIVATE)));
+            write(dataOut);
+            dataOut.close();
+        } catch (IOException e) {
+            Toast.makeText(activity, R.string.error_mywords_not_saved, Toast.LENGTH_LONG).show();
+        }
     }
 
-    public void loadMyWordsLocally() throws IOException {
-        File out = new File(ZEEGUUMYWORDSPATH);
-        DataInputStream dataIn = new DataInputStream(new BufferedInputStream(new FileInputStream(out)));
-        read(dataIn);
-        dataIn.close();
+    public void loadMyWordsLocally() {
+        try {
+            DataInputStream dataIn = new DataInputStream(new BufferedInputStream(activity.openFileInput("MyZeeguuWords.bin")));
+            read(dataIn);
+            dataIn.close();
+        } catch (IOException e) {
+            Toast.makeText(activity, R.string.error_mywords_not_loaded, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeInt(wordlist.size());
         for (WordlistHeader r : wordlist) {
+            out.writeInt(r.getName().length());
             out.writeChars(r.getName());
             r.write(out);
         }

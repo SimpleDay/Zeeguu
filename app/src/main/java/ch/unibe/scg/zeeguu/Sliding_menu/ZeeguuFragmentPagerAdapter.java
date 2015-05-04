@@ -44,12 +44,12 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
     /**
      * gets the fragment of the tab at position i
      *
-     * @param i is the position of tab
+     * @param position of tab
      * @return fragment for tab i
      */
     @Override
-    public ZeeguuFragment getItem(int i) {
-        return tabs.get(i).getFragment();
+    public ZeeguuFragment getItem(int position) {
+        return tabs.get(position).getFragment();
     }
 
     /**

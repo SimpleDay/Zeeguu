@@ -148,8 +148,13 @@ public class ConnectionManager {
             wordlistListener.notifyDataSetChanged();
     }
 
-    public void deleteContribution(long ContributionId) {
-        deleteContributionFromServer(ContributionId);
+    public void deleteContribution(long contributionId) {
+        if (wordlistListener != null && user.deleteWord(contributionId) != null) {
+            wordlistListener.notifyDataSetChanged();
+            deleteContributionFromServer(contributionId);
+        } else {
+            toast(activity.getString(R.string.error_bookmark_delete));
+        }
     }
 
     public void createAccountOnServer(final String username, final String email, final String pw) {
@@ -383,8 +388,11 @@ public class ConnectionManager {
     }
 
     private void getAllWordsFromServer() {
-        if (!user.userHasSessionId() || !isNetworkAvailable())
+        if (!user.userHasSessionId() || !isNetworkAvailable()) {
+            if (wordlistListener != null)
+                wordlistListener.notifyDataSetChanged();
             return;
+        }
 
         String url_session_ID = API_URL + "contribs_by_day/with_context?session=" + user.getSession_id();
         logging(url_session_ID);
@@ -465,7 +473,6 @@ public class ConnectionManager {
                 if (answer.equals("OK")) {
                     toast(activity.getString(R.string.successful_bookmark_deleted));
                     logging(activity.getString(R.string.successful_bookmark_deleted));
-                    getAllWordsFromServer(); //Get new wordlist TODO: delete word local
                 } else {
                     toast(activity.getString(R.string.error_bookmark_delete));
                     logging(activity.getString(R.string.error_bookmark_delete));
@@ -604,6 +611,9 @@ public class ConnectionManager {
 
         if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
             toast(activity.getString(R.string.error_no_internet_connection));
+            //reload MyWords when empty
+            if (user.isMyWordsEmpty())
+                user.loadMyWordsLocally();
             return false;
         }
 
@@ -613,6 +623,6 @@ public class ConnectionManager {
     //// Checking if a word we are searching is already in the WordList of the user ////
 
     public WordlistItem checkWordlistForTranslation(String input, String inputLanguage, String outputLanguage) {
-        return user.checkWordlistForTranslation(input, inputLanguage, outputLanguage);
+        return user.checkMyWordsForTranslation(input, inputLanguage, outputLanguage);
     }
 }

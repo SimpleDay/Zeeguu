@@ -1,12 +1,12 @@
 package ch.unibe.scg.zeeguu.Core;
 
-import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +18,7 @@ import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Settings.SettingsActivity;
 import ch.unibe.scg.zeeguu.Sliding_menu.SlidingFragment;
 
-public class ZeeguuActivity extends FragmentActivity {
+public class ZeeguuActivity extends ActionBarActivity {
     private ConnectionManager connectionManager;
     private static SlidingFragment fragment;
     private Menu menu;

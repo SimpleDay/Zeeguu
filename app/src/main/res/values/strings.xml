@@ -133,6 +133,8 @@
     <string name="error_connection_error">Ops! There has been a problem with the connection to the server, please check if you are online and try it later again </string>
     <string name="error_same_language">Ops! You have two times the same language, please change one </string>
     <string name="error_userinfo_invalid">Ops! You have entered invalid user information, please try again </string>
+    <string name="error_mywords_not_saved">Ops! An error has occurred with your local memory, your words have not been saved on your phone </string>
+    <string name="error_mywords_not_loaded">Ops! An error has occurred with your local memory, could not load your words from your phone </string>
 
 
     <!-- success messages  -->

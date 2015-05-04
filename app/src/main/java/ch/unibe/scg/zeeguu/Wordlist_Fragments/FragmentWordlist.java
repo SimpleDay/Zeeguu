@@ -36,7 +36,6 @@ public class FragmentWordlist extends ZeeguuFragment {
 
     private ActionMode mode;
     private MenuItem menuItem;
-    private View lastSelectedView;
 
 
     @Override
@@ -63,9 +62,7 @@ public class FragmentWordlist extends ZeeguuFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (id != 0) {
-                    mode = getActivity().startActionMode(new ActionBarCallBack(id));
-                    lastSelectedView = view;
-                    view.setSelected(true);
+                    mode = getActivity().startActionMode(new ActionBarCallBack(id, view));
                     return true;
                 }
                 return false;
@@ -76,7 +73,7 @@ public class FragmentWordlist extends ZeeguuFragment {
         wordlist.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
-                if (lastSelectedView != null && mode != null)
+                if (mode != null)
                     mode.finish();
                 return true;
             }
@@ -201,9 +198,12 @@ public class FragmentWordlist extends ZeeguuFragment {
 
     private class ActionBarCallBack implements ActionMode.Callback {
         private long id;
+        private View lastSelectedView;
 
-        public ActionBarCallBack(long id) {
+
+        public ActionBarCallBack(long id, View view) {
             this.id = id;
+            lastSelectedView = view;
         }
 
         @Override
@@ -221,6 +221,7 @@ public class FragmentWordlist extends ZeeguuFragment {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.menu_wordlist_actionmode, menu);
+            lastSelectedView.setSelected(true);
             return true;
         }
 
@@ -230,10 +231,12 @@ public class FragmentWordlist extends ZeeguuFragment {
                 lastSelectedView.setSelected(false);
                 lastSelectedView = null;
             }
+            mode.finish();
         }
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            lastSelectedView.setSelected(true);
             return false;
         }
     }

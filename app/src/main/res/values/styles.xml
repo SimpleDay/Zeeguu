@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="AppThemeLightActionbarDark" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="AppThemeLightActionbarDark" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="customIconText">@drawable/ic_action_edit_holo_light</item>
         <item name="customIconVoice">@drawable/btn_mic_holo_light</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_light</item>
@@ -15,9 +15,15 @@
         <item name="customIconSound">@drawable/btn_tts_holo_light</item>
         <item name="customIconPaste">@drawable/btn_paste_holo_light</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_light</item>
+
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/red</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/darkred</item>
+
     </style>
 
-    <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light">
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="customIconText">@drawable/ic_action_edit_holo_light</item>
         <item name="customIconVoice">@drawable/btn_mic_holo_light</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_light</item>
@@ -28,9 +34,14 @@
         <item name="customIconPaste">@drawable/btn_paste_holo_light</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_light</item>
 
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/red</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/darkred</item>
+
     </style>
 
-    <style name="AppThemeDark" parent="@android:style/Theme.Holo">
+    <style name="AppThemeDark" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="customIconText">@drawable/ic_action_edit_holo_dark</item>
         <item name="customIconVoice">@drawable/btn_mic_holo_dark</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_dark</item>
@@ -41,6 +52,10 @@
         <item name="customIconPaste">@drawable/btn_paste_halo_dark</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_dark</item>
 
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/blue</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/blue</item>
 
     </style>
 
