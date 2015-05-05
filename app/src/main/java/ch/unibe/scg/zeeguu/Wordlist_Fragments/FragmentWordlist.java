@@ -220,8 +220,8 @@ public class FragmentWordlist extends ZeeguuFragment {
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.menu_wordlist_actionmode, menu);
             lastSelectedView.setSelected(true);
+            mode.getMenuInflater().inflate(R.menu.menu_wordlist_actionmode, menu);
             return true;
         }
 
@@ -236,7 +236,6 @@ public class FragmentWordlist extends ZeeguuFragment {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            lastSelectedView.setSelected(true);
             return false;
         }
     }
