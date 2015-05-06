@@ -7,11 +7,11 @@
     <!-- sliding menu strings -->
     <string name="action_settings">Einstellungen</string>
     <string name="search_menu">Suche</string>
-    <string name="wordlist_menu">Woerterliste</string>
+    <string name="mywords_menu">Woerterliste</string>
 
     <!-- fragment strings -->
     <string name="search_text_title">Text Suche</string>
-    <string name="wordlist_title">Gelernte Woerter</string>
+    <string name="mywords_title">Meine Woerter</string>
 
 
     <!-- sign in dialog strings -->

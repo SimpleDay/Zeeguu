@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Wordlist_Fragments;
+package ch.unibe.scg.zeeguu.MyWords_Fragments;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +12,7 @@ import ch.unibe.scg.zeeguu.R;
  * Zeeguu Application
  * Created by Pascal on 22/01/15.
  */
-public class WordlistItem implements Item {
+public class MyWordsItem implements Item {
 
     private long id;
     private String nativeWord;
@@ -22,7 +22,7 @@ public class WordlistItem implements Item {
     private String context;
 
 
-    public WordlistItem(long id, String nativeWord, String translationedWord, String context, String fromLanguage, String toLanguage) {
+    public MyWordsItem(long id, String nativeWord, String translationedWord, String context, String fromLanguage, String toLanguage) {
         this.id = id;
         this.nativeWord = nativeWord;
         this.translationedWord = translationedWord;
@@ -84,9 +84,9 @@ public class WordlistItem implements Item {
 
             holder = new ViewHolder();
 
-            holder.native_language = (TextView) convertView.findViewById(R.id.wordlist_native_language);
-            holder.learning_language = (TextView) convertView.findViewById(R.id.wordlist_learning_language);
-            holder.context = (TextView) convertView.findViewById(R.id.wordlist_context);
+            holder.native_language = (TextView) convertView.findViewById(R.id.mywords_native_language);
+            holder.learning_language = (TextView) convertView.findViewById(R.id.mywords_learning_language);
+            holder.context = (TextView) convertView.findViewById(R.id.mywords_context);
             holder.flag_native = (ImageView) convertView.findViewById(R.id.flag_native);
             holder.flag_learning = (ImageView) convertView.findViewById(R.id.flag_learning);
 
@@ -118,7 +118,7 @@ public class WordlistItem implements Item {
 
     //// to see if an item is a translation from a word we are searching ////
 
-    public WordlistItem isTranslation(String input, String fromLanguage, String toLanguage) {
+    public MyWordsItem isTranslation(String input, String fromLanguage, String toLanguage) {
         if (fromLanguage.equals(this.fromLanguage) && toLanguage.equals(this.toLanguage)) {
             if (input.equals(nativeWord))
                 return this;

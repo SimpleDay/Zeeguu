@@ -130,7 +130,7 @@
                 android:gravity="top"
                 android:maxLines="6"
                 android:enabled="false"
-                android:padding="10dp" />
+                android:padding="30dp" />
 
             <ImageView
                 android:id="@+id/ic_flag_translate_to"
@@ -144,7 +144,7 @@
                 android:gravity="top" />
 
             <ImageView
-                android:id="@+id/btn_contribute"
+                android:id="@+id/btn_bookmark"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
                 android:layout_alignBottom="@+id/ic_flag_translate_to"
@@ -167,7 +167,7 @@
                 android:layout_height="35dp"
                 android:layout_alignLeft="@+id/text_translated"
                 android:layout_alignStart="@+id/text_translated"
-                android:layout_alignTop="@+id/btn_contribute"
+                android:layout_alignTop="@+id/btn_bookmark"
                 android:layout_marginLeft="10dp"
                 android:enabled="false"
                 android:src="?attr/customIconCopy" />

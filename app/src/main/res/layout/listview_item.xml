@@ -19,26 +19,26 @@
             android:padding="5dp" />
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/wordlist_native_language"
+            android:id="@+id/mywords_native_language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight=".5"
             android:gravity="left"
             android:padding="5dp"
             android:paddingTop="10dp"
-            android:textColor="@color/wordlist_text_color"
+            android:textColor="@color/mywords_text_color"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/wordlist_learning_language"
+            android:id="@+id/mywords_learning_language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight=".5"
             android:gravity="right"
             android:padding="5dp"
             android:paddingTop="10dp"
-            android:textColor="@color/wordlist_text_color"
+            android:textColor="@color/mywords_text_color"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -52,12 +52,12 @@
     </LinearLayout>
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/wordlist_context"
+        android:id="@+id/mywords_context"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
         android:padding="5dp"
-        android:textColor="@color/wordlist_text_color"
+        android:textColor="@color/mywords_text_color"
         android:textSize="16sp" />
 
 

@@ -32,7 +32,7 @@ import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Settings.LanguageListPreference;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
+import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsItem;
 
 /**
  * Created by Pascal on 12/01/15.
@@ -64,8 +64,8 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private ImageView btn_copy;
     private ImageView btn_paste;
 
-    private ImageView btn_contribute;
-    private boolean contributed;
+    private ImageView btn_bookmark;
+    private boolean bookmarked;
 
 
     public FragmentText() {
@@ -123,9 +123,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         TextView btn_transl = (TextView) view.findViewById(R.id.btn_translate);
         btn_transl.setOnClickListener(new TranslationListener());
 
-        btn_contribute = (ImageView) view.findViewById(R.id.btn_contribute);
-        btn_contribute.setOnClickListener(new ContributionListener());
-        contributed = false;
+        btn_bookmark = (ImageView) view.findViewById(R.id.btn_bookmark);
+        btn_bookmark.setOnClickListener(new BookmarkListener());
+        bookmarked = false;
 
         //Set done button to translate
         edit_text_native.setOnKeyListener(new TranslationListenerKeyboard());
@@ -225,9 +225,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    public void activateContribution() {
-        contributed = true;
-        btn_contribute.setImageResource(R.drawable.btn_bookmark_filled);
+    public void markEntriesAsBookmarked() {
+        bookmarked = true;
+        btn_bookmark.setImageResource(R.drawable.btn_bookmark_filled);
 
     }
 
@@ -339,17 +339,17 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private void translate() {
         String input = getEditTextTrimmed(edit_text_native);
         //search in MyWords if i already bookmarked that word
-        WordlistItem wordlistSearch = connectionManager.checkWordlistForTranslation(input, getInputLanguage(), getOutputLanguage());
+        MyWordsItem myWordsSearch = connectionManager.checkMyWordsForTranslation(input, getInputLanguage(), getOutputLanguage());
 
-        if (wordlistSearch == null)
+        if (myWordsSearch == null)
             connectionManager.getTranslation(input, getInputLanguage(), getOutputLanguage(), this);
         else {
-            if(wordlistSearch.getFromLanguage().equals(getInputLanguage()))
-                setTranslatedText(wordlistSearch.getTranslationedWord());
+            if (myWordsSearch.getFromLanguage().equals(getInputLanguage()))
+                setTranslatedText(myWordsSearch.getTranslationedWord());
             else
-                setTranslatedText(wordlistSearch.getNativeWord());
+                setTranslatedText(myWordsSearch.getNativeWord());
 
-            activateContribution();
+            markEntriesAsBookmarked();
         }
         closeKeyboard();
     }
@@ -359,17 +359,17 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
 
-    private void contribute() {
+    private void bookmarkEntries() {
         if (!connectionManager.loggedIn())
             toast(getString(R.string.error_user_not_logged_in_yet));
         else if (edit_text_native.getText().length() != 0 && edit_text_translated.getText().length() != 0) {
-            if (!contributed) {
+            if (!bookmarked) {
                 String input = getEditTextTrimmed(edit_text_native);
                 String translation = getEditTextTrimmed(edit_text_translated);
 
-                connectionManager.contributeToServer(input, getInputLanguage(), translation, getOutputLanguage(), this);
+                connectionManager.bookmarkWordOnServer(input, getInputLanguage(), translation, getOutputLanguage(), this);
             } else {
-                toast(getString(R.string.error_bookmarked_already)); //TODO: press it again when filled deletes contribution
+                toast(getString(R.string.error_bookmarked_already)); //TODO: press it again when filled deletes bookmark
             }
         } else {
             toast(getString(R.string.error_no_text_to_bookmark));
@@ -497,10 +497,10 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         }
     }
 
-    private class ContributionListener implements View.OnClickListener {
+    private class BookmarkListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            contribute();
+            bookmarkEntries();
         }
     }
 
@@ -536,9 +536,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
         @Override
         public void afterTextChanged(Editable s) {
-            //when learning textfield changes, it can be contributed again.
-            contributed = false;
-            btn_contribute.setImageResource(R.drawable.btn_bookmark);
+            //when learning textfield changes, it can be bookmarked again.
+            bookmarked = false;
+            btn_bookmark.setImageResource(R.drawable.btn_bookmark);
 
             boolean editTextIsEmpty = edit_text_translated.getText().toString().equals("");
             initButton(btn_copy, !editTextIsEmpty);

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/wordlist_header"
+    android:id="@+id/mywords_header"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/wordlist_info_header"
+    android:background="@color/mywords_info_header"
     android:orientation="horizontal">
 
 
@@ -15,7 +15,7 @@
         android:maxLines="1"
         android:padding="5dp"
         android:singleLine="true"
-        android:textColor="@color/wordlist_info_header_text_color"
+        android:textColor="@color/mywords_info_header_text_color"
         android:textSize="18sp"
         android:textStyle="bold" />
 

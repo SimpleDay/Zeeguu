@@ -36,10 +36,10 @@ import java.util.Map;
 import ch.unibe.scg.zeeguu.Data.User;
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.FragmentWordlist;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistInfoHeader;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
+import ch.unibe.scg.zeeguu.MyWords_Fragments.FragmentMyWords;
+import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsHeader;
+import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsInfoHeader;
+import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsItem;
 
 public class ConnectionManager {
 
@@ -51,11 +51,11 @@ public class ConnectionManager {
 
     //TAGS
     private static final boolean debugOn = true;
-    private static final String tag_wordlist_Req = "tag_wordlist_id";
-    private static final String tag_SessionID_Req = "tag_session_id";
-    private static final String tag_language_Req = "tag_language_id";
-    private static final String tag_translation_Req = "tag_translation_id";
-    private static final String tag_contribute_Req = "tag_contrib_id";
+    private static final String tagMyWordsReq = "tag_mywords_id";
+    private static final String tagSessionIDReq = "tag_session_id";
+    private static final String tagLanguageReq = "tag_language_id";
+    private static final String tagTranslationReq = "tag_translation_id";
+    private static final String tagBookmarkReq = "tag_bookmark_id";
     private static final String TAG = "tag_logging";
 
     private User user;
@@ -63,7 +63,7 @@ public class ConnectionManager {
     private static ZeeguuActivity activity;
 
 
-    private FragmentWordlist.WordlistListener wordlistListener;
+    private FragmentMyWords.MyWordsListener myWordsListener;
 
 
     public ConnectionManager(ZeeguuActivity activity) {
@@ -84,7 +84,7 @@ public class ConnectionManager {
             getSessionIdFromServer();
         else {
             getBothUserLanguageFromServer();
-            getAllWordsFromServer();
+            getMyWordsFromServer();
         }
     }
 
@@ -117,8 +117,8 @@ public class ConnectionManager {
     }
 
     public void cancelAllPendingRequests() {
-        cancelPendingRequests(tag_wordlist_Req);
-        cancelPendingRequests(tag_SessionID_Req);
+        cancelPendingRequests(tagMyWordsReq);
+        cancelPendingRequests(tagSessionIDReq);
     }
 
     public void cancelPendingRequests(Object tag) {
@@ -139,19 +139,19 @@ public class ConnectionManager {
         user.logoutUser();
     }
 
-    public void refreshWordlist() {
-        getAllWordsFromServer();
+    public void refreshMyWords() {
+        getMyWordsFromServer();
     }
 
-    public void notifyWordlistChange() {
-        if (wordlistListener != null)
-            wordlistListener.notifyDataSetChanged();
+    public void notifyMyWordsChange() {
+        if (myWordsListener != null)
+            myWordsListener.notifyDataSetChanged();
     }
 
-    public void deleteContribution(long contributionId) {
-        if (wordlistListener != null && user.deleteWord(contributionId) != null) {
-            wordlistListener.notifyDataSetChanged();
-            deleteContributionFromServer(contributionId);
+    public void removeBookmark(long bookmarkID) {
+        if (myWordsListener != null && user.deleteWord(bookmarkID) != null) {
+            myWordsListener.notifyDataSetChanged();
+            removeBookmarkFromServer(bookmarkID);
         } else {
             toast(activity.getString(R.string.error_bookmark_delete));
         }
@@ -190,7 +190,7 @@ public class ConnectionManager {
             }
         };
 
-        this.addToRequestQueue(strReq, tag_SessionID_Req);
+        this.addToRequestQueue(strReq, tagSessionIDReq);
 
     }
 
@@ -237,7 +237,7 @@ public class ConnectionManager {
             }
         };
 
-        this.addToRequestQueue(strReq, tag_SessionID_Req);
+        this.addToRequestQueue(strReq, tagSessionIDReq);
     }
 
     public void getTranslation(@NonNull final String input, String inputLanguage, String outputLanguage, final FragmentText fragmentText) {
@@ -273,37 +273,39 @@ public class ConnectionManager {
 
                 Map<String, String> params = new HashMap<>();
                 params.put("word", Uri.encode(input));
+                params.put("url", Uri.encode(activity.getString(R.string.bookmark_url_code)));
+                params.put("context", Uri.encode(""));
                 return params;
             }
 
         };
 
-        this.addToRequestQueue(strReq, tag_translation_Req);
+        this.addToRequestQueue(strReq, tagTranslationReq);
     }
 
-    public void contributeToServer(String input, String inputLangauge, String translation, String translationLanguage, final FragmentText fragmentText) {
-        if (!user.userHasLoginInfo() || input.equals("") || translation.equals("") || !isNetworkAvailable())
+    public void bookmarkWordOnServer(String inputWord, String inputLangauge, String translation, String translationLanguage, final FragmentText fragmentText) {
+        if (!user.userHasLoginInfo() || inputWord.equals("") || translation.equals("") || !isNetworkAvailable())
             return;
 
         //parse string to URL
-        input = Uri.encode(input);
+        inputWord = Uri.encode(inputWord);
         translation = Uri.encode(translation);
 
-        String urlContribution = API_URL + "contribute_with_context/" + inputLangauge + "/" + input + "/" +
+        String urlBookmark = API_URL + "contribute_with_context/" + inputLangauge + "/" + inputWord + "/" +
                 translationLanguage + "/" + translation + "?session=" + user.getSession_id();
-        logging(urlContribution);
+        logging(urlBookmark);
 
         createLoadingDialog();
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                urlContribution, new Response.Listener<String>() {
+                urlBookmark, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                fragmentText.activateContribution();
-                logging("successful contributed: " + response);
+                fragmentText.markEntriesAsBookmarked();
+                logging(activity.getString(R.string.successful_bookmarked) + ", " + response);
                 toast(activity.getString(R.string.successful_bookmarked));
-                getAllWordsFromServer(); //TODO: Not always get the whole list, just add word locally
+                getMyWordsFromServer(); //TODO: Not always get the whole list, just add word locally
             }
 
         }, new Response.ErrorListener() {
@@ -325,7 +327,7 @@ public class ConnectionManager {
             }
         };
 
-        this.addToRequestQueue(strReq, tag_contribute_Req);
+        this.addToRequestQueue(strReq, tagBookmarkReq);
     }
 
 
@@ -343,8 +345,8 @@ public class ConnectionManager {
         return user.getEmail();
     }
 
-    public ArrayList<WordlistHeader> getWordlist() {
-        return user.getWordlist();
+    public ArrayList<MyWordsHeader> getMyWords() {
+        return user.getMyWords();
     }
 
     public String getNativeLanguage() {
@@ -367,8 +369,8 @@ public class ConnectionManager {
         setUserLanguageOnServer(activity.getString(R.string.preference_learning_language), learning_language_key);
     }
 
-    public void setWordlistListener(FragmentWordlist.WordlistListener listener) {
-        wordlistListener = listener;
+    public void setMyWordsListener(FragmentMyWords.MyWordsListener listener) {
+        myWordsListener = listener;
     }
 
 
@@ -383,14 +385,14 @@ public class ConnectionManager {
         dismissDialog();
 
         activity.showLoginButtonIfNotLoggedIn();
-        getAllWordsFromServer();
+        getMyWordsFromServer();
         getBothUserLanguageFromServer();
     }
 
-    private void getAllWordsFromServer() {
+    private void getMyWordsFromServer() {
         if (!user.userHasSessionId() || !isNetworkAvailable()) {
-            if (wordlistListener != null)
-                wordlistListener.notifyDataSetChanged();
+            if (myWordsListener != null)
+                myWordsListener.notifyDataSetChanged();
             return;
         }
 
@@ -402,24 +404,24 @@ public class ConnectionManager {
             @Override
             public void onResponse(JSONArray response) {
                 logging(response.toString());
-                ArrayList<WordlistHeader> wordlist = user.getWordlist();
-                wordlist.clear();
+                ArrayList<MyWordsHeader> myWords = user.getMyWords();
+                myWords.clear();
 
                 //ToDo: optimization that not everytime the whole list is sent
                 try {
                     for (int j = 0; j < response.length(); j++) {
                         JSONObject dates = response.getJSONObject(j);
-                        WordlistHeader header = new WordlistHeader(dates.getString("date"));
-                        wordlist.add(header);
-                        JSONArray contribs = dates.getJSONArray("contribs");
+                        MyWordsHeader header = new MyWordsHeader(dates.getString("date"));
+                        myWords.add(header);
+                        JSONArray bookmarks = dates.getJSONArray("contribs");
                         String title = "";
 
-                        for (int i = 0; i < contribs.length(); i++) {
-                            JSONObject translation = contribs.getJSONObject(i);
+                        for (int i = 0; i < bookmarks.length(); i++) {
+                            JSONObject translation = bookmarks.getJSONObject(i);
                             //add title when a new one is
                             if (!title.equals(translation.getString("title"))) {
                                 title = translation.getString("title");
-                                header.addChild(new WordlistInfoHeader(title));
+                                header.addChild(new MyWordsInfoHeader(title));
                             }
                             //add word as entry to list
                             int id = translation.getInt("id");
@@ -429,20 +431,20 @@ public class ConnectionManager {
                             String toLanguage = translation.getString("to_language");
                             String context = translation.getString("context");
 
-                            header.addChild(new WordlistItem(id, nativeWord, translatedWord, context, fromLanguage, toLanguage));
+                            header.addChild(new MyWordsItem(id, nativeWord, translatedWord, context, fromLanguage, toLanguage));
                         }
                     }
 
-                    user.setWordlist(wordlist);
+                    user.setMyWords(myWords);
 
-                    toast(activity.getString(R.string.successful_wordlist_updated));
+                    toast(activity.getString(R.string.successful_mywords_updated));
                 } catch (JSONException error) {
                     logging(error.toString());
                 }
 
                 dismissDialog();
-                if (wordlistListener != null) {
-                    wordlistListener.notifyDataSetChanged();
+                if (myWordsListener != null) {
+                    myWordsListener.notifyDataSetChanged();
                 }
             }
         }, new Response.ErrorListener() {
@@ -453,19 +455,19 @@ public class ConnectionManager {
         });
 
 
-        this.addToRequestQueue(request, tag_wordlist_Req);
+        this.addToRequestQueue(request, tagMyWordsReq);
     }
 
-    private void deleteContributionFromServer(long ContributionId) {
+    private void removeBookmarkFromServer(long bookmarkID) {
         if (!user.userHasLoginInfo() || !isNetworkAvailable())
             return;
 
-        String url_delete_contribution = API_URL + "delete_contribution/" + ContributionId + "?session=" + user.getSession_id();
-        logging(url_delete_contribution);
+        String urlRemoveBookmark = API_URL + "delete_contribution/" + bookmarkID + "?session=" + user.getSession_id();
+        logging(urlRemoveBookmark);
 
         createLoadingDialog();
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                url_delete_contribution, new Response.Listener<String>() {
+                urlRemoveBookmark, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -488,7 +490,7 @@ public class ConnectionManager {
 
         });
 
-        this.addToRequestQueue(strReq, tag_SessionID_Req);
+        this.addToRequestQueue(strReq, tagSessionIDReq);
     }
 
     private void getBothUserLanguageFromServer() {
@@ -527,7 +529,7 @@ public class ConnectionManager {
 
                 });
 
-        this.addToRequestQueue(request, tag_language_Req);
+        this.addToRequestQueue(request, tagLanguageReq);
     }
 
     private void setUserLanguageOnServer(final String urlTag, final String language_key) {
@@ -564,7 +566,7 @@ public class ConnectionManager {
             }
         });
 
-        this.addToRequestQueue(strReq, tag_language_Req);
+        this.addToRequestQueue(strReq, tagLanguageReq);
     }
 
     private void checkErrorCode(VolleyError error) {
@@ -620,9 +622,9 @@ public class ConnectionManager {
         return true;
     }
 
-    //// Checking if a word we are searching is already in the WordList of the user ////
+    //// Checking if a word we are searching is already in the MyWords of the user ////
 
-    public WordlistItem checkWordlistForTranslation(String input, String inputLanguage, String outputLanguage) {
+    public MyWordsItem checkMyWordsForTranslation(String input, String inputLanguage, String outputLanguage) {
         return user.checkMyWordsForTranslation(input, inputLanguage, outputLanguage);
     }
 }

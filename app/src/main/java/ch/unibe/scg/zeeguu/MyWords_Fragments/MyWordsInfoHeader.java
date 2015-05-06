@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Wordlist_Fragments;
+package ch.unibe.scg.zeeguu.MyWords_Fragments;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +10,10 @@ import ch.unibe.scg.zeeguu.R;
  * Zeeguu Application
  * Created by Pascal on 24/01/15.
  */
-public class WordlistInfoHeader implements Item {
+public class MyWordsInfoHeader implements Item {
     private final String name;
 
-    public WordlistInfoHeader(String name) {
+    public MyWordsInfoHeader(String name) {
         this.name = name;
     }
 
@@ -46,8 +46,8 @@ public class WordlistInfoHeader implements Item {
     }
 
     @Override
-    public WordlistItem isTranslation(String input, String inputLanguage, String outputLanguage) {
-        return null; //because a WordListHeader cannot be a translation of a word
+    public MyWordsItem isTranslation(String input, String inputLanguage, String outputLanguage) {
+        return null; //because a MyWordsHeader cannot be a translation of a word
     }
 
     static class ViewHolder {

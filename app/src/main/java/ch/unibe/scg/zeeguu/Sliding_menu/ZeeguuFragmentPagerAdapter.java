@@ -9,7 +9,7 @@ import java.util.List;
 
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.FragmentWordlist;
+import ch.unibe.scg.zeeguu.MyWords_Fragments.FragmentMyWords;
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 
 /**
@@ -34,10 +34,10 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
         ));
 
         tabs.add(new PagerFragmentTab(
-                fragment.getString(R.string.wordlist_menu), // Title
+                fragment.getString(R.string.mywords_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                new FragmentWordlist() //fragment which the tab represents
+                new FragmentMyWords() //fragment which the tab represents
         ));
     }
 

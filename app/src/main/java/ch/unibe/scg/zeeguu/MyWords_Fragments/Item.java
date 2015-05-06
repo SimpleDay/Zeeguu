@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Wordlist_Fragments;
+package ch.unibe.scg.zeeguu.MyWords_Fragments;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,5 +15,5 @@ public interface Item {
     public long getItemId();
 
     // to see if an item is a translation from a word we are searching
-    WordlistItem isTranslation(String input, String inputLanguage, String outputLanguage);
+    MyWordsItem isTranslation(String input, String inputLanguage, String outputLanguage);
 }

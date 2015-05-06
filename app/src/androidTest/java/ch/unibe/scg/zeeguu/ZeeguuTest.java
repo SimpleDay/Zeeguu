@@ -58,7 +58,7 @@ public class ZeeguuTest extends ActivityInstrumentationTestCase2<ZeeguuActivity>
 
     }
 
-    public void testWordlist() {
+    public void testMyWords() {
         //do nothing at the moment
     }
 

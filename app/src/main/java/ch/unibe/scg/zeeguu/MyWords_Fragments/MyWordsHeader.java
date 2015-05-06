@@ -1,12 +1,12 @@
-package ch.unibe.scg.zeeguu.Wordlist_Fragments;
+package ch.unibe.scg.zeeguu.MyWords_Fragments;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -17,12 +17,12 @@ import ch.unibe.scg.zeeguu.R;
  * Zeeguu Application
  * Created by Pascal on 24/01/15.
  */
-public class WordlistHeader implements IO {
+public class MyWordsHeader implements IO {
     private final String name;
     private ArrayList<Item> children;
     private boolean groupOpen;
 
-    public WordlistHeader(String name) {
+    public MyWordsHeader(String name) {
         this.name = name;
         this.children = new ArrayList<>();
         groupOpen = false;
@@ -88,78 +88,74 @@ public class WordlistHeader implements IO {
     //// loading and writing my words from and to memory, IO interface  ////
 
     @Override
-    public void write(DataOutputStream out) throws IOException {
-        out.writeInt(children.size());
+    public void write(BufferedWriter bufferedWriter) throws IOException {
+        bufferedWriter.write(children.size());
+        bufferedWriter.newLine();
+
         for (Item r : children) {
             if (r.getItemId() != 0) {
-                out.writeLong(r.getItemId());
+                bufferedWriter.write(Long.toString(r.getItemId()));
+                bufferedWriter.newLine();
 
-                WordlistItem w = (WordlistItem) r;
+                MyWordsItem w = (MyWordsItem) r;
                 //native word saving
-                out.writeInt(w.getNativeWord().length());
-                out.writeChars(w.getNativeWord());
+                bufferedWriter.write(w.getNativeWord());
+                bufferedWriter.newLine();
                 //translation word saving
-                out.writeInt(w.getTranslationedWord().length());
-                out.writeChars(w.getTranslationedWord());
+                bufferedWriter.write(w.getTranslationedWord());
+                bufferedWriter.newLine();
                 //context saving
-                out.writeInt(w.getContext().length());
-                out.writeChars(w.getContext());
+                bufferedWriter.write(w.getContext());
+                bufferedWriter.newLine();
                 //fromLanguage saving
-                out.writeInt(w.getFromLanguage().length());
-                out.writeChars(w.getFromLanguage());
+                bufferedWriter.write(w.getFromLanguage());
+                bufferedWriter.newLine();
                 //toLanguage saving
-                out.writeInt(w.getToLanguage().length());
-                out.writeChars(w.getToLanguage());
+                bufferedWriter.write(w.getToLanguage());
+                bufferedWriter.newLine();
             } else {
-                out.writeLong(0);
+                bufferedWriter.write(0);
+                bufferedWriter.newLine();
 
                 //saving name of info header
-                WordlistInfoHeader w = (WordlistInfoHeader) r;
-                out.writeInt(w.getName().length());
-                out.writeChars(w.getName());
+                MyWordsInfoHeader w = (MyWordsInfoHeader) r;
+                bufferedWriter.write(w.getName());
+                bufferedWriter.newLine();
             }
         }
     }
 
     @Override
-    public void read(DataInputStream in) throws IOException {
-        int size = in.readInt();
-        children = new ArrayList<Item>(size);
+    public void read(BufferedReader bufferedReader) throws IOException {
+        int size = Integer.parseInt(bufferedReader.readLine().trim());
         for (int i = 0; i < size; i++) {
             //read all entries from the group and add it to the list
-            long id = in.readInt();
-            if (id != 0) {
+            long id = Long.parseLong(bufferedReader.readLine().trim());
+            if (id > 0) {
                 //load native word
-                byte[] nativeWordData = new byte[in.readInt()];
-                in.readFully(nativeWordData);
+                String nativeWordData = bufferedReader.readLine();
                 //load translated word
-                byte[] translatedWordData = new byte[in.readInt()];
-                in.readFully(translatedWordData);
+                String translatedWordData = bufferedReader.readLine();
                 //load context
-                byte[] contextData = new byte[in.readInt()];
-                in.readFully(contextData);
+                String contextData = bufferedReader.readLine();
                 //load from language
-                byte[] fromLanguageData = new byte[in.readInt()];
-                in.readFully(fromLanguageData);
+                String fromLanguageData = bufferedReader.readLine();
                 //load to language
-                byte[] toLanguageData = new byte[in.readInt()];
-                in.readFully(toLanguageData);
-                //add wordlist item to the list
-                children.add(new WordlistItem(id, new String(nativeWordData, "UTF-8"), new String(translatedWordData, "UTF-8"),
-                        new String(contextData, "UTF-8"), new String(fromLanguageData, "UTF-8"), new String(toLanguageData, "UTF-8")));
+                String toLanguageData = bufferedReader.readLine();
+                //add myword item to the list
+                children.add(new MyWordsItem(id, nativeWordData, translatedWordData,
+                        contextData, fromLanguageData, toLanguageData));
             } else {
-                byte[] nameData = new byte[in.readInt()];
-                in.readFully(nameData);
-                children.add(new WordlistInfoHeader(new String(nameData, "UTF-8")));
+                children.add(new MyWordsInfoHeader(bufferedReader.readLine()));
             }
         }
     }
 
-    //// search all words in the WordListHeader for a valid translation ////
+    //// search all words in the MyWordsHeader for a valid translation ////
 
-    public WordlistItem checkWordlistForTranslation(String input, String inputLanguage, String outputLanguage) {
+    public MyWordsItem checkMyWordsForTranslation(String input, String inputLanguage, String outputLanguage) {
         for (Item i : children) {
-            WordlistItem result = i.isTranslation(input, inputLanguage, outputLanguage);
+            MyWordsItem result = i.isTranslation(input, inputLanguage, outputLanguage);
             if (result != null)
                 return result;
         }

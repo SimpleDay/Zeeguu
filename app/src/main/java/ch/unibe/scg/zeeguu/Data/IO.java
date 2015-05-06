@@ -1,7 +1,7 @@
 package ch.unibe.scg.zeeguu.Data;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 
 /**
@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 public interface IO {
 
-    void write(DataOutputStream out) throws IOException;
+    void write(BufferedWriter bufferedWriter) throws IOException;
 
-    void read(DataInputStream in) throws IOException;
+    void read(BufferedReader bufferedReader) throws IOException;
 }

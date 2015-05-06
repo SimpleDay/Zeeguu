@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Wordlist_Fragments;
+package ch.unibe.scg.zeeguu.MyWords_Fragments;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -14,13 +14,13 @@ import java.util.ArrayList;
  */
 
 
-public class WordlistExpandableAdapter extends BaseExpandableListAdapter {
+public class MyWordsExpandableAdapter extends BaseExpandableListAdapter {
 
-    private final ArrayList<WordlistHeader> headers;
+    private final ArrayList<MyWordsHeader> headers;
     public LayoutInflater inflater;
     public Activity activity;
 
-    public WordlistExpandableAdapter(Activity act, ArrayList<WordlistHeader> headers) {
+    public MyWordsExpandableAdapter(Activity act, ArrayList<MyWordsHeader> headers) {
         this.activity = act;
         this.headers = headers;
         this.inflater = act.getLayoutInflater();

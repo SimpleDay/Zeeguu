@@ -1,29 +1,30 @@
 package ch.unibe.scg.zeeguu.Data;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import ch.unibe.scg.zeeguu.Core.ConnectionManager;
 import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguu.R;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.Item;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistHeader;
-import ch.unibe.scg.zeeguu.Wordlist_Fragments.WordlistItem;
+import ch.unibe.scg.zeeguu.MyWords_Fragments.Item;
+import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsHeader;
+import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsItem;
 
 /**
  * Zeeguu Application
@@ -38,7 +39,8 @@ public class User implements IO {
     private String learning_language;
 
     //User words
-    private ArrayList<WordlistHeader> wordlist;
+    private ArrayList<MyWordsHeader> myWords;
+    private String myWordsFileName = "zeeguuMyWordsTmp";
 
     private ZeeguuActivity activity;
     private ConnectionManager connectionManager;
@@ -54,7 +56,7 @@ public class User implements IO {
         this.settings = PreferenceManager.getDefaultSharedPreferences(activity);
         this.editor = settings.edit();
 
-        this.wordlist = new ArrayList<>();
+        this.myWords = new ArrayList<>();
     }
 
 
@@ -92,8 +94,8 @@ public class User implements IO {
         editor.remove(activity.getString(R.string.preference_user_session_id));
         editor.apply();
 
-        wordlist.clear();
-        connectionManager.notifyWordlistChange();
+        myWords.clear();
+        connectionManager.notifyMyWordsChange();
         activity.showLoginButtonIfNotLoggedIn();
         Toast.makeText(activity, activity.getString(R.string.error_user_logged_out), Toast.LENGTH_LONG).show();
     }
@@ -266,12 +268,12 @@ public class User implements IO {
         this.learning_language = learning_language;
     }
 
-    public ArrayList<WordlistHeader> getWordlist() {
-        return wordlist;
+    public ArrayList<MyWordsHeader> getMyWords() {
+        return myWords;
     }
 
-    public void setWordlist(ArrayList<WordlistHeader> wordlist) {
-        this.wordlist = wordlist;
+    public void setMyWords(ArrayList<MyWordsHeader> myWords) {
+        this.myWords = myWords;
         saveMyWordsLocally();
     }
 
@@ -279,23 +281,23 @@ public class User implements IO {
     //// interaction with MyWords  ////
 
     public boolean isMyWordsEmpty() {
-        return wordlist.isEmpty();
+        return myWords.isEmpty();
     }
 
     public Item deleteWord(long id) {
-        for (WordlistHeader wordlistHeader : wordlist) {
-            for (int itemPosition = 0; itemPosition < wordlistHeader.getChildrenSize(); itemPosition++) {
-                if (id == wordlistHeader.getChild(itemPosition).getItemId()) {
-                    return wordlistHeader.removeChild(itemPosition);
+        for (MyWordsHeader myWordsHeader : myWords) {
+            for (int itemPosition = 0; itemPosition < myWordsHeader.getChildrenSize(); itemPosition++) {
+                if (id == myWordsHeader.getChild(itemPosition).getItemId()) {
+                    return myWordsHeader.removeChild(itemPosition);
                 }
             }
         }
         return null;
     }
 
-    public WordlistItem checkMyWordsForTranslation(String input, String inputLanguage, String outputLanguage) {
-        for (WordlistHeader wordlistHeader : wordlist) {
-            WordlistItem result = wordlistHeader.checkWordlistForTranslation(input, inputLanguage, outputLanguage);
+    public MyWordsItem checkMyWordsForTranslation(String input, String inputLanguage, String outputLanguage) {
+        for (MyWordsHeader myWordsHeader : myWords) {
+            MyWordsItem result = myWordsHeader.checkMyWordsForTranslation(input, inputLanguage, outputLanguage);
             if (result != null)
                 return result;
         }
@@ -307,48 +309,64 @@ public class User implements IO {
 
     public void saveMyWordsLocally() {
         try {
-            DataOutputStream dataOut = new DataOutputStream(new BufferedOutputStream(activity.openFileOutput("MyZeeguuWords.bin", Context.MODE_PRIVATE)));
-            write(dataOut);
-            dataOut.close();
+            File file = new File(activity.getFilesDir(), myWordsFileName);
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+            write(bufferedWriter);
+            bufferedWriter.close();
+            Log.d("TAG", "Saved words to file at location: " + file.getPath());
+
         } catch (IOException e) {
             Toast.makeText(activity, R.string.error_mywords_not_saved, Toast.LENGTH_LONG).show();
+            Log.d(activity.getString(R.string.logging_tag), e.getMessage());
         }
+    }
+
+    @Override
+    public void write(BufferedWriter bufferedWriter) throws IOException {
+        bufferedWriter.write(myWords.size());
+        bufferedWriter.newLine();
+        for (MyWordsHeader r : myWords) {
+            bufferedWriter.write(r.getName());
+            bufferedWriter.newLine();
+            r.write(bufferedWriter);
+        }
+    }
+
+    public void readtest() {
+        try {
+            File file = new File(activity.getFilesDir(), myWordsFileName);
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+            Toast.makeText(activity, bufferedReader.readLine(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+        }
+
     }
 
     public void loadMyWordsLocally() {
         try {
-            DataInputStream dataIn = new DataInputStream(new BufferedInputStream(activity.openFileInput("MyZeeguuWords.bin")));
-            read(dataIn);
-            dataIn.close();
+            Log.d("TAG", activity.getFilesDir().toString());
+            File file = new File(activity.getFilesDir(), myWordsFileName);
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            read(bufferedReader);
+            bufferedReader.close();
+            Log.d("TAG", "Load words from file at location: " + activity.getFilesDir().toString());
         } catch (IOException e) {
             Toast.makeText(activity, R.string.error_mywords_not_loaded, Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
-    public void write(DataOutputStream out) throws IOException {
-        out.writeInt(wordlist.size());
-        for (WordlistHeader r : wordlist) {
-            out.writeInt(r.getName().length());
-            out.writeChars(r.getName());
-            r.write(out);
-        }
-    }
+    public void read(BufferedReader bufferedReader) throws IOException {
+        myWords.clear();
 
-    @Override
-    public void read(DataInputStream in) throws IOException {
-        int size = in.readInt();
-        wordlist = new ArrayList<WordlistHeader>(size);
+        int size = Integer.parseInt(bufferedReader.readLine().trim());
         for (int i = 0; i < size; i++) {
             //get the name of the header group and create it
-            int headerNameSize = in.readInt();
-            byte[] nameData = new byte[headerNameSize];
-            in.readFully(nameData);
-            WordlistHeader r = new WordlistHeader(new String(nameData, "UTF-8"));
-
+            MyWordsHeader r = new MyWordsHeader(bufferedReader.readLine().trim());
             //read all entries from the group and add it to the list
-            r.read(in);
-            wordlist.add(r);
+            r.read(bufferedReader);
+            myWords.add(r);
         }
     }
 

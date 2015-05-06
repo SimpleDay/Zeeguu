@@ -14,7 +14,6 @@ import ch.unibe.scg.zeeguu.R;
 public abstract class ZeeguuFragment extends Fragment {
     protected int RESULT_SPEECH = 1;
     protected boolean debugOn = true;
-    protected String TAG = "tag_logging";
 
     public ZeeguuFragment() {
         super();
@@ -49,7 +48,7 @@ public abstract class ZeeguuFragment extends Fragment {
     }
 
     protected void logging(String message) {
-        logging(TAG, message);
+        logging(getString(R.string.logging_tag), message);
     }
 
     protected void logging(String tag, String message) {

@@ -3,11 +3,11 @@
 
     <item android:id="@+id/listview_refresh"
         android:icon="@drawable/ic_action_refresh_holo_light"
-        android:title="@string/wordlist_refresh" />
+        android:title="@string/mywords_refresh" />
 
     <item android:id="@+id/listview_expand_collapse"
         android:icon="@drawable/ic_action_collapse_holo_light"
-        android:title="@string/wordlist_collapse" />
+        android:title="@string/mywords_collapse" />
 
 
 </menu>

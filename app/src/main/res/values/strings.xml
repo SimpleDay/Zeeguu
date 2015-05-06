@@ -8,16 +8,16 @@
     <!-- sliding menu strings -->
     <string name="action_settings">Settings</string>
     <string name="search_menu">Search</string>
-    <string name="wordlist_menu">Wordlist</string>
+    <string name="mywords_menu">My Words</string>
 
     <!-- fragment strings -->
     <string name="search_text_title">Text search</string>
-    <string name="wordlist_title">The words you learned</string>
-    <string name="wordlist_empty">You do not have any words in your library yet, please log in or save your words to retrieve them.</string>
-    <string name="wordlist_delete_bookmark">Delete</string>
-    <string name="wordlist_expand">Expand list</string>
-    <string name="wordlist_collapse">Collapse list</string>
-    <string name="wordlist_refresh">Refresh list</string>
+    <string name="mywords_title">The words you learned</string>
+    <string name="mywords_empty">You do not have any words in your library yet, please log in or save your words to retrieve them.</string>
+    <string name="mywords_delete_bookmark">Delete</string>
+    <string name="mywords_expand">Expand list</string>
+    <string name="mywords_collapse">Collapse list</string>
+    <string name="mywords_refresh">Refresh list</string>
 
     <!-- Textview -->
     <string name="text_view_translate_button">Translate</string>
@@ -142,9 +142,13 @@
     <string name="successful_language_native_changed">Successfully changed your native language on the server to: </string>
     <string name="successful_language_learning_changed">Successfully changed your learning language on the server to: </string>
     <string name="successful_text_copied">Text has been copied </string>
-    <string name="successful_wordlist_updated">wordlist updated </string>
-    <string name="successful_bookmarked">Successful bookmarked! </string>
+    <string name="successful_mywords_updated">Your Words have been updated </string>
+    <string name="successful_bookmarked">Successful bookmarked </string>
     <string name="successful_bookmark_deleted">Bookmark deleted successfully! </string>
+
+    <!-- tags  -->
+    <string name="logging_tag">logging_zeeguu</string>
+
 
 
 </resources>
