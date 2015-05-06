@@ -1,14 +1,8 @@
 package ch.unibe.scg.zeeguu.Data;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -21,10 +15,10 @@ import java.util.ArrayList;
 
 import ch.unibe.scg.zeeguu.Core.ConnectionManager;
 import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
-import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.MyWords_Fragments.Item;
 import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsHeader;
 import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsItem;
+import ch.unibe.scg.zeeguu.R;
 
 /**
  * Zeeguu Application
@@ -46,8 +40,6 @@ public class User implements IO {
     private ConnectionManager connectionManager;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
-
-    private AlertDialog aDialog;
 
 
     public User(ZeeguuActivity activity, ConnectionManager connectionManager) {
@@ -112,117 +104,12 @@ public class User implements IO {
         return !email.equals("") && !pw.equals("");
     }
 
+    public boolean userHasLoginInfo(String email, String pw) {
+        return !email.equals("") && !pw.equals("");
+    }
+
     public boolean userHasSessionId() {
         return !session_id.equals("");
-    }
-
-
-    //// information Dialogs ////
-
-    public void getLoginInformation(String tmpEmail) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_sign_in, null);
-
-        builder.setView(dialogView)
-                .setPositiveButton(R.string.button_sign_in, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
-                        EditText editTextPW = (EditText) aDialog.findViewById(R.id.dialog_password);
-
-                        email = editTextEmail.getText().toString();
-                        pw = editTextPW.getText().toString();
-
-                        if (!userHasLoginInfo()) {
-                            Toast.makeText(activity, activity.getString(R.string.error_userinfo_invalid), Toast.LENGTH_LONG).show();
-                            getLoginInformation(email);
-                        } else if (!isEmailValid(email)) {
-                            Toast.makeText(activity, R.string.error_email_not_valid, Toast.LENGTH_LONG).show();
-                            getLoginInformation(email);
-                        } else {
-                            connectionManager.getSessionIdFromServer();
-                        }
-
-                    }
-                })
-                .setNegativeButton(R.string.button_cancel, null);
-
-        aDialog = builder.create();
-
-        TextView noAccountMessage = (TextView) dialogView.findViewById(R.id.dialog_sign_in_no_account_textview);
-        noAccountMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aDialog.cancel();
-                EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
-                createNewAccount(editTextEmail.getText().toString(), "");
-            }
-        });
-        aDialog.show();
-
-        //if email address info available, put it in
-        if (!tmpEmail.isEmpty()) {
-            EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
-            editTextEmail.setText(tmpEmail);
-        }
-    }
-
-    public void createNewAccount(String tmpEmail, String tmpUsername) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_new_account, null);
-
-        builder.setView(dialogView)
-                .setPositiveButton(R.string.button_create_account, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        EditText editTextUsername = (EditText) aDialog.findViewById(R.id.dialog_username);
-                        EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
-                        EditText editTextpw = (EditText) aDialog.findViewById(R.id.dialog_password);
-
-                        String username = editTextUsername.getText().toString();
-                        String email = editTextEmail.getText().toString();
-                        String pw = editTextpw.getText().toString();
-
-                        if (!userHasLoginInfo()) {
-                            Toast.makeText(activity, activity.getString(R.string.error_userinfo_invalid), Toast.LENGTH_LONG).show();
-                            createNewAccount(email, username);
-                        } else if (!isEmailValid(email)) {
-                            Toast.makeText(activity, R.string.error_email_not_valid, Toast.LENGTH_LONG).show();
-                            createNewAccount(email, username);
-                        } else {
-                            connectionManager.createAccountOnServer(username, email, pw);
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.button_cancel, null);
-
-        aDialog = builder.create();
-
-        TextView noAccountMessage = (TextView) dialogView.findViewById(R.id.dialog_sign_in_no_account_textview);
-        noAccountMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aDialog.cancel();
-                //open login screen with last entered email address
-                EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
-                getLoginInformation(editTextEmail.getText().toString());
-            }
-        });
-        aDialog.show();
-
-        //if email or username already entered, reload them
-        if (!tmpEmail.isEmpty()) {
-            EditText editTextEmail = (EditText) aDialog.findViewById(R.id.dialog_email);
-            editTextEmail.setText(tmpEmail);
-        }
-        if (!tmpUsername.isEmpty()) {
-            EditText editTextUsername = (EditText) aDialog.findViewById(R.id.dialog_username);
-            editTextUsername.setText(tmpUsername);
-        }
     }
 
 
@@ -351,7 +238,7 @@ public class User implements IO {
             read(bufferedReader);
             bufferedReader.close();
             Log.d("TAG", "Load words from file at location: " + activity.getFilesDir().toString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Toast.makeText(activity, R.string.error_mywords_not_loaded, Toast.LENGTH_LONG).show();
         }
     }
@@ -370,9 +257,4 @@ public class User implements IO {
         }
     }
 
-    //// validation functions ////
-
-    private boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
 }

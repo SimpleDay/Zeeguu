@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.unibe.scg.zeeguu.Data.DialogBuilder;
 import ch.unibe.scg.zeeguu.Data.User;
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
@@ -59,6 +60,7 @@ public class ConnectionManager {
     private static final String TAG = "tag_logging";
 
     private User user;
+    private DialogBuilder dialogBuilder;
     private static ConnectionManager instance;
     private static ZeeguuActivity activity;
 
@@ -72,6 +74,7 @@ public class ConnectionManager {
         //initialise all variables
         this.activity = activity;
         this.user = new User(activity, this);
+        this.dialogBuilder = new DialogBuilder(activity,user,this);
         this.instance = this;
 
         //try to get the users information
@@ -79,9 +82,9 @@ public class ConnectionManager {
 
         //get the information that is missing from start point
         if (!user.userHasLoginInfo())
-            user.getLoginInformation("");
+            dialogBuilder.getLoginInformation("");
         else if (!user.userHasSessionId())
-            getSessionIdFromServer();
+            getSessionIdFromServer(user.getEmail(),user.getPw());
         else {
             getBothUserLanguageFromServer();
             getMyWordsFromServer();
@@ -132,7 +135,7 @@ public class ConnectionManager {
     }
 
     public void showLoginScreen() {
-        user.getLoginInformation("");
+        dialogBuilder.getLoginInformation("");
     }
 
     public void logout() {
@@ -177,7 +180,7 @@ public class ConnectionManager {
             @Override
             public void onErrorResponse(VolleyError error) {
                 checkErrorCode(error);
-                user.createNewAccount(email, username);
+                dialogBuilder.createNewAccount(email, username);
             }
         }) {
 
@@ -194,15 +197,16 @@ public class ConnectionManager {
 
     }
 
-    public void getSessionIdFromServer() {
-        if (!user.userHasLoginInfo()) {
+    public void getSessionIdFromServer(final String email, final String pw) {
+        if (!user.userHasLoginInfo(email, pw)) {
             user.logoutUser();
             toast(activity.getString(R.string.error_user_login_wrong));
             return;
-        } else if (!isNetworkAvailable())
+        } else if (!isNetworkAvailable()) {
             return;
+        }
 
-        String url_session_ID = API_URL + "session/" + user.getEmail();
+        String url_session_ID = API_URL + "session/" + email;
         logging(url_session_ID);
 
         createLoadingDialog();
@@ -211,6 +215,9 @@ public class ConnectionManager {
 
             @Override
             public void onResponse(String response) {
+                user.setEmail(email);
+                user.setPw(pw);
+
                 getSessionIDOutOfResponse(response);
             }
         }, new Response.ErrorListener() {
@@ -222,9 +229,8 @@ public class ConnectionManager {
                 dismissDialog();
 
                 //reset user until relogged again successfully
-                String tmpEmail = user.getEmail();
                 user.logoutUser();
-                user.getLoginInformation(tmpEmail);
+                dialogBuilder.getLoginInformation(email);
                 activity.showLoginButtonIfNotLoggedIn();
             }
         }) {
@@ -232,7 +238,7 @@ public class ConnectionManager {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("password", user.getPw());
+                params.put("password", pw);
                 return params;
             }
         };
