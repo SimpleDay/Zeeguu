@@ -128,7 +128,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         bookmarked = false;
 
         //Set done button to translate
-        editTextLanguageFrom.setOnKeyListener(new TranslationListenerKeyboard());
+        editTextLanguageFrom.setOnKeyListener(new KeyboardTranslationListener());
 
         editTextLanguageFrom.addTextChangedListener(new EditTextListener(false));
         editTextLanguageTo.addTextChangedListener(new EditTextListener(true));
@@ -358,24 +358,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         return editText.getText().toString().replaceAll("[ ]+", " ").trim();
     }
 
-
-    private void bookmarkEntries() {
-        if (!connectionManager.loggedIn())
-            toast(getString(R.string.error_user_not_logged_in_yet));
-        else if (editTextLanguageFrom.getText().length() != 0 && editTextLanguageTo.getText().length() != 0) {
-            if (!bookmarked) {
-                String input = getEditTextTrimmed(editTextLanguageFrom);
-                String translation = getEditTextTrimmed(editTextLanguageTo);
-
-                connectionManager.bookmarkWordOnServer(input, getInputLanguage(), translation, getOutputLanguage(), this);
-            } else {
-                toast(getString(R.string.error_bookmarked_already)); //TODO: press it again when filled deletes bookmark
-            }
-        } else {
-            toast(getString(R.string.error_no_text_to_bookmark));
-        }
-    }
-
     private String getInputLanguage() {
         return switchLanguage ? connectionManager.getLanguageTo() : connectionManager.getLanguageFrom();
     }
@@ -433,7 +415,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         }
     }
 
-    private class TranslationListenerKeyboard implements View.OnKeyListener {
+    private class KeyboardTranslationListener implements View.OnKeyListener {
         //Keyboard listener so that the enter button also will translate the text
         public boolean onKey(View v, int keyCode, KeyEvent event) {
             if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -500,7 +482,20 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private class BookmarkListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            bookmarkEntries();
+            if (!connectionManager.loggedIn())
+                toast(getString(R.string.error_user_not_logged_in_yet));
+            else if (editTextLanguageFrom.getText().length() != 0 && editTextLanguageTo.getText().length() != 0) {
+                if (!bookmarked) {
+                    String input = getEditTextTrimmed(editTextLanguageFrom);
+                    String translation = getEditTextTrimmed(editTextLanguageTo);
+
+                    connectionManager.bookmarkWordOnServer(input, getInputLanguage(), translation, getOutputLanguage(), FragmentText.this);
+                } else {
+                    toast(getString(R.string.error_bookmarked_already)); //TODO: press it again when filled deletes bookmark
+                }
+            } else {
+                toast(getString(R.string.error_no_text_to_bookmark));
+            }
         }
     }
 
