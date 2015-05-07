@@ -355,24 +355,24 @@ public class ConnectionManager {
         return user.getMyWords();
     }
 
-    public String getNativeLanguage() {
-        return user.getNative_language();
+    public String getLanguageFrom() {
+        return user.getLanguageFrom();
     }
 
-    public void setNativeLanguage(String native_language_key, boolean switchFlagsIfNeeded) {
-        user.setNative_language(native_language_key);
+    public void setLanguageFrom(String languageFromKey, boolean switchFlagsIfNeeded) {
+        user.setLanguageFrom(languageFromKey);
         activity.refreshLanguages(switchFlagsIfNeeded);
-        setUserLanguageOnServer(activity.getString(R.string.preference_native_language), native_language_key);
+        setUserLanguageOnServer(activity.getString(R.string.preference_language_from), languageFromKey);
     }
 
-    public String getLearningLanguage() {
-        return user.getLearning_language();
+    public String getLanguageTo() {
+        return user.getLanguageTo();
     }
 
-    public void setLearningLanguage(String learning_language_key, boolean switchFlagsIfNeeded) {
-        user.setLearning_language(learning_language_key);
+    public void setLanguageTo(String languageToKey, boolean switchFlagsIfNeeded) {
+        user.setLanguageTo(languageToKey);
         activity.refreshLanguages(switchFlagsIfNeeded);
-        setUserLanguageOnServer(activity.getString(R.string.preference_learning_language), learning_language_key);
+        setUserLanguageOnServer(activity.getString(R.string.preference_language_to), languageToKey);
     }
 
     public void setMyWordsListener(FragmentMyWords.MyWordsListener listener) {
@@ -431,13 +431,13 @@ public class ConnectionManager {
                             }
                             //add word as entry to list
                             int id = translation.getInt("id");
-                            String nativeWord = translation.getString("from");
-                            String fromLanguage = translation.getString("from_language");
-                            String translatedWord = translation.getString("to");
-                            String toLanguage = translation.getString("to_language");
+                            String languageFromWord = translation.getString("from");
+                            String languageFrom = translation.getString("from_language");
+                            String languageToWord = translation.getString("to");
+                            String languageTo = translation.getString("to_language");
                             String context = translation.getString("context");
 
-                            header.addChild(new MyWordsItem(id, nativeWord, translatedWord, context, fromLanguage, toLanguage));
+                            header.addChild(new MyWordsItem(id, languageFromWord, languageToWord, context, languageFrom, languageTo));
                         }
                     }
 
@@ -512,10 +512,10 @@ public class ConnectionManager {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            user.setNative_language(response.getString("native"));
-                            user.setLearning_language(response.getString("learned"));
+                            user.setLanguageFrom(response.getString("native"));
+                            user.setLanguageTo(response.getString("learned"));
                             user.saveUserLanguagesLocally();
-                            logging("native: " + response.getString("native") + ", learned: " + response.getString("learned"));
+                            logging("Language from: " + user.getLanguageFrom() + ", language to: " + user.getLanguageTo());
 
 
                             activity.refreshLanguages(true);
@@ -554,13 +554,13 @@ public class ConnectionManager {
 
                         //Save language
                         if (response.toString().equals("OK")) {
-                            if (urlTag.equals(activity.getString(R.string.preference_learning_language)))
-                                toast(activity.getString(R.string.successful_language_learning_changed) + " " + language_key);
+                            if (urlTag.equals(activity.getString(R.string.preference_language_to)))
+                                toast(activity.getString(R.string.successful_language_to_changed) + " " + language_key);
 
                             else
-                                toast(activity.getString(R.string.successful_language_native_changed) + " " + language_key);
+                                toast(activity.getString(R.string.successful_language_from_changed) + " " + language_key);
                         } else
-                            toast(activity.getString(R.string.error_change_learning_language_on_server_not_possible));
+                            toast(activity.getString(R.string.error_change_language_from_on_server_not_possible));
 
                         dismissDialog();
                     }

@@ -5,8 +5,8 @@ import android.content.ClipboardManager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import ch.unibe.scg.zeeguu.Core.ConnectionManager;
 import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
@@ -47,14 +47,14 @@ public class ZeeguuTest extends ActivityInstrumentationTestCase2<ZeeguuActivity>
     }
 
     public void testTranslation() {
-        EditText edit_text_native = (EditText) zeeguuActivity.findViewById(R.id.text_native);
-        EditText edit_text_translated = (EditText) zeeguuActivity.findViewById(R.id.text_translated);
-        ImageButton btn_transl = (ImageButton) zeeguuActivity.findViewById(R.id.btn_translate);
+        EditText editTextLanguageFrom = (EditText) zeeguuActivity.findViewById(R.id.edit_text_language_from);
+        EditText editTextLanguageTo = (EditText) zeeguuActivity.findViewById(R.id.edit_text_language_to);
+        TextView btn_transl = (TextView) zeeguuActivity.findViewById(R.id.btn_translate);
 
-        edit_text_native.setText("hallo");
+        editTextLanguageFrom.setText("hallo");
         TouchUtils.clickView(this, btn_transl);
 
-        assertEquals(edit_text_translated.getText(),"hello");
+        assertEquals(editTextLanguageTo.getText(),"hello");
 
     }
 

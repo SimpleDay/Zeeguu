@@ -11,7 +11,7 @@
     android:layout_alignParentTop="true">
 
     <FrameLayout
-        android:id="@+id/text_native_translation"
+        android:id="@+id/layout_language_translate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -24,7 +24,7 @@
             android:layout_gravity="left|center_vertical">
 
             <EditText
-                android:id="@+id/text_native"
+                android:id="@+id/edit_text_language_from"
                 android:layout_width="255dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="right|top"
@@ -39,7 +39,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_alignParentBottom="true"
-                android:layout_alignRight="@+id/text_native"
+                android:layout_alignRight="@+id/edit_text_language_from"
                 android:layout_gravity="center_horizontal|bottom"
                 android:layout_marginBottom="12dp"
                 android:layout_marginRight="15dp"
@@ -80,7 +80,7 @@
                 android:textColor="#fff" />
 
             <ImageView
-                android:id="@+id/btn_tts_native_language"
+                android:id="@+id/btn_tts_language_from"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
                 android:layout_alignBottom="@+id/ic_flag_translate_from"
@@ -96,7 +96,7 @@
             android:layout_gravity="right|center_vertical">
 
             <EditText
-                android:id="@+id/text_translated"
+                android:id="@+id/edit_text_language_to"
                 android:layout_width="255dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="left|center_vertical"
@@ -136,13 +136,13 @@
                 android:id="@+id/btn_bookmark"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:layout_alignTop="@+id/btn_tts_learning_language"
+                android:layout_alignTop="@+id/btn_tts_language_to"
                 android:layout_toEndOf="@+id/btn_copy"
                 android:layout_toRightOf="@+id/btn_copy"
                 android:src="@drawable/btn_bookmark" />
 
             <ImageView
-                android:id="@+id/btn_tts_learning_language"
+                android:id="@+id/btn_tts_language_to"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
                 android:layout_alignBottom="@+id/ic_flag_translate_to"

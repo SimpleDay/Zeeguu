@@ -21,6 +21,7 @@ public class MyWordsHeader implements IO {
     private final String name;
     private ArrayList<Item> children;
     private boolean groupOpen;
+    private String languageTo;
 
     public MyWordsHeader(String name) {
         this.name = name;
@@ -98,20 +99,20 @@ public class MyWordsHeader implements IO {
                 bufferedWriter.newLine();
 
                 MyWordsItem w = (MyWordsItem) r;
-                //native word saving
-                bufferedWriter.write(w.getNativeWord());
+                //language from saving
+                bufferedWriter.write(w.getLanguageFromWord());
                 bufferedWriter.newLine();
-                //translation word saving
-                bufferedWriter.write(w.getTranslationedWord());
+                //language to saving
+                bufferedWriter.write(w.getLanguageToWord());
                 bufferedWriter.newLine();
                 //context saving
                 bufferedWriter.write(w.getContext());
                 bufferedWriter.newLine();
-                //fromLanguage saving
-                bufferedWriter.write(w.getFromLanguage());
+                //language from saving
+                bufferedWriter.write(w.getLanguageFrom());
                 bufferedWriter.newLine();
-                //toLanguage saving
-                bufferedWriter.write(w.getToLanguage());
+                //language to saving
+                bufferedWriter.write(w.getLanguageTo());
                 bufferedWriter.newLine();
             } else {
                 bufferedWriter.write(0);
@@ -132,19 +133,19 @@ public class MyWordsHeader implements IO {
             //read all entries from the group and add it to the list
             long id = Long.parseLong(bufferedReader.readLine().trim());
             if (id > 0) {
-                //load native word
-                String nativeWordData = bufferedReader.readLine();
-                //load translated word
-                String translatedWordData = bufferedReader.readLine();
+                //load language from word
+                String languageFromWord = bufferedReader.readLine();
+                //load language to word
+                String langaugeToWord = bufferedReader.readLine();
                 //load context
                 String contextData = bufferedReader.readLine();
-                //load from language
-                String fromLanguageData = bufferedReader.readLine();
-                //load to language
-                String toLanguageData = bufferedReader.readLine();
+                //load language from
+                String languageFrom = bufferedReader.readLine();
+                //load language to
+                String languageTo = bufferedReader.readLine();
                 //add myword item to the list
-                children.add(new MyWordsItem(id, nativeWordData, translatedWordData,
-                        contextData, fromLanguageData, toLanguageData));
+                children.add(new MyWordsItem(id, languageFromWord, langaugeToWord,
+                        contextData, languageFrom, languageTo));
             } else {
                 children.add(new MyWordsInfoHeader(bufferedReader.readLine()));
             }

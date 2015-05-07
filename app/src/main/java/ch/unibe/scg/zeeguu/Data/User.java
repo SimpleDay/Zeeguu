@@ -29,8 +29,8 @@ public class User implements IO {
     private String email;
     private String pw;
     private String session_id;
-    private String native_language;
-    private String learning_language;
+    private String languageFrom;
+    private String languageTo;
 
     //User words
     private ArrayList<MyWordsHeader> myWords;
@@ -59,8 +59,8 @@ public class User implements IO {
         email = settings.getString(activity.getString(R.string.preference_email), "").toString();
         pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
         session_id = settings.getString(activity.getString(R.string.preference_user_session_id), "").toString();
-        native_language = settings.getString(activity.getString(R.string.preference_native_language), "").toString();
-        learning_language = settings.getString(activity.getString(R.string.preference_learning_language), "").toString();
+        languageFrom = settings.getString(activity.getString(R.string.preference_language_from), "en").toString();
+        languageTo = settings.getString(activity.getString(R.string.preference_language_to), "de").toString();
     }
 
     public void saveUserInformationLocally() {
@@ -71,8 +71,8 @@ public class User implements IO {
     }
 
     public void saveUserLanguagesLocally() {
-        editor.putString(activity.getString(R.string.preference_native_language), native_language);
-        editor.putString(activity.getString(R.string.preference_learning_language), learning_language);
+        editor.putString(activity.getString(R.string.preference_language_from), languageFrom);
+        editor.putString(activity.getString(R.string.preference_language_to), languageTo);
         editor.apply();
     }
 
@@ -139,20 +139,20 @@ public class User implements IO {
         this.session_id = session_id;
     }
 
-    public String getNative_language() {
-        return native_language;
+    public String getLanguageFrom() {
+        return languageFrom;
     }
 
-    public void setNative_language(String native_language) {
-        this.native_language = native_language;
+    public void setLanguageFrom(String languageFrom) {
+        this.languageFrom = languageFrom;
     }
 
-    public String getLearning_language() {
-        return learning_language;
+    public String getLanguageTo() {
+        return languageTo;
     }
 
-    public void setLearning_language(String learning_language) {
-        this.learning_language = learning_language;
+    public void setLanguageTo(String languageTo) {
+        this.languageTo = languageTo;
     }
 
     public ArrayList<MyWordsHeader> getMyWords() {

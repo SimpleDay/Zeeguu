@@ -15,58 +15,57 @@ import ch.unibe.scg.zeeguu.R;
 public class MyWordsItem implements Item {
 
     private long id;
-    private String nativeWord;
-    private String fromLanguage;
-    private String translationedWord;
-    private String toLanguage;
+    private String languageFromWord;
+    private String languageFrom;
+    private String languageToWord;
+    private String languageTo;
     private String context;
 
 
-    public MyWordsItem(long id, String nativeWord, String translationedWord, String context, String fromLanguage, String toLanguage) {
+    public MyWordsItem(long id, String languageFromWord, String languageToWord, String context, String languageFrom, String languageTo) {
         this.id = id;
-        this.nativeWord = nativeWord;
-        this.translationedWord = translationedWord;
+        this.languageFromWord = languageFromWord;
+        this.languageToWord = languageToWord;
         this.context = context;
-        this.fromLanguage = fromLanguage;
-        this.toLanguage = toLanguage;
+        this.languageFrom = languageFrom;
+        this.languageTo = languageTo;
     }
 
 
-    public String getTranslationedWord() {
-        return translationedWord;
+    public String getLanguageFrom() {
+        return languageFrom;
     }
 
-    public String getFromLanguage() {
-        return fromLanguage;
-    }
-
-    public String getToLanguage() {
-        return toLanguage;
+    public String getLanguageTo() {
+        return languageTo;
     }
 
     public String getContext() {
         return context;
     }
 
-    public String getNativeWord() {
-
-        return nativeWord;
+    public String getLanguageFromWord() {
+        return languageFromWord;
     }
 
-    public void setNativeWord(String nativeWord) {
-        this.nativeWord = nativeWord;
+    public void setLanguageFromWord(String languageFromWord) {
+        this.languageFromWord = languageFromWord;
     }
 
-    public void setTranslationedWord(String translationedWord) {
-        this.translationedWord = translationedWord;
+    public String getLanguageToWord() {
+        return languageToWord;
     }
 
-    public void setFromLanguage(String fromLanguage) {
-        this.fromLanguage = fromLanguage;
+    public void setLanguageToWord(String languageToWord) {
+        this.languageToWord = languageToWord;
     }
 
-    public void setToLanguage(String toLanguage) {
-        this.toLanguage = toLanguage;
+    public void setLanguageFrom(String languageFrom) {
+        this.languageFrom = languageFrom;
+    }
+
+    public void setLanguageTo(String languageTo) {
+        this.languageTo = languageTo;
     }
 
     public void setContext(String context) {
@@ -84,17 +83,17 @@ public class MyWordsItem implements Item {
 
             holder = new ViewHolder();
 
-            holder.native_language = (TextView) convertView.findViewById(R.id.mywords_native_language);
-            holder.learning_language = (TextView) convertView.findViewById(R.id.mywords_learning_language);
+            holder.languageFromWord = (TextView) convertView.findViewById(R.id.mywords_language_from_word);
+            holder.languageToWord = (TextView) convertView.findViewById(R.id.mywords_language_to_word);
             holder.context = (TextView) convertView.findViewById(R.id.mywords_context);
-            holder.flag_native = (ImageView) convertView.findViewById(R.id.flag_native);
-            holder.flag_learning = (ImageView) convertView.findViewById(R.id.flag_learning);
+            holder.languageFromFlag = (ImageView) convertView.findViewById(R.id.flag_language_from);
+            holder.languageToFlag = (ImageView) convertView.findViewById(R.id.flag_language_to);
 
             convertView.setTag(holder);
         }
 
-        holder.native_language.setText(nativeWord);
-        holder.learning_language.setText(translationedWord);
+        holder.languageFromWord.setText(languageFromWord);
+        holder.languageToWord.setText(languageToWord);
 
         //if context, write it into the textview, if not, don't show the textview
         if (!context.equals("")) {
@@ -103,10 +102,10 @@ public class MyWordsItem implements Item {
         } else
             holder.context.setVisibility(View.GONE);
 
-        if (fromLanguage != null)
-            ZeeguuFragment.setFlag(holder.flag_native, fromLanguage);
-        if (toLanguage != null)
-            ZeeguuFragment.setFlag(holder.flag_learning, toLanguage);
+        if (languageFrom != null)
+            ZeeguuFragment.setFlag(holder.languageFromFlag, languageFrom);
+        if (languageTo != null)
+            ZeeguuFragment.setFlag(holder.languageToFlag, languageTo);
 
         return convertView;
     }
@@ -119,11 +118,11 @@ public class MyWordsItem implements Item {
     //// to see if an item is a translation from a word we are searching ////
 
     public MyWordsItem isTranslation(String input, String fromLanguage, String toLanguage) {
-        if (fromLanguage.equals(this.fromLanguage) && toLanguage.equals(this.toLanguage)) {
-            if (input.equals(nativeWord))
+        if (fromLanguage.equals(this.languageFrom) && toLanguage.equals(this.languageTo)) {
+            if (input.equals(languageFromWord))
                 return this;
-        } else if (fromLanguage.equals(this.toLanguage) && toLanguage.equals(this.fromLanguage)) {
-            if (input.equals(translationedWord))
+        } else if (fromLanguage.equals(this.languageTo) && toLanguage.equals(this.languageFrom)) {
+            if (input.equals(languageToWord))
                 return this;
         }
         return null;
@@ -132,12 +131,12 @@ public class MyWordsItem implements Item {
     //// View holder for the list elements so that they can be reused ////
 
     static class ViewHolder {
-        TextView native_language;
-        TextView learning_language;
+        TextView languageFromWord;
+        TextView languageToWord;
         TextView context;
 
-        ImageView flag_native;
-        ImageView flag_learning;
+        ImageView languageFromFlag;
+        ImageView languageToFlag;
     }
 
 }

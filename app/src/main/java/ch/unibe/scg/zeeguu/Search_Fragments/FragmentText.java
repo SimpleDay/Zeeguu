@@ -39,32 +39,32 @@ import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsItem;
  */
 public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitListener {
     private Activity activity;
-    private EditText edit_text_native;
-    private EditText edit_text_translated;
+    private EditText editTextLanguageFrom;
+    private EditText editTextLanguageTo;
     private ConnectionManager connectionManager;
     private ClipboardManager clipboard;
 
     //TTS
-    private TextToSpeech textToSpeechNativeLanguage;
-    private TextToSpeech textToSpeechOtherLanguage;
+    private TextToSpeech textToSpeechLanguageFrom;
+    private TextToSpeech textToSpeechLanguageTo;
     private TextToSpeech activeTextToSpeech;
 
     //flags
-    private ImageView flag_translate_from;
-    private ImageView flag_translate_to;
+    private ImageView flagTranslateFrom;
+    private ImageView flagTranslateTo;
 
     private boolean switchLanguage;
     private String switchedText;
     private SharedPreferences settings;
 
     //buttons
-    private ImageView btn_tts_native_language;
-    private ImageView btn_tts_learning_language;
+    private ImageView btnttsLanguageFrom;
+    private ImageView btnttsLanguageTo;
 
-    private ImageView btn_copy;
-    private ImageView btn_paste;
+    private ImageView btnCopy;
+    private ImageView btnPaste;
 
-    private ImageView btn_bookmark;
+    private ImageView btnBookmark;
     private boolean bookmarked;
 
 
@@ -78,37 +78,37 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
         //initialize class variables
         activity = getActivity();
-        edit_text_native = (EditText) view.findViewById(R.id.text_native);
-        edit_text_translated = (EditText) view.findViewById(R.id.text_translated);
+        editTextLanguageFrom = (EditText) view.findViewById(R.id.edit_text_language_from);
+        editTextLanguageTo = (EditText) view.findViewById(R.id.edit_text_language_to);
         connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) activity);
         clipboard = (ClipboardManager) activity.getSystemService(Activity.CLIPBOARD_SERVICE);
 
         //TTS
-        textToSpeechNativeLanguage = new TextToSpeech(activity, this);
-        textToSpeechOtherLanguage = new TextToSpeech(activity, this);
+        textToSpeechLanguageFrom = new TextToSpeech(activity, this);
+        textToSpeechLanguageTo = new TextToSpeech(activity, this);
         activeTextToSpeech = null;
 
         //initialize flags
-        flag_translate_from = (ImageView) view.findViewById(R.id.ic_flag_translate_from);
-        flag_translate_to = (ImageView) view.findViewById(R.id.ic_flag_translate_to);
+        flagTranslateFrom = (ImageView) view.findViewById(R.id.ic_flag_translate_from);
+        flagTranslateTo = (ImageView) view.findViewById(R.id.ic_flag_translate_to);
 
         //remembers if languages was switched
         settings = PreferenceManager.getDefaultSharedPreferences(activity);
         switchLanguage = settings.getBoolean("switchLanguage", false);
 
         //listeners for the flags to switch the flags by pressing on them
-        flag_translate_from.setOnClickListener(new LanguageSwitchListener());
-        flag_translate_to.setOnClickListener(new LanguageSwitchListener());
+        flagTranslateFrom.setOnClickListener(new LanguageSwitchListener());
+        flagTranslateTo.setOnClickListener(new LanguageSwitchListener());
 
-        flag_translate_from.setOnLongClickListener(new LanguageChangeListener(true));
-        flag_translate_to.setOnLongClickListener(new LanguageChangeListener(false));
+        flagTranslateFrom.setOnLongClickListener(new LanguageChangeListener(true));
+        flagTranslateTo.setOnLongClickListener(new LanguageChangeListener(false));
 
         //if a text was entered and the screen rotated, the text will be added again here.
         if (savedInstanceState != null) {
-            edit_text_native.setText(savedInstanceState.getString(
-                    getString(R.string.preference_native_language)));
-            edit_text_translated.setText(savedInstanceState.getString(
-                    getString(R.string.preference_learning_language)));
+            editTextLanguageFrom.setText(savedInstanceState.getString(
+                    getString(R.string.preference_language_from)));
+            editTextLanguageTo.setText(savedInstanceState.getString(
+                    getString(R.string.preference_language_to)));
         }
 
         //set listeners
@@ -123,47 +123,47 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         TextView btn_transl = (TextView) view.findViewById(R.id.btn_translate);
         btn_transl.setOnClickListener(new TranslationListener());
 
-        btn_bookmark = (ImageView) view.findViewById(R.id.btn_bookmark);
-        btn_bookmark.setOnClickListener(new BookmarkListener());
+        btnBookmark = (ImageView) view.findViewById(R.id.btn_bookmark);
+        btnBookmark.setOnClickListener(new BookmarkListener());
         bookmarked = false;
 
         //Set done button to translate
-        edit_text_native.setOnKeyListener(new TranslationListenerKeyboard());
+        editTextLanguageFrom.setOnKeyListener(new TranslationListenerKeyboard());
 
-        edit_text_native.addTextChangedListener(new EditTextNativeLanguageListener());
-        edit_text_translated.addTextChangedListener(new EditTextLearningLanguageListener());
+        editTextLanguageFrom.addTextChangedListener(new EditTextListener(false));
+        editTextLanguageTo.addTextChangedListener(new EditTextListener(true));
 
         //Clipboard button listeners
-        btn_paste = (ImageView) view.findViewById(R.id.btn_paste);
-        btn_paste.setOnClickListener(new PasteListener());
+        btnPaste = (ImageView) view.findViewById(R.id.btn_paste);
+        btnPaste.setOnClickListener(new PasteListener());
 
-        btn_copy = (ImageView) view.findViewById(R.id.btn_copy);
-        btn_copy.setOnClickListener(new CopyListener());
+        btnCopy = (ImageView) view.findViewById(R.id.btn_copy);
+        btnCopy.setOnClickListener(new CopyListener());
 
 
         //See if something has been added to clipboard and if activate paste button
-        initButton(btn_paste, hasClipboardEntry());
-        initButton(btn_copy, !edit_text_translated.getText().toString().isEmpty());
+        initButton(btnPaste, hasClipboardEntry());
+        initButton(btnCopy, !editTextLanguageTo.getText().toString().isEmpty());
 
 
         //TTS
-        btn_tts_native_language = (ImageView) view.findViewById(R.id.btn_tts_native_language);
-        btn_tts_native_language.setOnClickListener(new View.OnClickListener() {
+        btnttsLanguageFrom = (ImageView) view.findViewById(R.id.btn_tts_language_from);
+        btnttsLanguageFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speak(textToSpeechNativeLanguage, edit_text_native);
+                speak(textToSpeechLanguageFrom, editTextLanguageFrom);
             }
         });
-        initButton(btn_tts_native_language, !edit_text_native.getText().toString().equals(""));
+        initButton(btnttsLanguageFrom, !editTextLanguageFrom.getText().toString().equals(""));
 
-        btn_tts_learning_language = (ImageView) view.findViewById(R.id.btn_tts_learning_language);
-        btn_tts_learning_language.setOnClickListener(new View.OnClickListener() {
+        btnttsLanguageTo = (ImageView) view.findViewById(R.id.btn_tts_language_to);
+        btnttsLanguageTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speak(textToSpeechOtherLanguage, edit_text_translated);
+                speak(textToSpeechLanguageTo, editTextLanguageTo);
             }
         });
-        initButton(btn_tts_learning_language, !edit_text_translated.getText().toString().equals(""));
+        initButton(btnttsLanguageTo, !editTextLanguageTo.getText().toString().equals(""));
 
         //Open tutorial when the app is first opened
         if (connectionManager.firstLogin()) {
@@ -180,7 +180,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         //TODO: distinguish between image and sound recognition
         if (resultCode == Activity.RESULT_OK && null != data) {
             ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            edit_text_native.setText(text.get(0));
+            editTextLanguageFrom.setText(text.get(0));
         }
     }
 
@@ -219,21 +219,21 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(getString(R.string.preference_native_language), edit_text_native.getText().toString());
-        savedInstanceState.putString(getString(R.string.preference_learning_language), edit_text_translated.getText().toString());
+        savedInstanceState.putString(getString(R.string.preference_language_from), editTextLanguageFrom.getText().toString());
+        savedInstanceState.putString(getString(R.string.preference_language_to), editTextLanguageTo.getText().toString());
 
         super.onSaveInstanceState(savedInstanceState);
     }
 
     public void markEntriesAsBookmarked() {
         bookmarked = true;
-        btn_bookmark.setImageResource(R.drawable.btn_bookmark_filled);
+        btnBookmark.setImageResource(R.drawable.btn_bookmark_filled);
 
     }
 
     public void setTranslatedText(String text) {
-        edit_text_translated.setText(text);
-        initButton(btn_copy, !text.equals(""));
+        editTextLanguageTo.setText(text);
+        initButton(btnCopy, !text.equals(""));
     }
 
     @Override
@@ -256,14 +256,14 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     @Override
     public void onDestroy() {
         // Shut down both TTS to prevent memory leaks
-        if (textToSpeechNativeLanguage != null) {
-            textToSpeechNativeLanguage.stop();
-            textToSpeechNativeLanguage.shutdown();
+        if (textToSpeechLanguageFrom != null) {
+            textToSpeechLanguageFrom.stop();
+            textToSpeechLanguageFrom.shutdown();
         }
 
-        if (textToSpeechOtherLanguage != null) {
-            textToSpeechOtherLanguage.stop();
-            textToSpeechOtherLanguage.shutdown();
+        if (textToSpeechLanguageTo != null) {
+            textToSpeechLanguageTo.stop();
+            textToSpeechLanguageTo.shutdown();
         }
         super.onDestroy();
     }
@@ -272,11 +272,11 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     //// private Methods ////
 
     private void setLanguagesTextFields() {
-        setFlag(flag_translate_from, getInputLanguage());
-        setTTS(textToSpeechNativeLanguage, getInputLanguage());
+        setFlag(flagTranslateFrom, getInputLanguage());
+        setTTS(textToSpeechLanguageFrom, getInputLanguage());
 
-        setFlag(flag_translate_to, getOutputLanguage());
-        setTTS(textToSpeechOtherLanguage, getOutputLanguage());
+        setFlag(flagTranslateTo, getOutputLanguage());
+        setTTS(textToSpeechLanguageTo, getOutputLanguage());
     }
 
     private void setTTS(TextToSpeech tts, String language) {
@@ -337,17 +337,17 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     private void translate() {
-        String input = getEditTextTrimmed(edit_text_native);
+        String input = getEditTextTrimmed(editTextLanguageFrom);
         //search in MyWords if i already bookmarked that word
         MyWordsItem myWordsSearch = connectionManager.checkMyWordsForTranslation(input, getInputLanguage(), getOutputLanguage());
 
         if (myWordsSearch == null)
             connectionManager.getTranslation(input, getInputLanguage(), getOutputLanguage(), this);
         else {
-            if (myWordsSearch.getFromLanguage().equals(getInputLanguage()))
-                setTranslatedText(myWordsSearch.getTranslationedWord());
+            if (myWordsSearch.getLanguageFrom().equals(getInputLanguage()))
+                setTranslatedText(myWordsSearch.getLanguageToWord());
             else
-                setTranslatedText(myWordsSearch.getNativeWord());
+                setTranslatedText(myWordsSearch.getLanguageFromWord());
 
             markEntriesAsBookmarked();
         }
@@ -362,10 +362,10 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private void bookmarkEntries() {
         if (!connectionManager.loggedIn())
             toast(getString(R.string.error_user_not_logged_in_yet));
-        else if (edit_text_native.getText().length() != 0 && edit_text_translated.getText().length() != 0) {
+        else if (editTextLanguageFrom.getText().length() != 0 && editTextLanguageTo.getText().length() != 0) {
             if (!bookmarked) {
-                String input = getEditTextTrimmed(edit_text_native);
-                String translation = getEditTextTrimmed(edit_text_translated);
+                String input = getEditTextTrimmed(editTextLanguageFrom);
+                String translation = getEditTextTrimmed(editTextLanguageTo);
 
                 connectionManager.bookmarkWordOnServer(input, getInputLanguage(), translation, getOutputLanguage(), this);
             } else {
@@ -377,39 +377,39 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     private String getInputLanguage() {
-        return switchLanguage ? connectionManager.getLearningLanguage() : connectionManager.getNativeLanguage();
+        return switchLanguage ? connectionManager.getLanguageTo() : connectionManager.getLanguageFrom();
     }
 
     private String getOutputLanguage() {
-        return switchLanguage ? connectionManager.getNativeLanguage() : connectionManager.getLearningLanguage();
+        return switchLanguage ? connectionManager.getLanguageFrom() : connectionManager.getLanguageTo();
     }
 
     private void flipTextFields() {
         switchLanguage = !switchLanguage;
         setLanguagesTextFields();
 
-        String tmpText = getEditTextTrimmed(edit_text_native);
-        String textLearning = getEditTextTrimmed(edit_text_translated);
-        if (textLearning.equals(""))
-            edit_text_native.setText(switchedText);
+        String tmpText = getEditTextTrimmed(editTextLanguageFrom);
+        String textLanguageTo = getEditTextTrimmed(editTextLanguageTo);
+        if (textLanguageTo.equals(""))
+            editTextLanguageFrom.setText(switchedText);
         else
-            edit_text_native.setText(textLearning);
+            editTextLanguageFrom.setText(textLanguageTo);
 
         switchedText = tmpText;
-        edit_text_translated.setText("");
-        initButton(btn_copy, false);
+        editTextLanguageTo.setText("");
+        initButton(btnCopy, false);
     }
 
     private void resetTextFields() {
-        edit_text_native.setText("");
-        edit_text_translated.setText("");
-        initButton(btn_copy, false);
+        editTextLanguageFrom.setText("");
+        editTextLanguageTo.setText("");
+        initButton(btnCopy, false);
     }
 
     private void closeKeyboard() {
         if (activity != null) {
             InputMethodManager iMM = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            iMM.hideSoftInputFromWindow(edit_text_native.getWindowToken(), 0);
+            iMM.hideSoftInputFromWindow(editTextLanguageFrom.getWindowToken(), 0);
         }
     }
 
@@ -418,11 +418,11 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     public class FragmentTextListener {
 
-        public void updateLanguage(String languageCode, boolean nativeLanguage) {
-            if (nativeLanguage)
-                connectionManager.setNativeLanguage(languageCode, false);
+        public void updateLanguage(String languageCode, boolean isLanguageFrom) {
+            if (isLanguageFrom)
+                connectionManager.setLanguageFrom(languageCode, false);
             else
-                connectionManager.setLearningLanguage(languageCode, false);
+                connectionManager.setLanguageTo(languageCode, false);
         }
     }
 
@@ -452,10 +452,10 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     private class LanguageChangeListener implements View.OnLongClickListener {
-        private boolean nativeLanguage;
+        private boolean isLanguageFrom;
 
-        public LanguageChangeListener(boolean nativeLanguage) {
-            this.nativeLanguage = nativeLanguage;
+        public LanguageChangeListener(boolean isLanguageFrom) {
+            this.isLanguageFrom = isLanguageFrom;
         }
 
         @Override
@@ -466,7 +466,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
             listPreference.setEntries(res.getStringArray(R.array.languages));
             listPreference.setEntryValues(res.getStringArray(R.array.language_keys));
 
-            listPreference.showDialog(activity, switchLanguage ? !nativeLanguage : nativeLanguage, new FragmentTextListener());
+            listPreference.showDialog(activity, switchLanguage ? !isLanguageFrom : isLanguageFrom, new FragmentTextListener());
             return true;
         }
     }
@@ -504,25 +504,12 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         }
     }
 
-    private class EditTextNativeLanguageListener implements TextWatcher {
+    private class EditTextListener implements TextWatcher {
+        private boolean isLanguageToListener;
 
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            //Do nothing
+        public EditTextListener(boolean isLanguageToListener) {
+            this.isLanguageToListener = isLanguageToListener;
         }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //Do nothing
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            initButton(btn_tts_native_language, !edit_text_native.getText().toString().equals(""));
-        }
-    }
-
-    private class EditTextLearningLanguageListener implements TextWatcher {
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -536,13 +523,17 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
         @Override
         public void afterTextChanged(Editable s) {
-            //when learning textfield changes, it can be bookmarked again.
-            bookmarked = false;
-            btn_bookmark.setImageResource(R.drawable.btn_bookmark);
+            if(isLanguageToListener) {
+                //when language to textfield changes, it can be bookmarked again.
+                bookmarked = false;
+                btnBookmark.setImageResource(R.drawable.btn_bookmark);
 
-            boolean editTextIsEmpty = edit_text_translated.getText().toString().equals("");
-            initButton(btn_copy, !editTextIsEmpty);
-            initButton(btn_tts_learning_language, !editTextIsEmpty);
+                boolean editTextIsEmpty = editTextLanguageTo.getText().toString().equals("");
+                initButton(btnCopy, !editTextIsEmpty);
+                initButton(btnttsLanguageTo, !editTextIsEmpty);
+            } else {
+                initButton(btnttsLanguageFrom, !editTextLanguageFrom.getText().toString().equals(""));
+            }
         }
     }
 
@@ -553,14 +544,14 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         @Override
         public void onClick(View view) {
             ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
-            edit_text_native.getText().insert(edit_text_native.getSelectionStart(), item.getText());
+            editTextLanguageFrom.getText().insert(editTextLanguageFrom.getSelectionStart(), item.getText());
         }
     }
 
     private class CopyListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            ClipData clip = ClipData.newPlainText("paste", edit_text_translated.getText().toString());
+            ClipData clip = ClipData.newPlainText("paste", editTextLanguageTo.getText().toString());
             clipboard.setPrimaryClip(clip);
             //Feedback that text has been copied
             toast(getString(R.string.successful_text_copied));
@@ -571,7 +562,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         @Override
         public void onPrimaryClipChanged() {
             //initialize paste button because something is added to clipboard
-            initButton(btn_paste, true);
+            initButton(btnPaste, true);
         }
     }
 

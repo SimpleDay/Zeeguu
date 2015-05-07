@@ -38,7 +38,7 @@ public class LanguageListPreference extends ListPreference {
 
     //variables for showDialog
     private Dialog mDialog;
-    private boolean nativeLanguage;
+    private boolean isLanguageFrom;
     private FragmentText.FragmentTextListener fragmentTextListener;
 
 
@@ -70,22 +70,22 @@ public class LanguageListPreference extends ListPreference {
         return super.getValue();
     }
 
-    public void showDialog(Activity activity, boolean nativeLanguage, FragmentText.FragmentTextListener fragmentTextListener) {
+    public void showDialog(Activity activity, boolean isLanguageFrom, FragmentText.FragmentTextListener fragmentTextListener) {
         entries = getEntries();
         entryValues = getEntryValues();
-        mKey = nativeLanguage ? activity.getString(R.string.preference_native_language) : activity.getString(R.string.preference_learning_language);
-        updateSelectedEntry();
+        mKey = isLanguageFrom ? activity.getString(R.string.preference_language_from) : activity.getString(R.string.preference_language_to);
+        selectedEntry = updateSelectedEntry();
 
         if (iconListPreferenceAdapter == null)
             iconListPreferenceAdapter = new IconListPreferenceAdapter();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setAdapter(iconListPreferenceAdapter, null);
-        builder.setTitle(nativeLanguage ? activity.getString(R.string.native_language_dialog) :
-                activity.getString(R.string.learning_language_dialog));
+        builder.setTitle(isLanguageFrom ? activity.getString(R.string.language_from_dialog) :
+                activity.getString(R.string.language_to_dialog));
 
         this.fragmentTextListener = fragmentTextListener;
-        this.nativeLanguage = nativeLanguage;
+        this.isLanguageFrom = isLanguageFrom;
         this.mDialog = builder.show();
     }
 
@@ -95,7 +95,7 @@ public class LanguageListPreference extends ListPreference {
 
         entries = getEntries();
         entryValues = getEntryValues();
-        updateSelectedEntry();
+        selectedEntry = updateSelectedEntry();
 
         if (entries.length != entryValues.length) {
             throw new IllegalStateException("ListPreference requires an entries array and an entryValues array which are both the same length");
@@ -107,14 +107,14 @@ public class LanguageListPreference extends ListPreference {
 
     }
 
-    private void updateSelectedEntry() {
+    private int updateSelectedEntry() {
         String selectedValue = prefs.getString(mKey, "");
         for (int i = 0; i < entryValues.length; i++) {
             if (selectedValue.compareTo((String) entryValues[i]) == 0) {
-                selectedEntry = i;
-                return;
+                return i;
             }
         }
+        return -1;
     }
 
     protected void closeDialog() {
@@ -182,7 +182,7 @@ public class LanguageListPreference extends ListPreference {
                     if (mDialog == null) {
                         LanguageListPreference.this.callChangeListener(entryValues[p]);
                     } else {
-                        fragmentTextListener.updateLanguage(entryValues[p].toString(), nativeLanguage);
+                        fragmentTextListener.updateLanguage(entryValues[p].toString(), isLanguageFrom);
                     }
 
                     editor.putString(mKey, entryValues[p].toString());

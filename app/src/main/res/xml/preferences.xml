@@ -24,32 +24,6 @@
 
     </PreferenceCategory>
 
-
-    <PreferenceCategory
-        android:key="category_main_settings"
-        android:title="@string/category_main_settings">
-
-        <ch.unibe.scg.zeeguu.Settings.LanguageListPreference
-            android:defaultValue="@string/language_default"
-            android:dialogTitle="@string/native_language_dialog"
-            android:entries="@array/languages"
-            android:entryValues="@array/language_keys"
-            android:key="@string/preference_native_language"
-            android:summary="@string/native_language_dialog"
-            android:title="@string/native_language" />
-
-        <ch.unibe.scg.zeeguu.Settings.LanguageListPreference
-            android:defaultValue="@string/language_default"
-            android:dialogTitle="@string/learning_language_dialog"
-            android:entries="@array/languages"
-            android:entryValues="@array/language_keys"
-            android:key="@string/preference_learning_language"
-            android:summary="@string/learning_language_dialog"
-            android:title="@string/learning_language" />
-
-    </PreferenceCategory>
-
-
     <PreferenceCategory
         android:key="category_app_settings"
         android:title="@string/category_app_settings">

@@ -12,7 +12,7 @@
 
     <!-- fragment strings -->
     <string name="search_text_title">Text search</string>
-    <string name="mywords_title">The words you learned</string>
+    <string name="mywords_title">Your words</string>
     <string name="mywords_empty">You do not have any words in your library yet, please log in or save your words to retrieve them.</string>
     <string name="mywords_delete_bookmark">Delete</string>
     <string name="mywords_expand">Expand list</string>
@@ -36,8 +36,6 @@
     <string name="dialog_new_account_title">New account</string>
     <string name="dialog_new_account_message">You are going to create a new account, please enter the following information</string>
     <string name="dialog_new_account_sign_in_message">Have an account? \n Sign in here!</string>
-    <string name="dialog_new_account_native_spinner">What is your native language?</string>
-    <string name="dialog_new_account_learning_spinner">Which language do you want to improve?</string>
 
     <!-- preference tags  -->
     <string name="category_user_information">category_user_information</string>
@@ -47,8 +45,8 @@
     <string name="preference_login">LOGIN</string>
     <string name="preference_app_design">APP_DESIGN</string>
     <string name="unknown">Unknown</string>
-    <string name="preference_native_language">native_language</string> <!-- needs to be same tag as server URL -->
-    <string name="preference_learning_language">learned_language</string> <!-- needs to be same tag as server URL -->
+    <string name="preference_language_from">language_from</string> <!-- needs to be same tag as server URL -->
+    <string name="preference_language_to">language_to</string> <!-- needs to be same tag as server URL -->
 
     <!-- preference YesNoDialog tags-->
     <string name="preference_logout">Logout</string>
@@ -66,19 +64,14 @@
     <string name="password_info">Please enter your password here</string>
     <string name="email_info">You are not logged in yet</string>
 
-    <string name="category_main_settings">Zeeguu Account Settings</string>
-    <string name="learning_language">Language to learn</string>
-    <string name="learning_language_dialog">Change the language you want to learn</string>
-
-    <string name="native_language">Native Language</string>
-    <string name="native_language_dialog">Change your native language</string>
-
-    <string name="user_session_id">Used session ID</string>
-
     <string name="category_app_settings">App Settings</string>
     <string name="app_language">App Language</string>
     <string name="app_language_dialog">Change the language of the app</string>
     <string name="language_default">en</string>
+
+    <!-- language dialog strings -->
+    <string name="language_to_dialog">Translate To</string>
+    <string name="language_from_dialog">Translate From</string>
 
     <!-- choosable languages  -->
     <string-array name="languages">
@@ -114,7 +107,7 @@
 
     <!-- error messages  -->
     <string name="error_mic_search_not_supported">Ops! Your device does not support Speech to Text</string>
-    <string name="error_change_learning_language_on_server_not_possible">Ops! There occurred an error, we could not change your learning language on the server. Do you have connection to the internet?</string>
+    <string name="error_change_language_from_on_server_not_possible">Ops! There occurred an error, we could not change the language on the server. Do you have connection to the internet?</string>
     <string name="error_no_internet_connection">Ops! Your device is not connected to the internet</string>
     <string name="error_user_login_wrong">Ops! Your username or password is not correct</string>
     <string name="error_account_not_created">Ops! Account could not be created, please try later again</string>
@@ -139,8 +132,8 @@
 
     <!-- success messages  -->
     <string name="successful_login">Successfully logged in</string>
-    <string name="successful_language_native_changed">Successfully changed your native language on the server to: </string>
-    <string name="successful_language_learning_changed">Successfully changed your learning language on the server to: </string>
+    <string name="successful_language_from_changed">Successfully changed your language on the server to: </string>
+    <string name="successful_language_to_changed">Successfully changed your language on the server to: </string>
     <string name="successful_text_copied">Text has been copied </string>
     <string name="successful_mywords_updated">Your Words have been updated </string>
     <string name="successful_bookmarked">Successful bookmarked </string>
