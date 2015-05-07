@@ -170,7 +170,6 @@ public class ConnectionManager {
     public void setLanguageFrom(String languageFromKey, boolean switchFlagsIfNeeded) {
         user.setLanguageFrom(languageFromKey);
         activity.refreshLanguages(switchFlagsIfNeeded);
-        setUserLanguageOnServer(activity.getString(R.string.preference_language_from), languageFromKey);
     }
 
     public String getLanguageTo() {
@@ -180,7 +179,6 @@ public class ConnectionManager {
     public void setLanguageTo(String languageToKey, boolean switchFlagsIfNeeded) {
         user.setLanguageTo(languageToKey);
         activity.refreshLanguages(switchFlagsIfNeeded);
-        setUserLanguageOnServer(activity.getString(R.string.preference_language_to), languageToKey);
     }
 
     public void setMyWordsListener(FragmentMyWords.MyWordsListener listener) {
