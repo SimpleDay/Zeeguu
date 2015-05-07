@@ -112,6 +112,12 @@ public class User implements IO {
         return !session_id.equals("");
     }
 
+    public void switchLanguages() {
+        String tmpLanguageFrom = languageFrom;
+        languageFrom = languageTo;
+        languageTo = tmpLanguageFrom;
+    }
+
 
     //// Getter and Setter ////
 
@@ -256,5 +262,4 @@ public class User implements IO {
             myWords.add(r);
         }
     }
-
 }

@@ -53,7 +53,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private ImageView flagTranslateFrom;
     private ImageView flagTranslateTo;
 
-    private boolean switchLanguage;
     private String switchedText;
     private SharedPreferences settings;
 
@@ -94,7 +93,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
         //remembers if languages was switched
         settings = PreferenceManager.getDefaultSharedPreferences(activity);
-        switchLanguage = settings.getBoolean("switchLanguage", false);
 
         //listeners for the flags to switch the flags by pressing on them
         flagTranslateFrom.setOnClickListener(new LanguageSwitchListener());
@@ -196,12 +194,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     @Override
-    public void refreshLanguages(boolean switchFlagsIfNeeded) {
-        if (switchLanguage && switchFlagsIfNeeded) {
-            flipTextFields();
-            switchLanguage = false;
-        }
-
+    public void refreshLanguages() {
         setLanguagesTextFields();
         resetTextFields();
     }
@@ -237,23 +230,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     @Override
-    public void onStop() {
-        // The activity has become visible (it is now "resumed").
-        super.onStop();
-
-        //Save if langauge is switched
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("switchLanguage", switchLanguage);
-        editor.apply();
-    }
-
-    @Override
-    public void onResume() {
-        // The activity has become visible (it is now "resumed").
-        super.onResume();
-    }
-
-    @Override
     public void onDestroy() {
         // Shut down both TTS to prevent memory leaks
         if (textToSpeechLanguageFrom != null) {
@@ -272,11 +248,11 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     //// private Methods ////
 
     private void setLanguagesTextFields() {
-        setFlag(flagTranslateFrom, getInputLanguage());
-        setTTS(textToSpeechLanguageFrom, getInputLanguage());
+        setFlag(flagTranslateFrom, connectionManager.getLanguageFrom());
+        setTTS(textToSpeechLanguageFrom, connectionManager.getLanguageFrom());
 
-        setFlag(flagTranslateTo, getOutputLanguage());
-        setTTS(textToSpeechLanguageTo, getOutputLanguage());
+        setFlag(flagTranslateTo, connectionManager.getLanguageTo());
+        setTTS(textToSpeechLanguageTo, connectionManager.getLanguageTo());
     }
 
     private void setTTS(TextToSpeech tts, String language) {
@@ -339,12 +315,12 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private void translate() {
         String input = getEditTextTrimmed(editTextLanguageFrom);
         //search in MyWords if i already bookmarked that word
-        MyWordsItem myWordsSearch = connectionManager.checkMyWordsForTranslation(input, getInputLanguage(), getOutputLanguage());
+        MyWordsItem myWordsSearch = connectionManager.checkMyWordsForTranslation(input, connectionManager.getLanguageFrom(), connectionManager.getLanguageTo());
 
         if (myWordsSearch == null)
-            connectionManager.getTranslation(input, getInputLanguage(), getOutputLanguage(), this);
+            connectionManager.getTranslation(input, connectionManager.getLanguageFrom(), connectionManager.getLanguageTo(), this);
         else {
-            if (myWordsSearch.getLanguageFrom().equals(getInputLanguage()))
+            if (myWordsSearch.getLanguageFrom().equals(connectionManager.getLanguageFrom()))
                 setTranslatedText(myWordsSearch.getLanguageToWord());
             else
                 setTranslatedText(myWordsSearch.getLanguageFromWord());
@@ -356,30 +332,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     private String getEditTextTrimmed(EditText editText) {
         return editText.getText().toString().replaceAll("[ ]+", " ").trim();
-    }
-
-    private String getInputLanguage() {
-        return switchLanguage ? connectionManager.getLanguageTo() : connectionManager.getLanguageFrom();
-    }
-
-    private String getOutputLanguage() {
-        return switchLanguage ? connectionManager.getLanguageFrom() : connectionManager.getLanguageTo();
-    }
-
-    private void flipTextFields() {
-        switchLanguage = !switchLanguage;
-        setLanguagesTextFields();
-
-        String tmpText = getEditTextTrimmed(editTextLanguageFrom);
-        String textLanguageTo = getEditTextTrimmed(editTextLanguageTo);
-        if (textLanguageTo.equals(""))
-            editTextLanguageFrom.setText(switchedText);
-        else
-            editTextLanguageFrom.setText(textLanguageTo);
-
-        switchedText = tmpText;
-        editTextLanguageTo.setText("");
-        initButton(btnCopy, false);
     }
 
     private void resetTextFields() {
@@ -397,16 +349,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
 
     ///// Listeners /////
-
-    public class FragmentTextListener {
-
-        public void updateLanguage(String languageCode, boolean isLanguageFrom) {
-            if (isLanguageFrom)
-                connectionManager.setLanguageFrom(languageCode, false);
-            else
-                connectionManager.setLanguageTo(languageCode, false);
-        }
-    }
 
     private class TranslationListener implements View.OnClickListener {
         @Override
@@ -429,7 +371,21 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private class LanguageSwitchListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            flipTextFields();
+            connectionManager.switchLanguages();
+
+            String tmpLanguageFromWord = getEditTextTrimmed(editTextLanguageFrom);
+            String tmpLanguageToWord = getEditTextTrimmed(editTextLanguageTo);
+            if (tmpLanguageToWord.equals(""))
+                editTextLanguageFrom.setText(switchedText);
+            else
+                editTextLanguageFrom.setText(tmpLanguageToWord);
+
+            switchedText = tmpLanguageFromWord;
+            editTextLanguageTo.setText("");
+
+            //initialize back the view
+            initButton(btnCopy, false);
+            setLanguagesTextFields();
         }
     }
 
@@ -448,8 +404,20 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
             listPreference.setEntries(res.getStringArray(R.array.languages));
             listPreference.setEntryValues(res.getStringArray(R.array.language_keys));
 
-            listPreference.showDialog(activity, switchLanguage ? !isLanguageFrom : isLanguageFrom, new FragmentTextListener());
+            listPreference.showDialog(activity, isLanguageFrom, new FragmentTextListener());
             return true;
+        }
+    }
+
+    public class FragmentTextListener {
+
+        public void updateLanguage(String languageCode, boolean isLanguageFrom) {
+            switchedText = "";
+
+            if (isLanguageFrom)
+                connectionManager.setLanguageFrom(languageCode, false);
+            else
+                connectionManager.setLanguageTo(languageCode, false);
         }
     }
 
@@ -457,7 +425,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getInputLanguage());
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getLanguageFrom());
 
             if (activeTextToSpeech != null) {
                 activeTextToSpeech.stop();
@@ -489,7 +457,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
                     String input = getEditTextTrimmed(editTextLanguageFrom);
                     String translation = getEditTextTrimmed(editTextLanguageTo);
 
-                    connectionManager.bookmarkWordOnServer(input, getInputLanguage(), translation, getOutputLanguage(), FragmentText.this);
+                    connectionManager.bookmarkWordOnServer(input, connectionManager.getLanguageFrom(), translation, connectionManager.getLanguageTo(), FragmentText.this);
                 } else {
                     toast(getString(R.string.error_bookmarked_already)); //TODO: press it again when filled deletes bookmark
                 }

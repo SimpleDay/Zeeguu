@@ -121,7 +121,7 @@ public class ZeeguuActivity extends ActionBarActivity {
 
     public void refreshLanguages(boolean switchFlagsIfNeeded) {
         for (ZeeguuFragment f : fragment.getAllFragments())
-            f.refreshLanguages(switchFlagsIfNeeded);
+            f.refreshLanguages();
     }
 
     @Override

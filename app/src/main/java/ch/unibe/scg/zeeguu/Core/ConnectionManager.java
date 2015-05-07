@@ -52,11 +52,7 @@ public class ConnectionManager {
 
     //TAGS
     private static final boolean debugOn = true;
-    private static final String tagMyWordsReq = "tag_mywords_id";
-    private static final String tagSessionIDReq = "tag_session_id";
-    private static final String tagLanguageReq = "tag_language_id";
-    private static final String tagTranslationReq = "tag_translation_id";
-    private static final String tagBookmarkReq = "tag_bookmark_id";
+    private static final String tagZeeguuRequest = "tag_zeeguu_request";
     private static final String TAG = "tag_logging";
 
     private User user;
@@ -98,10 +94,6 @@ public class ConnectionManager {
         return instance;
     }
 
-    public static synchronized ConnectionManager getInstance() {
-        return instance;
-    }
-
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(activity.getApplicationContext());
@@ -114,19 +106,9 @@ public class ConnectionManager {
         getRequestQueue().add(req);
     }
 
-    public <T> void addToRequestQueue(Request<T> req) {
-        req.setTag(TAG);
-        getRequestQueue().add(req);
-    }
-
     public void cancelAllPendingRequests() {
-        cancelPendingRequests(tagMyWordsReq);
-        cancelPendingRequests(tagSessionIDReq);
-    }
-
-    public void cancelPendingRequests(Object tag) {
         if (mRequestQueue != null) {
-            mRequestQueue.cancelAll(tag);
+            mRequestQueue.cancelAll(tagZeeguuRequest);
         }
     }
 
@@ -159,6 +141,54 @@ public class ConnectionManager {
             toast(activity.getString(R.string.error_bookmark_delete));
         }
     }
+
+    public void switchLanguages() {
+        user.switchLanguages();
+    }
+
+    //// Checking if a word we are searching is already in the MyWords of the user ////
+
+    public MyWordsItem checkMyWordsForTranslation(String input, String inputLanguage, String outputLanguage) {
+        return user.checkMyWordsForTranslation(input, inputLanguage, outputLanguage);
+    }
+
+
+    //Getter und setter
+
+    public String getEmail() {
+        return user.getEmail();
+    }
+
+    public ArrayList<MyWordsHeader> getMyWords() {
+        return user.getMyWords();
+    }
+
+    public String getLanguageFrom() {
+        return user.getLanguageFrom();
+    }
+
+    public void setLanguageFrom(String languageFromKey, boolean switchFlagsIfNeeded) {
+        user.setLanguageFrom(languageFromKey);
+        activity.refreshLanguages(switchFlagsIfNeeded);
+        setUserLanguageOnServer(activity.getString(R.string.preference_language_from), languageFromKey);
+    }
+
+    public String getLanguageTo() {
+        return user.getLanguageTo();
+    }
+
+    public void setLanguageTo(String languageToKey, boolean switchFlagsIfNeeded) {
+        user.setLanguageTo(languageToKey);
+        activity.refreshLanguages(switchFlagsIfNeeded);
+        setUserLanguageOnServer(activity.getString(R.string.preference_language_to), languageToKey);
+    }
+
+    public void setMyWordsListener(FragmentMyWords.MyWordsListener listener) {
+        myWordsListener = listener;
+    }
+
+
+    //// public requests ////
 
     public void createAccountOnServer(final String username, final String email, final String pw) {
         String url_create_account = API_URL + "add_user/" + email;
@@ -193,7 +223,7 @@ public class ConnectionManager {
             }
         };
 
-        this.addToRequestQueue(strReq, tagSessionIDReq);
+        this.addToRequestQueue(strReq, tagZeeguuRequest);
 
     }
 
@@ -243,7 +273,7 @@ public class ConnectionManager {
             }
         };
 
-        this.addToRequestQueue(strReq, tagSessionIDReq);
+        this.addToRequestQueue(strReq, tagZeeguuRequest);
     }
 
     public void getTranslation(@NonNull final String input, String inputLanguage, String outputLanguage, final FragmentText fragmentText) {
@@ -286,7 +316,7 @@ public class ConnectionManager {
 
         };
 
-        this.addToRequestQueue(strReq, tagTranslationReq);
+        this.addToRequestQueue(strReq, tagZeeguuRequest);
     }
 
     public void bookmarkWordOnServer(String inputWord, String inputLangauge, String translation, String translationLanguage, final FragmentText fragmentText) {
@@ -333,7 +363,7 @@ public class ConnectionManager {
             }
         };
 
-        this.addToRequestQueue(strReq, tagBookmarkReq);
+        this.addToRequestQueue(strReq, tagZeeguuRequest);
     }
 
 
@@ -341,46 +371,8 @@ public class ConnectionManager {
         return user.isFirstLogin();
     }
 
-    //Getter und setter
 
-    public String getSessionId() {
-        return user.getSession_id();
-    }
-
-    public String getEmail() {
-        return user.getEmail();
-    }
-
-    public ArrayList<MyWordsHeader> getMyWords() {
-        return user.getMyWords();
-    }
-
-    public String getLanguageFrom() {
-        return user.getLanguageFrom();
-    }
-
-    public void setLanguageFrom(String languageFromKey, boolean switchFlagsIfNeeded) {
-        user.setLanguageFrom(languageFromKey);
-        activity.refreshLanguages(switchFlagsIfNeeded);
-        setUserLanguageOnServer(activity.getString(R.string.preference_language_from), languageFromKey);
-    }
-
-    public String getLanguageTo() {
-        return user.getLanguageTo();
-    }
-
-    public void setLanguageTo(String languageToKey, boolean switchFlagsIfNeeded) {
-        user.setLanguageTo(languageToKey);
-        activity.refreshLanguages(switchFlagsIfNeeded);
-        setUserLanguageOnServer(activity.getString(R.string.preference_language_to), languageToKey);
-    }
-
-    public void setMyWordsListener(FragmentMyWords.MyWordsListener listener) {
-        myWordsListener = listener;
-    }
-
-
-    //// private methods ////
+    //// private requests and methods ////
 
     private void getSessionIDOutOfResponse(String response) {
         user.setSession_id(response.toString());
@@ -461,7 +453,7 @@ public class ConnectionManager {
         });
 
 
-        this.addToRequestQueue(request, tagMyWordsReq);
+        this.addToRequestQueue(request, tagZeeguuRequest);
     }
 
     private void removeBookmarkFromServer(long bookmarkID) {
@@ -496,7 +488,7 @@ public class ConnectionManager {
 
         });
 
-        this.addToRequestQueue(strReq, tagSessionIDReq);
+        this.addToRequestQueue(strReq, tagZeeguuRequest);
     }
 
     private void getBothUserLanguageFromServer() {
@@ -535,7 +527,7 @@ public class ConnectionManager {
 
                 });
 
-        this.addToRequestQueue(request, tagLanguageReq);
+        this.addToRequestQueue(request, tagZeeguuRequest);
     }
 
     private void setUserLanguageOnServer(final String urlTag, final String language_key) {
@@ -572,7 +564,7 @@ public class ConnectionManager {
             }
         });
 
-        this.addToRequestQueue(strReq, tagLanguageReq);
+        this.addToRequestQueue(strReq, tagZeeguuRequest);
     }
 
     private void checkErrorCode(VolleyError error) {
@@ -626,11 +618,5 @@ public class ConnectionManager {
         }
 
         return true;
-    }
-
-    //// Checking if a word we are searching is already in the MyWords of the user ////
-
-    public MyWordsItem checkMyWordsForTranslation(String input, String inputLanguage, String outputLanguage) {
-        return user.checkMyWordsForTranslation(input, inputLanguage, outputLanguage);
     }
 }
