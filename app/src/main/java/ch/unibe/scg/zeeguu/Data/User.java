@@ -39,14 +39,12 @@ public class User implements IO {
     private ZeeguuActivity activity;
     private ConnectionManager connectionManager;
     private SharedPreferences settings;
-    private SharedPreferences.Editor editor;
 
 
     public User(ZeeguuActivity activity, ConnectionManager connectionManager) {
         this.activity = activity;
         this.connectionManager = connectionManager;
         this.settings = PreferenceManager.getDefaultSharedPreferences(activity);
-        this.editor = settings.edit();
 
         this.myWords = new ArrayList<>();
 
@@ -67,6 +65,7 @@ public class User implements IO {
     }
 
     public void saveUserInformationLocally() {
+        SharedPreferences.Editor editor = settings.edit();
         editor.putString(activity.getString(R.string.preference_email), email);
         editor.putString(activity.getString(R.string.preference_password), pw);
         editor.putString(activity.getString(R.string.preference_user_session_id), session_id);
@@ -74,6 +73,7 @@ public class User implements IO {
     }
 
     public void saveUserLanguagesLocally() {
+        SharedPreferences.Editor editor = settings.edit();
         editor.putString(activity.getString(R.string.preference_language_from), languageFrom);
         editor.putString(activity.getString(R.string.preference_language_to), languageTo);
         editor.apply();
@@ -84,6 +84,8 @@ public class User implements IO {
         session_id = "";
         email = "";
         pw = "";
+
+        SharedPreferences.Editor editor = settings.edit();
         editor.remove(activity.getString(R.string.preference_email));
         editor.remove(activity.getString(R.string.preference_password));
         editor.remove(activity.getString(R.string.preference_user_session_id));
