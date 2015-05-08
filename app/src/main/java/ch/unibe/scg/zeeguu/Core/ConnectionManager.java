@@ -15,15 +15,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.Volley.NoConnectionError;
-import com.google.Volley.Request;
-import com.google.Volley.RequestQueue;
-import com.google.Volley.Response;
-import com.google.Volley.VolleyError;
-import com.google.Volley.toolbox.JsonArrayRequest;
-import com.google.Volley.toolbox.JsonObjectRequest;
-import com.google.Volley.toolbox.StringRequest;
-import com.google.Volley.toolbox.Volley;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,12 +34,12 @@ import java.util.Map;
 
 import ch.unibe.scg.zeeguu.Data.DialogBuilder;
 import ch.unibe.scg.zeeguu.Data.User;
-import ch.unibe.scg.zeeguu.R;
-import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
 import ch.unibe.scg.zeeguu.MyWords_Fragments.FragmentMyWords;
 import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsHeader;
 import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsInfoHeader;
 import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsItem;
+import ch.unibe.scg.zeeguu.R;
+import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
 
 public class ConnectionManager {
 
@@ -79,7 +78,7 @@ public class ConnectionManager {
         else if (!user.userHasSessionId())
             getSessionIdFromServer(user.getEmail(), user.getPw());
         else if (user.getLanguageTo().equals("") || user.getLanguageFrom().equals("")) {
-            getUserLanguagesFromServer();
+            //getUserLanguagesFromServer();
             getMyWordsFromServer();
         } else {
             getMyWordsFromServer();
@@ -383,7 +382,7 @@ public class ConnectionManager {
 
         activity.showLoginButtonIfNotLoggedIn();
         getMyWordsFromServer();
-        getUserLanguagesFromServer();
+        //getUserLanguagesFromServer();
     }
 
     private void getMyWordsFromServer() {
@@ -490,7 +489,7 @@ public class ConnectionManager {
         this.addToRequestQueue(strReq, tagZeeguuRequest);
     }
 
-    private void getUserLanguagesFromServer() {
+  /*  private void getUserLanguagesFromServer() {
         if (!user.userHasSessionId() || !isNetworkAvailable())
             return;
 
@@ -529,7 +528,7 @@ public class ConnectionManager {
 
         this.addToRequestQueue(request, tagZeeguuRequest);
     }
-
+*/
     private void setUserLanguageOnServer(final String urlTag, final String language_key) {
         if (!user.userHasSessionId() || !isNetworkAvailable())
             return;

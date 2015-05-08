@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -47,6 +48,9 @@ public class ZeeguuActivity extends ActionBarActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_menu, fragment, "slidingMenu");
         transaction.commit();
+
+        ActionBar actionBar = getSupportActionBar();
+        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         //TODO: Language change affects whole app
     }
@@ -142,27 +146,9 @@ public class ZeeguuActivity extends ActionBarActivity {
     //protected android methods
 
     @Override
-    protected void onResume() {
-        // The activity has become visible (it is now "resumed").
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        // Another activity is taking focus (this activity is about to be "paused").
-        super.onPause();
-    }
-
-    @Override
     protected void onStop() {
         // The activity is no longer visible (it is now "stopped")
         super.onStop();
         connectionManager.cancelAllPendingRequests();
-    }
-
-    @Override
-    protected void onDestroy() {
-        // The activity is about to be destroyed.
-        super.onDestroy();
     }
 }

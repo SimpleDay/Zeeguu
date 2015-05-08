@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.SlidingTab.SlidingTabLayout;
+import com.android.SlidingTab.SlidingTabLayout;
 
 import java.util.ArrayList;
 
