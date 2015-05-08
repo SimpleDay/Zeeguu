@@ -90,7 +90,7 @@ public class MyWordsHeader implements IO {
 
     @Override
     public void write(BufferedWriter bufferedWriter) throws IOException {
-        bufferedWriter.write(children.size());
+        bufferedWriter.write("" + children.size());
         bufferedWriter.newLine();
 
         for (Item r : children) {
@@ -115,7 +115,7 @@ public class MyWordsHeader implements IO {
                 bufferedWriter.write(w.getLanguageTo());
                 bufferedWriter.newLine();
             } else {
-                bufferedWriter.write(0);
+                bufferedWriter.write("0");
                 bufferedWriter.newLine();
 
                 //saving name of info header

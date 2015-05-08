@@ -82,6 +82,7 @@ public class FragmentMyWords extends ZeeguuFragment {
         //Set text when listview empty
         TextView emptyText = (TextView) view.findViewById(R.id.mywords_empty);
         myWordsListView.setEmptyView(emptyText);
+        expandMyWordsList();
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.mywords_listview_swipe_refresh_layout);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

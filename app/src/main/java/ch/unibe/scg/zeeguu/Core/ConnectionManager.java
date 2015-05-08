@@ -70,19 +70,18 @@ public class ConnectionManager {
         //initialise all variables
         this.activity = activity;
         this.user = new User(activity, this);
-        this.dialogBuilder = new DialogBuilder(activity,user,this);
+        this.dialogBuilder = new DialogBuilder(activity, user, this);
         this.instance = this;
-
-        //try to get the users information
-        user.loadAllUserInformationLocally();
 
         //get the information that is missing from start point
         if (!user.userHasLoginInfo())
             dialogBuilder.getLoginInformation("");
         else if (!user.userHasSessionId())
-            getSessionIdFromServer(user.getEmail(),user.getPw());
-        else {
-            getBothUserLanguageFromServer();
+            getSessionIdFromServer(user.getEmail(), user.getPw());
+        else if (user.getLanguageTo().equals("") || user.getLanguageFrom().equals("")) {
+            getUserLanguagesFromServer();
+            getMyWordsFromServer();
+        } else {
             getMyWordsFromServer();
         }
     }
@@ -167,18 +166,20 @@ public class ConnectionManager {
         return user.getLanguageFrom();
     }
 
-    public void setLanguageFrom(String languageFromKey, boolean switchFlagsIfNeeded) {
-        user.setLanguageFrom(languageFromKey);
+    public boolean setLanguageFrom(String languageFromKey, boolean switchFlagsIfNeeded) {
+        boolean languageChanged = user.setLanguageFrom(languageFromKey);
         activity.refreshLanguages(switchFlagsIfNeeded);
+        return languageChanged;
     }
 
     public String getLanguageTo() {
         return user.getLanguageTo();
     }
 
-    public void setLanguageTo(String languageToKey, boolean switchFlagsIfNeeded) {
-        user.setLanguageTo(languageToKey);
+    public boolean setLanguageTo(String languageToKey, boolean switchFlagsIfNeeded) {
+        boolean languageChanged = user.setLanguageTo(languageToKey);
         activity.refreshLanguages(switchFlagsIfNeeded);
+        return languageChanged;
     }
 
     public void setMyWordsListener(FragmentMyWords.MyWordsListener listener) {
@@ -382,7 +383,7 @@ public class ConnectionManager {
 
         activity.showLoginButtonIfNotLoggedIn();
         getMyWordsFromServer();
-        getBothUserLanguageFromServer();
+        getUserLanguagesFromServer();
     }
 
     private void getMyWordsFromServer() {
@@ -489,7 +490,7 @@ public class ConnectionManager {
         this.addToRequestQueue(strReq, tagZeeguuRequest);
     }
 
-    private void getBothUserLanguageFromServer() {
+    private void getUserLanguagesFromServer() {
         if (!user.userHasSessionId() || !isNetworkAvailable())
             return;
 
@@ -502,11 +503,12 @@ public class ConnectionManager {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            user.setLanguageFrom(response.getString("native"));
-                            user.setLanguageTo(response.getString("learned"));
+                            if (!user.setLanguageFrom(response.getString("native")) ||
+                                    !user.setLanguageTo(response.getString("learned"))) {
+                                user.setDefaultLanguages();
+                            }
                             user.saveUserLanguagesLocally();
                             logging("Language from: " + user.getLanguageFrom() + ", language to: " + user.getLanguageTo());
-
 
                             activity.refreshLanguages(true);
 

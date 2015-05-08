@@ -52,7 +52,7 @@ public class DialogBuilder {
                         if (!user.userHasLoginInfo(email, pw)) {
                             Toast.makeText(activity, activity.getString(R.string.error_userinfo_invalid), Toast.LENGTH_LONG).show();
                             getLoginInformation(email);
-                        } else if (!isEmailValid(email)) {
+                        } else if (!user.isEmailValid(email)) {
                             Toast.makeText(activity, R.string.error_email_not_valid, Toast.LENGTH_LONG).show();
                             getLoginInformation(email);
                         } else {
@@ -105,7 +105,7 @@ public class DialogBuilder {
                         if (!user.userHasLoginInfo(email, pw) || username.equals("")) {
                             Toast.makeText(activity, activity.getString(R.string.error_userinfo_invalid), Toast.LENGTH_LONG).show();
                             createNewAccount(email, username);
-                        } else if (!isEmailValid(email)) {
+                        } else if (!user.isEmailValid(email)) {
                             Toast.makeText(activity, R.string.error_email_not_valid, Toast.LENGTH_LONG).show();
                             createNewAccount(email, username);
                         } else {
@@ -139,11 +139,4 @@ public class DialogBuilder {
             editTextUsername.setText(tmpUsername);
         }
     }
-
-    //// validation functions ////
-
-    private boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
 }

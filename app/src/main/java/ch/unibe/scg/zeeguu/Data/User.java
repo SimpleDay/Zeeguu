@@ -49,6 +49,9 @@ public class User implements IO {
         this.editor = settings.edit();
 
         this.myWords = new ArrayList<>();
+
+        //try to get the users information
+        loadAllUserInformationLocally();
     }
 
 
@@ -59,8 +62,8 @@ public class User implements IO {
         email = settings.getString(activity.getString(R.string.preference_email), "").toString();
         pw = settings.getString(activity.getString(R.string.preference_password), "").toString();
         session_id = settings.getString(activity.getString(R.string.preference_user_session_id), "").toString();
-        languageFrom = settings.getString(activity.getString(R.string.preference_language_from), "en").toString();
-        languageTo = settings.getString(activity.getString(R.string.preference_language_to), "de").toString();
+        languageFrom = settings.getString(activity.getString(R.string.preference_language_from), "").toString();
+        languageTo = settings.getString(activity.getString(R.string.preference_language_to), "").toString();
     }
 
     public void saveUserInformationLocally() {
@@ -118,6 +121,17 @@ public class User implements IO {
         languageTo = tmpLanguageFrom;
     }
 
+    public void setDefaultLanguages() {
+        languageFrom = "en";
+        languageTo = "de";
+    }
+
+    //// validation functions ////
+
+    public boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
 
     //// Getter and Setter ////
 
@@ -125,49 +139,73 @@ public class User implements IO {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public boolean setEmail(String email) {
+        if(isEmailValid(email)) {
+            this.email = email;
+            return true;
+        }
+        return false;
     }
 
     public String getPw() {
         return pw;
     }
 
-    public void setPw(String pw) {
-        this.pw = pw;
+    public boolean setPw(String pw) {
+        if(pw.length() > 0) {
+            this.pw = pw;
+            return true;
+        }
+        return false;
     }
 
     public String getSession_id() {
         return session_id;
     }
 
-    public void setSession_id(String session_id) {
-        this.session_id = session_id;
+    public boolean setSession_id(String session_id) {
+        if(session_id != null) {
+            this.session_id = session_id;
+            return true;
+        }
+        return false;
     }
 
     public String getLanguageFrom() {
         return languageFrom;
     }
 
-    public void setLanguageFrom(String languageFrom) {
-        this.languageFrom = languageFrom;
+    public boolean setLanguageFrom(String languageFrom) {
+        if (languageFrom.length() == 2) {
+            this.languageFrom = languageFrom;
+            return true;
+        }
+        return false;
     }
 
     public String getLanguageTo() {
         return languageTo;
     }
 
-    public void setLanguageTo(String languageTo) {
-        this.languageTo = languageTo;
+    public boolean setLanguageTo(String languageTo) {
+        if (languageTo.length() == 2) {
+            this.languageTo = languageTo;
+            return true;
+        }
+        return false;
     }
 
     public ArrayList<MyWordsHeader> getMyWords() {
         return myWords;
     }
 
-    public void setMyWords(ArrayList<MyWordsHeader> myWords) {
-        this.myWords = myWords;
-        saveMyWordsLocally();
+    public boolean setMyWords(ArrayList<MyWordsHeader> myWords) {
+        if (myWords != null) {
+            this.myWords = myWords;
+            saveMyWordsLocally();
+            return true;
+        }
+        return false;
     }
 
 
@@ -203,11 +241,13 @@ public class User implements IO {
     public void saveMyWordsLocally() {
         try {
             File file = new File(activity.getFilesDir(), myWordsFileName);
+            file.createNewFile();
+
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
             write(bufferedWriter);
             bufferedWriter.close();
-            Log.d("TAG", "Saved words to file at location: " + file.getPath());
 
+            Log.d("TAG", "Saved words to file at location: " + file.getPath());
         } catch (IOException e) {
             Toast.makeText(activity, R.string.error_mywords_not_saved, Toast.LENGTH_LONG).show();
             Log.d(activity.getString(R.string.logging_tag), e.getMessage());
@@ -216,12 +256,13 @@ public class User implements IO {
 
     @Override
     public void write(BufferedWriter bufferedWriter) throws IOException {
-        bufferedWriter.write(myWords.size());
+        bufferedWriter.write("" + myWords.size());
         bufferedWriter.newLine();
         for (MyWordsHeader r : myWords) {
             bufferedWriter.write(r.getName());
             bufferedWriter.newLine();
             r.write(bufferedWriter);
+            bufferedWriter.flush();
         }
     }
 
@@ -238,7 +279,6 @@ public class User implements IO {
 
     public void loadMyWordsLocally() {
         try {
-            Log.d("TAG", activity.getFilesDir().toString());
             File file = new File(activity.getFilesDir(), myWordsFileName);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             read(bufferedReader);
@@ -253,7 +293,7 @@ public class User implements IO {
     public void read(BufferedReader bufferedReader) throws IOException {
         myWords.clear();
 
-        int size = Integer.parseInt(bufferedReader.readLine().trim());
+        int size = Integer.parseInt(bufferedReader.readLine());
         for (int i = 0; i < size; i++) {
             //get the name of the header group and create it
             MyWordsHeader r = new MyWordsHeader(bufferedReader.readLine().trim());
@@ -262,4 +302,5 @@ public class User implements IO {
             myWords.add(r);
         }
     }
+
 }
