@@ -90,6 +90,8 @@ public class User implements IO {
         editor.apply();
 
         myWords.clear();
+        clearMyWordsOnPhone();
+
         connectionManager.notifyMyWordsChange();
         activity.showLoginButtonIfNotLoggedIn();
         Toast.makeText(activity, activity.getString(R.string.error_user_logged_out), Toast.LENGTH_LONG).show();
@@ -202,7 +204,7 @@ public class User implements IO {
     public boolean setMyWords(ArrayList<MyWordsHeader> myWords) {
         if (myWords != null) {
             this.myWords = myWords;
-            saveMyWordsLocally();
+            saveMyWordsToPhone();
             return true;
         }
         return false;
@@ -238,7 +240,7 @@ public class User implements IO {
 
     //// loading and writing my words from and to memory, IO interface  ////
 
-    public void saveMyWordsLocally() {
+    public void saveMyWordsToPhone() {
         try {
             File file = new File(activity.getFilesDir(), myWordsFileName);
             file.createNewFile();
@@ -266,18 +268,7 @@ public class User implements IO {
         }
     }
 
-    public void readtest() {
-        try {
-            File file = new File(activity.getFilesDir(), myWordsFileName);
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-
-            Toast.makeText(activity, bufferedReader.readLine(), Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-        }
-
-    }
-
-    public void loadMyWordsLocally() {
+    public void loadMyWordsFromPhone() {
         try {
             File file = new File(activity.getFilesDir(), myWordsFileName);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -300,6 +291,17 @@ public class User implements IO {
             //read all entries from the group and add it to the list
             r.read(bufferedReader);
             myWords.add(r);
+        }
+    }
+
+    public void clearMyWordsOnPhone() {
+        try {
+            File file = new File(activity.getFilesDir(), myWordsFileName);
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+            write(bufferedWriter);
+            bufferedWriter.close();
+        } catch (Exception e) {
+            Log.d("TAG", "MyWords on phone could not be deleted");
         }
     }
 

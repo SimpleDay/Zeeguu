@@ -613,7 +613,7 @@ public class ConnectionManager {
             toast(activity.getString(R.string.error_no_internet_connection));
             //reload MyWords when empty
             if (user.isMyWordsEmpty())
-                user.loadMyWordsLocally();
+                user.loadMyWordsFromPhone();
             return false;
         }
 
