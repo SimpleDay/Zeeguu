@@ -15,21 +15,21 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import ch.unibe.scg.zeeguu.Core.ConnectionManager;
-import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
-import ch.unibe.scg.zeeguu.R;
+import ch.unibe.zeeguulibrary.MyWords.MyWordsHeader;
+import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
 
 /**
  * Created by Pascal on 12/01/15.
  */
 public class FragmentMyWords extends ZeeguuFragment {
-    private ConnectionManager connectionManager;
+    private ZeeguuFragmentMyWordsCallbacks callback;
+    private ZeeguuConnectionManager connectionManager;
 
     //Listview variables
     private MyWordsExpandableAdapter adapter;
     private ExpandableListView myWordsListView;
-    SwipeRefreshLayout swipeLayout;
+    private SwipeRefreshLayout swipeLayout;
 
     private boolean listviewExpanded;
     private boolean listviewRefreshing;
@@ -37,6 +37,19 @@ public class FragmentMyWords extends ZeeguuFragment {
     private ActionMode mode;
     private MenuItem menuItem;
 
+    public interface ZeeguuFragmentMyWordsCallbacks {
+        ZeeguuConnectionManager getConnectionManager();
+    }
+
+    public FragmentMyWords() {
+        // Make sure that the interface is implemented in the container activity
+        try {
+            callback = (ZeeguuFragmentMyWordsCallbacks) getActivity();
+            connectionManager = callback.getConnectionManager();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement ZeeguuFragmentTextCallbacks");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,13 +59,10 @@ public class FragmentMyWords extends ZeeguuFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        //getMyWords from server
-        connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) getActivity());
-        connectionManager.setMyWordsListener(new MyWordsListener());
         listviewRefreshing = false;
 
         //create listview for myWordsListView and customize it
-        ArrayList<MyWordsHeader> list = connectionManager.getMyWords();
+        ArrayList<MyWordsHeader> list = connectionManager.getAccount().getMyWords();
         adapter = new MyWordsExpandableAdapter(getActivity(), list);
         myWordsListView = (ExpandableListView) view.findViewById(R.id.mywords_listview);
         myWordsListView.setAdapter(adapter);
@@ -113,7 +123,7 @@ public class FragmentMyWords extends ZeeguuFragment {
                 return true;
 
             case R.id.listview_expand_collapse:
-                if (!connectionManager.loggedIn())
+                if (!connectionManager.getAccount().isUserLoggedIn())
                     toast(getString(R.string.error_user_not_logged_in_yet));
                 else if (listviewExpanded)
                     collapseMyWordsList();
@@ -144,17 +154,11 @@ public class FragmentMyWords extends ZeeguuFragment {
         //maybe integrate a filter here which only shows words of the selected language pair
     }
 
-    //// Listener ////
-
-    public class MyWordsListener {
-
-        public void notifyDataSetChanged() {
-            adapter.notifyDataSetChanged();
-            listviewRefreshing = false;
-            listviewRefreshing = false;
-            swipeLayout.setRefreshing(false);
-            expandMyWordsList();
-        }
+    public void notifyDataSetChanged() {
+        adapter.notifyDataSetChanged();
+        listviewRefreshing = false;
+        swipeLayout.setRefreshing(false);
+        expandMyWordsList();
     }
 
     //// private classes ////
@@ -187,11 +191,11 @@ public class FragmentMyWords extends ZeeguuFragment {
     }
 
     private void refreshMyWords() {
-        if (!connectionManager.loggedIn()) {
+        if (!connectionManager.getAccount().isUserLoggedIn()) {
             toast(getString(R.string.error_user_not_logged_in_yet));
         } else if (!listviewRefreshing) {
             listviewRefreshing = true;
-            connectionManager.refreshMyWords();
+            connectionManager.getMyWordsFromServer();
         } else {
             toast(getString(R.string.error_refreshing_already_running));
         }
@@ -211,8 +215,12 @@ public class FragmentMyWords extends ZeeguuFragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.item_delete:
-                    logging("deleted bookmark with id: " + id);
-                    connectionManager.removeBookmark(id);
+                    if(connectionManager.getAccount().deleteWord(id) != null) {
+                        connectionManager.removeBookmarkFromServer(id);
+                        toast(getString(R.string.successful_bookmark_deleted));
+                    } else {
+                        toast(getString(R.string.error_bookmark_delete));
+                    }
                     mode.finish();
                     break;
             }

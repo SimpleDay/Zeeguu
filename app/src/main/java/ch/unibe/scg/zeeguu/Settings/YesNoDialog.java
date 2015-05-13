@@ -4,21 +4,21 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.preference.DialogPreference;
 
-import ch.unibe.scg.zeeguu.Core.ConnectionManager;
 import ch.unibe.scg.zeeguu.R;
+import ch.unibe.zeeguulibrary.ZeeguuAccount;
 
 /**
  * Zeeguu Application
  * Created by Pascal on 20/04/15.
  */
 public class YesNoDialog extends DialogPreference {
-    private ConnectionManager connectionManager;
+    private ZeeguuAccount account;
     private SettingsActivity context;
 
-    public YesNoDialog(SettingsActivity context, ConnectionManager connectionManager) {
+    public YesNoDialog(SettingsActivity context, ZeeguuAccount account) {
         super(context, null);
         this.context = context;
-        this.connectionManager = connectionManager;
+        this.account = account;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class YesNoDialog extends DialogPreference {
         dialog.setPositiveButton(R.string.dialog_logout_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        connectionManager.logout();
+                        account.logout();
                         context.finish();
                     }
                 }

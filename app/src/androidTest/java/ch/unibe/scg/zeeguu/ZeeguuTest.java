@@ -8,15 +8,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ch.unibe.scg.zeeguu.Core.ConnectionManager;
 import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
+import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
 
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */
 public class ZeeguuTest extends ActivityInstrumentationTestCase2<ZeeguuActivity> {
     private ZeeguuActivity zeeguuActivity;
-    private ConnectionManager connectionManager;
+    private ZeeguuConnectionManager connectionManager;
     private ClipboardManager clipboard;
 
     public ZeeguuTest() {
@@ -27,7 +27,6 @@ public class ZeeguuTest extends ActivityInstrumentationTestCase2<ZeeguuActivity>
     public void setUp() throws Exception {
         super.setUp();
         zeeguuActivity = getActivity();
-        connectionManager = ConnectionManager.getConnectionManager(zeeguuActivity);
         clipboard = (ClipboardManager) zeeguuActivity.getSystemService(Activity.CLIPBOARD_SERVICE);
 
         setActivityInitialTouchMode(true);

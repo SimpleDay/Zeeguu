@@ -1,7 +1,7 @@
 package ch.unibe.scg.zeeguu.Sliding_menu;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +23,7 @@ public class SlidingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new ZeeguuFragmentPagerAdapter(getChildFragmentManager(), this);
+        adapter = new ZeeguuFragmentPagerAdapter(getFragmentManager(), this);
     }
 
     public ZeeguuFragment getActiveFragment() {

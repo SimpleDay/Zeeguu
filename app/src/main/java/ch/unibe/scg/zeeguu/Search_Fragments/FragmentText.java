@@ -27,22 +27,25 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import ch.unibe.scg.zeeguu.Core.ConnectionManager;
-import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
+import ch.unibe.zeeguulibrary.MyWords.MyWordsItem;
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Settings.LanguageListPreference;
-import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsItem;
+import ch.unibe.zeeguulibrary.ZeeguuAccount;
+import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
 
 /**
  * Created by Pascal on 12/01/15.
  */
 public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitListener {
     private Activity activity;
+    private ZeeguuFragmentTextCallbacks callback;
+    private ZeeguuConnectionManager connectionManager;
+    private ClipboardManager clipboard;
+
+    //text fields
     private EditText editTextLanguageFrom;
     private EditText editTextLanguageTo;
-    private ConnectionManager connectionManager;
-    private ClipboardManager clipboard;
 
     //TTS
     private TextToSpeech textToSpeechLanguageFrom;
@@ -67,7 +70,20 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private boolean bookmarked;
 
 
+
+    public interface ZeeguuFragmentTextCallbacks {
+        ZeeguuConnectionManager getConnectionManager();
+    }
+
     public FragmentText() {
+        // Make sure that the interface is implemented in the container activity
+        activity = getActivity();
+        try {
+            callback = (ZeeguuFragmentTextCallbacks) activity;
+            connectionManager = callback.getConnectionManager();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement ZeeguuFragmentTextCallbacks");
+        }
     }
 
     @Override
@@ -76,10 +92,8 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         View view = inflater.inflate(R.layout.fragment_text, container, false);
 
         //initialize class variables
-        activity = getActivity();
         editTextLanguageFrom = (EditText) view.findViewById(R.id.edit_text_language_from);
         editTextLanguageTo = (EditText) view.findViewById(R.id.edit_text_language_to);
-        connectionManager = ConnectionManager.getConnectionManager((ZeeguuActivity) activity);
         clipboard = (ClipboardManager) activity.getSystemService(Activity.CLIPBOARD_SERVICE);
 
         //TTS
@@ -164,7 +178,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         initButton(btnttsLanguageTo, !editTextLanguageTo.getText().toString().equals(""));
 
         //Open tutorial when the app is first opened
-        if (connectionManager.firstLogin()) {
+        if (connectionManager.getAccount().isFirstLogin()) {
             RelativeLayout tutorial = (RelativeLayout) view.findViewById(R.id.fragment_text_tutorial);
             tutorial.setVisibility(View.GONE); //TODO only for usability testing, otherwise visible
         }
@@ -225,8 +239,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     }
 
     public void setTranslatedText(String text) {
-        editTextLanguageTo.setText(text);
-        initButton(btnCopy, !text.equals(""));
+
     }
 
     @Override
@@ -248,11 +261,12 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     //// private Methods ////
 
     private void setLanguagesTextFields() {
-        setFlag(flagTranslateFrom, connectionManager.getLanguageFrom());
-        setTTS(textToSpeechLanguageFrom, connectionManager.getLanguageFrom());
+        ZeeguuAccount account = connectionManager.getAccount();
+        setFlag(flagTranslateFrom, account.getLanguageNative());
+        setTTS(textToSpeechLanguageFrom, account.getLanguageNative());
 
-        setFlag(flagTranslateTo, connectionManager.getLanguageTo());
-        setTTS(textToSpeechLanguageTo, connectionManager.getLanguageTo());
+        setFlag(flagTranslateTo, account.getLanguageLearning());
+        setTTS(textToSpeechLanguageTo, account.getLanguageLearning());
     }
 
     private void setTTS(TextToSpeech tts, String language) {
@@ -314,13 +328,14 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
     private void translate() {
         String input = getEditTextTrimmed(editTextLanguageFrom);
+        ZeeguuAccount account = connectionManager.getAccount();
         //search in MyWords if i already bookmarked that word
-        MyWordsItem myWordsSearch = connectionManager.checkMyWordsForTranslation(input, connectionManager.getLanguageFrom(), connectionManager.getLanguageTo());
+        MyWordsItem myWordsSearch = connectionManager.getAccount().checkMyWordsForTranslation(input, account.getLanguageNative(), account.getLanguageLearning());
 
         if (myWordsSearch == null)
-            connectionManager.getTranslation(input, connectionManager.getLanguageFrom(), connectionManager.getLanguageTo(), this);
+            connectionManager.translate(input, account.getLanguageNative(), account.getLanguageLearning());
         else {
-            if (myWordsSearch.getLanguageFrom().equals(connectionManager.getLanguageFrom()))
+            if (myWordsSearch.getLanguageFrom().equals(account.getLanguageNative()))
                 setTranslatedText(myWordsSearch.getLanguageToWord());
             else
                 setTranslatedText(myWordsSearch.getLanguageFromWord());
@@ -329,6 +344,8 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         }
         closeKeyboard();
     }
+
+
 
     private String getEditTextTrimmed(EditText editText) {
         return editText.getText().toString().replaceAll("[ ]+", " ").trim();
@@ -371,7 +388,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private class LanguageSwitchListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            connectionManager.switchLanguages();
+            connectionManager.getAccount().switchLanguages();
 
             String tmpLanguageFromWord = getEditTextTrimmed(editTextLanguageFrom);
             String tmpLanguageToWord = getEditTextTrimmed(editTextLanguageTo);
@@ -415,9 +432,9 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
             switchedText = "";
 
             if (isLanguageFrom)
-                connectionManager.setLanguageFrom(languageCode, false);
+                connectionManager.getAccount().setLanguageNative(languageCode);
             else
-                connectionManager.setLanguageTo(languageCode, false);
+                connectionManager.getAccount().setLanguageLearning(languageCode);
         }
     }
 
@@ -425,7 +442,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getLanguageFrom());
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getAccount().getLanguageNative());
 
             if (activeTextToSpeech != null) {
                 activeTextToSpeech.stop();
@@ -450,14 +467,16 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private class BookmarkListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if (!connectionManager.loggedIn())
+            ZeeguuAccount account = connectionManager.getAccount();
+            if (!account.isUserLoggedIn())
                 toast(getString(R.string.error_user_not_logged_in_yet));
             else if (editTextLanguageFrom.getText().length() != 0 && editTextLanguageTo.getText().length() != 0) {
                 if (!bookmarked) {
                     String input = getEditTextTrimmed(editTextLanguageFrom);
                     String translation = getEditTextTrimmed(editTextLanguageTo);
 
-                    connectionManager.bookmarkWordOnServer(input, connectionManager.getLanguageFrom(), translation, connectionManager.getLanguageTo(), FragmentText.this);
+                    connectionManager.contributeWithContext(input, account.getLanguageNative(), translation, account.getLanguageLearning(),
+                            getString(R.string.bookmark_title), activity.getString(R.string.bookmark_url_code), "");
                 } else {
                     toast(getString(R.string.error_bookmarked_already)); //TODO: press it again when filled deletes bookmark
                 }

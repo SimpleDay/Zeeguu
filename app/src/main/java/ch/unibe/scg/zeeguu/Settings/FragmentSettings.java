@@ -7,8 +7,8 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
-import ch.unibe.scg.zeeguu.Core.ConnectionManager;
 import ch.unibe.scg.zeeguu.R;
+import ch.unibe.zeeguulibrary.ZeeguuAccount;
 
 /**
  * Zeeguu Application
@@ -17,7 +17,7 @@ import ch.unibe.scg.zeeguu.R;
 public class FragmentSettings extends PreferenceFragment {
     private PreferenceListener listener;
     private SharedPreferences settings;
-    private ConnectionManager connectionManager;
+    private ZeeguuAccount account;
     private SettingsActivity activity;
 
     @Override
@@ -27,7 +27,6 @@ public class FragmentSettings extends PreferenceFragment {
 
         //initialize variables
         activity = (SettingsActivity) getActivity();
-        connectionManager = ConnectionManager.getConnectionManager(null); //null because we don't want to create a new one
 
         //add change listener
         listener = new PreferenceListener();
@@ -40,8 +39,8 @@ public class FragmentSettings extends PreferenceFragment {
         Preference preference_login_button = findPreference(getString(R.string.preference_login));
         Preference preference_logout_button = findPreference(getString(R.string.preference_logout));
 
-        if (connectionManager.loggedIn()) {
-            String email = connectionManager.getEmail();
+        if (account.isUserLoggedIn()) {
+            String email = account.getEmail();
             preference_email.setSummary(email);
             preference_email.setEnabled(false);
 
@@ -51,7 +50,7 @@ public class FragmentSettings extends PreferenceFragment {
             preference_logout_button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    YesNoDialog dialog = new YesNoDialog(activity, connectionManager);
+                    YesNoDialog dialog = new YesNoDialog(activity, account);
                     dialog.onClick();
                     return true;
                 }
@@ -64,8 +63,8 @@ public class FragmentSettings extends PreferenceFragment {
             preference_login_button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
+                    activity.setResult(2);
                     activity.finish();
-                    connectionManager.showLoginScreen();
                     return true;
                 }
             });
