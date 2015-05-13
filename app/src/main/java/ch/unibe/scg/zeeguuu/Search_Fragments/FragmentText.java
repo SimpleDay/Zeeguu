@@ -70,20 +70,16 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
     private boolean bookmarked;
 
 
-
     public interface ZeeguuFragmentTextCallbacks {
         ZeeguuConnectionManager getConnectionManager();
     }
 
-    public FragmentText() {
-        // Make sure that the interface is implemented in the container activity
+    //TODO: separate onCreate and onCreateView
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         activity = getActivity();
-        try {
-            callback = (ZeeguuFragmentTextCallbacks) activity;
-            connectionManager = callback.getConnectionManager();
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement ZeeguuFragmentTextCallbacks");
-        }
+
     }
 
     @Override
@@ -193,6 +189,18 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         if (resultCode == Activity.RESULT_OK && null != data) {
             ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             editTextLanguageFrom.setText(text.get(0));
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // Make sure that the interface is implemented in the container activity
+        try {
+            callback = (ZeeguuFragmentTextCallbacks) activity;
+            connectionManager = callback.getConnectionManager();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement ZeeguuFragmentTextCallbacks");
         }
     }
 
@@ -344,7 +352,6 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
         }
         closeKeyboard();
     }
-
 
 
     private String getEditTextTrimmed(EditText editText) {
@@ -505,7 +512,7 @@ public class FragmentText extends ZeeguuFragment implements TextToSpeech.OnInitL
 
         @Override
         public void afterTextChanged(Editable s) {
-            if(isLanguageToListener) {
+            if (isLanguageToListener) {
                 //when language to textfield changes, it can be bookmarked again.
                 bookmarked = false;
                 btnBookmark.setImageResource(R.drawable.btn_bookmark);

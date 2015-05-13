@@ -1,5 +1,6 @@
 package ch.unibe.scg.zeeguuu.MyWords_Fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ActionMode;
@@ -40,16 +41,6 @@ public class FragmentMyWords extends ZeeguuFragment {
 
     public interface ZeeguuFragmentMyWordsCallbacks {
         ZeeguuConnectionManager getConnectionManager();
-    }
-
-    public FragmentMyWords() {
-        // Make sure that the interface is implemented in the container activity
-        try {
-            callback = (ZeeguuFragmentMyWordsCallbacks) getActivity();
-            connectionManager = callback.getConnectionManager();
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement ZeeguuFragmentTextCallbacks");
-        }
     }
 
     @Override
@@ -105,6 +96,18 @@ public class FragmentMyWords extends ZeeguuFragment {
 
         //activate the menu for fragments
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // Make sure that the interface is implemented in the container activity
+        try {
+            callback = (ZeeguuFragmentMyWordsCallbacks) activity;
+            connectionManager = callback.getConnectionManager();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement ZeeguuFragmentTextCallbacks");
+        }
     }
 
     @Override

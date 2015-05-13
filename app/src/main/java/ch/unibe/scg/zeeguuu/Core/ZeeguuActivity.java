@@ -21,6 +21,7 @@ import ch.unibe.scg.zeeguuu.MyWords_Fragments.FragmentMyWords;
 import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentText;
 import ch.unibe.scg.zeeguuu.Settings.SettingsActivity;
 import ch.unibe.scg.zeeguuu.Sliding_menu.SlidingFragment;
+import ch.unibe.scg.zeeguuu.Sliding_menu.ZeeguuFragmentPagerAdapter;
 import ch.unibe.zeeguulibrary.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
 import ch.unibe.zeeguulibrary.ZeeguuCreateAccountDialog;
@@ -32,13 +33,14 @@ public class ZeeguuActivity extends AppCompatActivity implements
         FragmentText.ZeeguuFragmentTextCallbacks,
         FragmentMyWords.ZeeguuFragmentMyWordsCallbacks,
         ZeeguuAccount.ZeeguuAccountCallbacks,
-        ZeeguuCreateAccountDialog.ZeeguuCreateAccountDialogCallbacks {
+        ZeeguuCreateAccountDialog.ZeeguuCreateAccountDialogCallbacks,
+        ZeeguuFragmentPagerAdapter.ZeeguuSlidingFragmentInterface {
 
     private FragmentManager fragmentManager = getFragmentManager();
     private ZeeguuConnectionManager connectionManager;
 
     //fragments
-    private static SlidingFragment fragment;
+    private static SlidingFragment slidingFragment;
     private DataFragment dataFragment;
     private FragmentText fragmentText;
     private FragmentMyWords fragmentMyWords;
@@ -57,39 +59,36 @@ public class ZeeguuActivity extends AppCompatActivity implements
         //set default settings when app started, but don't overwrite active settings
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        // Login Dialog
-        zeeguuLoginDialog = (ZeeguuLoginDialog) fragmentManager.findFragmentByTag("zeeguuLoginDialog");
-        if (zeeguuLoginDialog == null) zeeguuLoginDialog = new ZeeguuLoginDialog();
-
-        // FragmentText
-        fragmentText = (FragmentText) fragmentManager.findFragmentByTag("fragmentText");
-        if (fragmentText == null) fragmentText = new FragmentText();
-
-        // FragmentMyWords
-        fragmentMyWords = (FragmentMyWords) fragmentManager.findFragmentByTag("fragmentMyWords");
-        if (fragmentMyWords == null) fragmentMyWords = new FragmentMyWords();
-
         // Data fragment so that the instance of the ConnectionManager is never destroyed
         dataFragment = (DataFragment) fragmentManager.findFragmentByTag("data");
         if (dataFragment == null) {
-            // Add the fragment
             dataFragment = new DataFragment();
             fragmentManager.beginTransaction()
                     .add(dataFragment, "data")
                     .commit();
-
-            // Create objects, store in data fragment
             dataFragment.setConnectionManager(new ZeeguuConnectionManager(this));
         }
 
-        //create slidemenu
-        fragment = (SlidingFragment) fragmentManager.findFragmentByTag("slidingMenu");
+        // Login Dialog
+        zeeguuLoginDialog = (ZeeguuLoginDialog) fragmentManager.findFragmentByTag("zeeguuLoginDialog");
+        if (zeeguuLoginDialog == null) zeeguuLoginDialog = new ZeeguuLoginDialog();
 
-        if (fragment == null)
-            fragment = new SlidingFragment();
+        //create slidemenu
+        slidingFragment = (SlidingFragment) fragmentManager.findFragmentByTag("slidingMenu");
+        if (slidingFragment == null) {
+            // FragmentText
+            fragmentText = (FragmentText) fragmentManager.findFragmentByTag("fragmentText");
+            if (fragmentText == null) fragmentText = new FragmentText();
+
+            // FragmentMyWords
+            fragmentMyWords = (FragmentMyWords) fragmentManager.findFragmentByTag("fragmentMyWords");
+            if (fragmentMyWords == null) fragmentMyWords = new FragmentMyWords();
+
+            slidingFragment = new SlidingFragment();
+        }
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_menu, fragment, "slidingMenu");
+        transaction.replace(R.id.fragment_menu, slidingFragment, "slidingMenu");
         transaction.commit();
 
         ActionBar actionBar = getActionBar();
@@ -128,8 +127,10 @@ public class ZeeguuActivity extends AppCompatActivity implements
     }
 
     public void showLoginButtonIfNotLoggedIn() {
-        MenuItem item = menu.findItem(R.id.action_log_in);
-        item.setVisible(!connectionManager.getAccount().isUserInSession());
+        if(connectionManager != null) {
+            MenuItem item = menu.findItem(R.id.action_log_in);
+            item.setVisible(!connectionManager.getAccount().isUserInSession());
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -166,11 +167,6 @@ public class ZeeguuActivity extends AppCompatActivity implements
             recreate();
     }
 
-    public void refreshLanguages(boolean switchFlagsIfNeeded) {
-        for (ZeeguuFragment f : fragment.getAllFragments())
-            f.refreshLanguages();
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -182,7 +178,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
                     showZeeguuLoginDialog(getString(R.string.login_title), "");
                 break;
             default:
-                fragment.getActiveFragment().onActivityResult(requestCode, resultCode, data);
+                slidingFragment.getActiveFragment().onActivityResult(requestCode, resultCode, data);
                 break;
         }
     }
@@ -238,4 +234,11 @@ public class ZeeguuActivity extends AppCompatActivity implements
     public void log(String text) {
         Log.d("ZeeguuActivity", text);
     }
+
+    @Override
+    public FragmentText getFragmentText() { return fragmentText; }
+
+    @Override
+    public FragmentMyWords getFragmentMyWords() { return fragmentMyWords; }
+
 }

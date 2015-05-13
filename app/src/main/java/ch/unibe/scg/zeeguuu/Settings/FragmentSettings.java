@@ -50,8 +50,8 @@ public class FragmentSettings extends PreferenceFragment {
             preference_logout_button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    YesNoDialog dialog = new YesNoDialog(activity, account);
-                    dialog.onClick();
+                    ZeeguuLogoutDialog zeeguuLogoutDialog = new ZeeguuLogoutDialog();
+                    zeeguuLogoutDialog.show(getFragmentManager(), "logout?");
                     return true;
                 }
             });

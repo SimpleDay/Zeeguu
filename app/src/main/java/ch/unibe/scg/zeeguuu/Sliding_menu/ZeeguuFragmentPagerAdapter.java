@@ -1,5 +1,6 @@
 package ch.unibe.scg.zeeguuu.Sliding_menu;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -19,25 +20,33 @@ import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentText;
 public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
     private List<PagerFragmentTab> tabs;
 
-    ZeeguuFragmentPagerAdapter(FragmentManager fm, Fragment fragment) {
-        super(fm);
-        tabs = new ArrayList<>();
+    public interface ZeeguuSlidingFragmentInterface {
 
+        public FragmentText getFragmentText();
+
+        public FragmentMyWords getFragmentMyWords();
+    }
+
+    ZeeguuFragmentPagerAdapter(Activity activity, FragmentManager fm, Fragment fragment) {
+        super(fm);
+
+        ZeeguuSlidingFragmentInterface callbacks = (ZeeguuSlidingFragmentInterface) activity;
         /**
          * Add tabs to the sliding menu
          */
+        tabs = new ArrayList<>();
         tabs.add(new PagerFragmentTab(
                 fragment.getString(R.string.search_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                new FragmentText() //fragment which the tab represents
+                callbacks.getFragmentText() //fragment which the tab represents
         ));
 
         tabs.add(new PagerFragmentTab(
                 fragment.getString(R.string.mywords_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                new FragmentMyWords() //fragment which the tab represents
+                callbacks.getFragmentMyWords() //fragment which the tab represents
         ));
     }
 
@@ -76,14 +85,6 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return tabs.get(position).getTitle();
-    }
-
-    public ArrayList<ZeeguuFragment> getAllFragments() {
-        ArrayList<ZeeguuFragment> fragments = new ArrayList<>();
-        for (PagerFragmentTab i : tabs)
-            fragments.add(i.getFragment());
-
-        return fragments;
     }
 
 }
