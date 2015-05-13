@@ -35,9 +35,9 @@ import java.util.Map;
 import ch.unibe.scg.zeeguu.Data.DialogBuilder;
 import ch.unibe.scg.zeeguu.Data.User;
 import ch.unibe.scg.zeeguu.MyWords_Fragments.FragmentMyWords;
-import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsHeader;
-import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsInfoHeader;
-import ch.unibe.scg.zeeguu.MyWords_Fragments.MyWordsItem;
+import ch.unibe.zeeguulibrary.MyWordsHeader;
+import ch.unibe.zeeguulibrary.MyWordsInfoHeader;
+import ch.unibe.zeeguulibrary.MyWordsItem;
 import ch.unibe.scg.zeeguu.R;
 import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
 
@@ -131,14 +131,7 @@ public class ConnectionManager {
             myWordsListener.notifyDataSetChanged();
     }
 
-    public void removeBookmark(long bookmarkID) {
-        if (myWordsListener != null && user.deleteWord(bookmarkID) != null) {
-            myWordsListener.notifyDataSetChanged();
-            removeBookmarkFromServer(bookmarkID);
-        } else {
-            toast(activity.getString(R.string.error_bookmark_delete));
-        }
-    }
+
 
     public void switchLanguages() {
         user.switchLanguages();

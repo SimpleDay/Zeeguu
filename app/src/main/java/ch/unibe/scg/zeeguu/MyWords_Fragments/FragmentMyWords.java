@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
 import ch.unibe.zeeguulibrary.MyWords.MyWordsHeader;
+import ch.unibe.zeeguulibrary.MyWordsHeader;
 import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
 
 /**

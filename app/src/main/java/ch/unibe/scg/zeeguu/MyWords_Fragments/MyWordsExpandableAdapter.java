@@ -8,6 +8,9 @@ import android.widget.BaseExpandableListAdapter;
 
 import java.util.ArrayList;
 
+import ch.unibe.zeeguulibrary.Item;
+import ch.unibe.zeeguulibrary.MyWordsHeader;
+
 /**
  * Zeeguu Application
  * Created by Pascal on 23/02/15.
