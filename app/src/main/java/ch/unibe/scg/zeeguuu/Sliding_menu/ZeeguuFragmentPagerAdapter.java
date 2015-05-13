@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Sliding_menu;
+package ch.unibe.scg.zeeguuu.Sliding_menu;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -7,10 +7,10 @@ import android.support.v13.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
-import ch.unibe.scg.zeeguu.MyWords_Fragments.FragmentMyWords;
-import ch.unibe.scg.zeeguu.R;
-import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
+import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
+import ch.unibe.scg.zeeguuu.MyWords_Fragments.FragmentMyWords;
+import ch.unibe.scg.zeeguuu.R;
+import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentText;
 
 /**
  * Zeeguu Application

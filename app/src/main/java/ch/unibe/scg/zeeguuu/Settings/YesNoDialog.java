@@ -1,10 +1,10 @@
-package ch.unibe.scg.zeeguu.Settings;
+package ch.unibe.scg.zeeguuu.Settings;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.preference.DialogPreference;
 
-import ch.unibe.scg.zeeguu.R;
+import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.zeeguulibrary.ZeeguuAccount;
 
 /**

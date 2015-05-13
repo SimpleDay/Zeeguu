@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Settings;
+package ch.unibe.scg.zeeguuu.Settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,9 +16,9 @@ import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 
-import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
-import ch.unibe.scg.zeeguu.R;
-import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
+import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
+import ch.unibe.scg.zeeguuu.R;
+import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentText;
 
 /**
  * New Preference List extended from ListPreference that allows to add flags in front of the language names.

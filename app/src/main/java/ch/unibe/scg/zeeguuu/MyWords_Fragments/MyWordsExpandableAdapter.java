@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.MyWords_Fragments;
+package ch.unibe.scg.zeeguuu.MyWords_Fragments;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -8,8 +8,8 @@ import android.widget.BaseExpandableListAdapter;
 
 import java.util.ArrayList;
 
-import ch.unibe.zeeguulibrary.Item;
-import ch.unibe.zeeguulibrary.MyWordsHeader;
+import ch.unibe.zeeguulibrary.MyWords.Item;
+import ch.unibe.zeeguulibrary.MyWords.MyWordsHeader;
 
 /**
  * Zeeguu Application

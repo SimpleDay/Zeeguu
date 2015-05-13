@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Sliding_menu;
+package ch.unibe.scg.zeeguuu.Sliding_menu;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -11,8 +11,8 @@ import com.android.SlidingTab.SlidingTabLayout;
 
 import java.util.ArrayList;
 
-import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
-import ch.unibe.scg.zeeguu.R;
+import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
+import ch.unibe.scg.zeeguuu.R;
 
 public class SlidingFragment extends Fragment {
     private SlidingTabLayout slidingTabLayout;

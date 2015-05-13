@@ -1,9 +1,11 @@
-package ch.unibe.scg.zeeguu.Core;
+package ch.unibe.scg.zeeguuu.Core;
 
 import android.app.Fragment;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import ch.unibe.scg.zeeguuu.R;
 
 /**
  * Zeeguu Application

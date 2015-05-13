@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Core;
+package ch.unibe.scg.zeeguuu.Core;
 
 import android.app.ActionBar;
 import android.app.FragmentManager;
@@ -16,10 +16,11 @@ import android.widget.Toast;
 
 import java.lang.reflect.Method;
 
-import ch.unibe.scg.zeeguu.MyWords_Fragments.FragmentMyWords;
-import ch.unibe.scg.zeeguu.Search_Fragments.FragmentText;
-import ch.unibe.scg.zeeguu.Settings.SettingsActivity;
-import ch.unibe.scg.zeeguu.Sliding_menu.SlidingFragment;
+import ch.unibe.scg.zeeguuu.R;
+import ch.unibe.scg.zeeguuu.MyWords_Fragments.FragmentMyWords;
+import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentText;
+import ch.unibe.scg.zeeguuu.Settings.SettingsActivity;
+import ch.unibe.scg.zeeguuu.Sliding_menu.SlidingFragment;
 import ch.unibe.zeeguulibrary.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
 import ch.unibe.zeeguulibrary.ZeeguuCreateAccountDialog;

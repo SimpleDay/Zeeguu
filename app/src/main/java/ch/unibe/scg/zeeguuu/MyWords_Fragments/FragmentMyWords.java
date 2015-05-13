@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.MyWords_Fragments;
+package ch.unibe.scg.zeeguuu.MyWords_Fragments;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,9 +15,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
+import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
+import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.zeeguulibrary.MyWords.MyWordsHeader;
-import ch.unibe.zeeguulibrary.MyWordsHeader;
 import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
 
 /**

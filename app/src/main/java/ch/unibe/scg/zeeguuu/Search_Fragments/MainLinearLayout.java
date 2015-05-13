@@ -1,11 +1,11 @@
-package ch.unibe.scg.zeeguu.Search_Fragments;
+package ch.unibe.scg.zeeguuu.Search_Fragments;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.LinearLayout;
 
-import ch.unibe.scg.zeeguu.R;
+import ch.unibe.scg.zeeguuu.R;
 
 /**
  * Zeeguu Application

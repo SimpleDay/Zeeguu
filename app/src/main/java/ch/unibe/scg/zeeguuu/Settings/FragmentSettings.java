@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Settings;
+package ch.unibe.scg.zeeguuu.Settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
-import ch.unibe.scg.zeeguu.R;
+import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.zeeguulibrary.ZeeguuAccount;
 
 /**

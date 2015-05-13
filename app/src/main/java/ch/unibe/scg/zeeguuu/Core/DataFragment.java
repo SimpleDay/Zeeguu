@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Core;
+package ch.unibe.scg.zeeguuu.Core;
 
 import android.app.Fragment;
 import android.os.Bundle;

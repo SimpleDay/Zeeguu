@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu;
+package ch.unibe.scg.zeeguuu;
 
 import android.app.Activity;
 import android.content.ClipboardManager;
@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ch.unibe.scg.zeeguu.Core.ZeeguuActivity;
+import ch.unibe.scg.zeeguuu.Core.ZeeguuActivity;
 import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
 
 /**

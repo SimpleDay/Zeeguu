@@ -141,7 +141,7 @@
 
     <!-- tags  -->
     <string name="logging_tag">logging_zeeguu</string>
-
+    <string name="login_title">Zeeguu Login</string>
 
 
 </resources>

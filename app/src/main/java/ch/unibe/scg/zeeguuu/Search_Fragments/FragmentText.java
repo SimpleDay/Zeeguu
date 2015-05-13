@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Search_Fragments;
+package ch.unibe.scg.zeeguuu.Search_Fragments;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -27,10 +27,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
+import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
 import ch.unibe.zeeguulibrary.MyWords.MyWordsItem;
-import ch.unibe.scg.zeeguu.R;
-import ch.unibe.scg.zeeguu.Settings.LanguageListPreference;
+import ch.unibe.scg.zeeguuu.R;
+import ch.unibe.scg.zeeguuu.Settings.LanguageListPreference;
 import ch.unibe.zeeguulibrary.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
 

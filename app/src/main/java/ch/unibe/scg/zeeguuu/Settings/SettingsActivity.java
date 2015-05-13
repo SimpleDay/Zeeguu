@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguu.Settings;
+package ch.unibe.scg.zeeguuu.Settings;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;

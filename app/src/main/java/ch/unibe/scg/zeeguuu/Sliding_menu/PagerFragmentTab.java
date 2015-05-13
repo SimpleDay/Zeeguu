@@ -1,6 +1,6 @@
-package ch.unibe.scg.zeeguu.Sliding_menu;
+package ch.unibe.scg.zeeguuu.Sliding_menu;
 
-import ch.unibe.scg.zeeguu.Core.ZeeguuFragment;
+import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
 
 /**
  * Zeeguu Application
