@@ -1,5 +1,6 @@
 package ch.unibe.scg.zeeguuu.Settings;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -8,7 +9,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
 import ch.unibe.scg.zeeguuu.R;
-import ch.unibe.zeeguulibrary.ZeeguuAccount;
+import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
+import ch.unibe.zeeguulibrary.ZeeguuCreateAccountDialog;
 
 /**
  * Zeeguu Application
@@ -17,8 +19,17 @@ import ch.unibe.zeeguulibrary.ZeeguuAccount;
 public class FragmentSettings extends PreferenceFragment {
     private PreferenceListener listener;
     private SharedPreferences settings;
-    private ZeeguuAccount account;
-    private SettingsActivity activity;
+
+    private SettingsCallbacks callback;
+
+
+    public interface SettingsCallbacks {
+        void showZeeguuLoginDialog(String title, String tmpEmail);
+
+        void returnToMainActivity();
+
+        ZeeguuConnectionManager getConnectionManager();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,11 +37,10 @@ public class FragmentSettings extends PreferenceFragment {
         addPreferencesFromResource(R.xml.preferences);
 
         //initialize variables
-        activity = (SettingsActivity) getActivity();
 
         //add change listener
         listener = new PreferenceListener();
-        settings = PreferenceManager.getDefaultSharedPreferences(activity);
+        settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         settings.registerOnSharedPreferenceChangeListener(listener);
 
         //add Email and Session ID to info box when logged in or not show at all
@@ -39,8 +49,8 @@ public class FragmentSettings extends PreferenceFragment {
         Preference preference_login_button = findPreference(getString(R.string.preference_login));
         Preference preference_logout_button = findPreference(getString(R.string.preference_logout));
 
-        if (account.isUserLoggedIn()) {
-            String email = account.getEmail();
+        if (callback.getConnectionManager().getAccount().isUserLoggedIn()) {
+            String email = callback.getConnectionManager().getAccount().getEmail();
             preference_email.setSummary(email);
             preference_email.setEnabled(false);
 
@@ -50,7 +60,7 @@ public class FragmentSettings extends PreferenceFragment {
             preference_logout_button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    ZeeguuLogoutDialog zeeguuLogoutDialog = new ZeeguuLogoutDialog();
+                    ZeeguuCreateAccountDialog.ZeeguuLogoutDialog zeeguuLogoutDialog = new ZeeguuCreateAccountDialog.ZeeguuLogoutDialog();
                     zeeguuLogoutDialog.show(getFragmentManager(), "logout?");
                     return true;
                 }
@@ -63,21 +73,34 @@ public class FragmentSettings extends PreferenceFragment {
             preference_login_button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    activity.setResult(2);
-                    activity.finish();
+                    callback.showZeeguuLoginDialog("", "");
+                    callback.returnToMainActivity();
                     return true;
                 }
             });
         }
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // Make sure that the interface is implemented in the container activity
+        try {
+            callback = (SettingsCallbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement SettingsCallbacks");
+        }
+    }
+
+
     private class PreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(activity.getString(R.string.preference_app_design)))
-                activity.setResult(1); //used to refresh view
-            else { /* Do nothing yet */ }
+            if (key.equals(getActivity().getString(R.string.preference_app_design))) {
+                //TODO: implement interface for theme change
+            } else { /* Do nothing yet */ }
         }
     }
 }

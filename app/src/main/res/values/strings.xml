@@ -48,11 +48,6 @@
     <string name="preference_language_from">language_from</string> <!-- needs to be same tag as server URL -->
     <string name="preference_language_to">language_to</string> <!-- needs to be same tag as server URL -->
 
-    <!-- preference YesNoDialog tags-->
-    <string name="preference_logout">Logout</string>
-    <string name="dialog_logout_confirmation">Are you sure you want to logout?</string>
-    <string name="dialog_logout_button">Logout</string>
-
 
     <!-- bookmark tags  -->
     <string name="bookmark_url_code">android:zeeguu_app</string>
