@@ -24,8 +24,6 @@ public abstract class ZeeguuFragment extends Fragment {
 
     public abstract void defocusFragment();
 
-    public abstract void refreshLanguages();
-
     public static void setFlag(ImageView flag, String language) {
         switch (language) {
             case "en":

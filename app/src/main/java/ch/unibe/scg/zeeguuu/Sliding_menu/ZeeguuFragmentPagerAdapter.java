@@ -11,7 +11,7 @@ import java.util.List;
 import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguuu.MyWords_Fragments.FragmentMyWords;
 import ch.unibe.scg.zeeguuu.R;
-import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentText;
+import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
 
 /**
  * Zeeguu Application
@@ -22,7 +22,7 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public interface ZeeguuSlidingFragmentInterface {
 
-        public FragmentText getFragmentText();
+        public FragmentSearch getFragmentSearch();
 
         public FragmentMyWords getFragmentMyWords();
     }
@@ -39,7 +39,7 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
                 fragment.getString(R.string.search_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                callbacks.getFragmentText() //fragment which the tab represents
+                callbacks.getFragmentSearch() //fragment which the tab represents
         ));
 
         tabs.add(new PagerFragmentTab(

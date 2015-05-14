@@ -19,25 +19,25 @@ import java.lang.reflect.Method;
 
 import ch.unibe.scg.zeeguuu.MyWords_Fragments.FragmentMyWords;
 import ch.unibe.scg.zeeguuu.R;
-import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentText;
+import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
 import ch.unibe.scg.zeeguuu.Settings.FragmentSettings;
+import ch.unibe.scg.zeeguuu.Settings.LanguageListPreference;
 import ch.unibe.scg.zeeguuu.Sliding_menu.SlidingFragment;
 import ch.unibe.scg.zeeguuu.Sliding_menu.ZeeguuFragmentPagerAdapter;
-import ch.unibe.zeeguulibrary.ZeeguuAccount;
-import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
-import ch.unibe.zeeguulibrary.ZeeguuCreateAccountDialog;
-import ch.unibe.zeeguulibrary.ZeeguuLoginDialog;
+import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
+import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
+import ch.unibe.zeeguulibrary.Dialogs.ZeeguuDialogCallbacks;
+import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLoginDialog;
 
 public class ZeeguuActivity extends AppCompatActivity implements
         ZeeguuConnectionManager.ZeeguuConnectionManagerCallbacks,
         ZeeguuAccount.ZeeguuAccountCallbacks,
-        ZeeguuLoginDialog.ZeeguuLoginDialogCallbacks,
-        ZeeguuCreateAccountDialog.ZeeguuLogoutDialog.ZeeguuLogoutDialogCallbacks,
-        ZeeguuCreateAccountDialog.ZeeguuCreateAccountDialogCallbacks,
-        FragmentText.ZeeguuFragmentTextCallbacks,
+        FragmentSearch.ZeeguuFragmentTextCallbacks,
         FragmentMyWords.ZeeguuFragmentMyWordsCallbacks,
         ZeeguuFragmentPagerAdapter.ZeeguuSlidingFragmentInterface,
-        FragmentSettings.SettingsCallbacks {
+        FragmentSettings.ZeeguuSettingsCallbacks,
+        LanguageListPreference.ZeeguuLanguageListCallbacks,
+        ZeeguuDialogCallbacks {
 
     private FragmentManager fragmentManager = getFragmentManager();
     private ZeeguuConnectionManager connectionManager;
@@ -46,7 +46,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     private static SlidingFragment fragmentSlidingMenu;
     private ZeeguuLoginDialog zeeguuLoginDialog;
     private DataFragment dataFragment;
-    private FragmentText fragmentText;
+    private FragmentSearch fragmentSearch;
     private FragmentMyWords fragmentMyWords;
     private FragmentSettings fragmentSettings;
 
@@ -76,15 +76,16 @@ public class ZeeguuActivity extends AppCompatActivity implements
             fragmentManager.beginTransaction()
                     .add(dataFragment, "data")
                     .commit();
-            dataFragment.setConnectionManager(new ZeeguuConnectionManager(this));
+            connectionManager = new ZeeguuConnectionManager(this);
+            dataFragment.setConnectionManager(connectionManager);
         }
 
         //create slidemenu
         fragmentSlidingMenu = (SlidingFragment) fragmentManager.findFragmentByTag("slidingMenu");
         if (fragmentSlidingMenu == null) {
             // FragmentText
-            fragmentText = (FragmentText) fragmentManager.findFragmentByTag("fragmentText");
-            if (fragmentText == null) fragmentText = new FragmentText();
+            fragmentSearch = (FragmentSearch) fragmentManager.findFragmentByTag("fragmentText");
+            if (fragmentSearch == null) fragmentSearch = new FragmentSearch();
 
             // FragmentMyWords
             fragmentMyWords = (FragmentMyWords) fragmentManager.findFragmentByTag("fragmentMyWords");
@@ -140,13 +141,6 @@ public class ZeeguuActivity extends AppCompatActivity implements
         return super.onMenuOpened(featureId, menu);
     }
 
-    public void showLoginButtonIfNotLoggedIn() {
-        if (connectionManager != null) {
-            MenuItem item = menu.findItem(R.id.action_log_in);
-            item.setVisible(!connectionManager.getAccount().isUserInSession());
-        }
-    }
-
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_log_in:
@@ -189,8 +183,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onBackPressed() {
-        if (isInSettings)
+    public void onBackPressed() {if (isInSettings)
             switchActiveFragmentTo(fragmentSlidingMenu, "slidingMenu");
         else
             super.onBackPressed();
@@ -205,11 +198,11 @@ public class ZeeguuActivity extends AppCompatActivity implements
     //// ConnectionManager interface methods ////
 
     @Override
-    public void showZeeguuLoginDialog(String title, String tmpEmail) {
+    public void showZeeguuLoginDialog(String title, String email) {
         if (title.equals(""))
             title = getString(R.string.login_title);
         zeeguuLoginDialog.setTitle(title);
-        zeeguuLoginDialog.setEmail(tmpEmail);
+        zeeguuLoginDialog.setEmail(email);
         zeeguuLoginDialog.show(fragmentManager, "zeeguuLoginDialog");
     }
 
@@ -219,8 +212,8 @@ public class ZeeguuActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void setTranslation(String translation, boolean isErrorMessage) {
-
+    public void setTranslation(String translation) {
+        fragmentSearch.setTranslatedText(translation);
     }
 
     @Override
@@ -233,24 +226,13 @@ public class ZeeguuActivity extends AppCompatActivity implements
     @Override
     public void notifyDataChanged() {
         fragmentMyWords.notifyDataSetChanged();
-        showLoginButtonIfNotLoggedIn();
     }
 
     //// user interaction interface ////
 
     @Override
-    public void toast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void log(String text) {
-        Log.d("ZeeguuActivity", text);
-    }
-
-    @Override
-    public FragmentText getFragmentText() {
-        return fragmentText;
+    public FragmentSearch getFragmentSearch() {
+        return fragmentSearch;
     }
 
     @Override
@@ -262,4 +244,33 @@ public class ZeeguuActivity extends AppCompatActivity implements
     public void returnToMainActivity() {
         onBackPressed();
     }
+
+
+    //// display messages interface ////
+
+    @Override
+    public void displayErrorMessage(String error, boolean isToast) {
+        displayMessage(error);
+    }
+
+    @Override
+    public void displayMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT);
+    }
+
+    //// Settings interface ////
+
+    @Override
+    public void showLoginButtonIfNotLoggedIn() {
+        if (connectionManager != null) {
+            MenuItem item = menu.findItem(R.id.action_log_in);
+            item.setVisible(!connectionManager.getAccount().isUserInSession());
+        }
+    }
+
+    @Override
+    public void notifyLanguageChanged(boolean isLanguageFrom) {
+        fragmentSearch.refreshLanguages(isLanguageFrom);
+    }
+
 }

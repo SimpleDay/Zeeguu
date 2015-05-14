@@ -18,7 +18,7 @@ import android.widget.ImageView;
 
 import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguuu.R;
-import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentText;
+import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 
 /**
  * New Preference List extended from ListPreference that allows to add flags in front of the language names.
@@ -39,7 +39,15 @@ public class LanguageListPreference extends ListPreference {
     //variables for showDialog
     private Dialog mDialog;
     private boolean isLanguageFrom;
-    private FragmentText.FragmentTextListener fragmentTextListener;
+    private ZeeguuLanguageListCallbacks callback;
+
+    /**
+     * Callback interface that must be implemented by the container activity
+     */
+    public interface ZeeguuLanguageListCallbacks {
+        ZeeguuConnectionManager getConnectionManager();
+        void notifyLanguageChanged(boolean isLanguageFrom);
+    }
 
 
     public LanguageListPreference(Context context, AttributeSet attrs) {
@@ -70,7 +78,7 @@ public class LanguageListPreference extends ListPreference {
         return super.getValue();
     }
 
-    public void showDialog(Activity activity, boolean isLanguageFrom, FragmentText.FragmentTextListener fragmentTextListener) {
+    public void showDialog(Activity activity, boolean isLanguageFrom) {
         entries = getEntries();
         entryValues = getEntryValues();
         mKey = isLanguageFrom ? activity.getString(R.string.preference_language_from) : activity.getString(R.string.preference_language_to);
@@ -84,9 +92,15 @@ public class LanguageListPreference extends ListPreference {
         builder.setTitle(isLanguageFrom ? activity.getString(R.string.language_from_dialog) :
                 activity.getString(R.string.language_to_dialog));
 
-        this.fragmentTextListener = fragmentTextListener;
         this.isLanguageFrom = isLanguageFrom;
         this.mDialog = builder.show();
+
+        // Make sure that the interface is implemented in the container activity
+        try {
+            callback = (ZeeguuLanguageListCallbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement ZeeguuLanguageListCallbacks");
+        }
     }
 
     @Override
@@ -182,7 +196,11 @@ public class LanguageListPreference extends ListPreference {
                     if (mDialog == null) {
                         LanguageListPreference.this.callChangeListener(entryValues[p]);
                     } else {
-                        fragmentTextListener.updateLanguage(entryValues[p].toString(), isLanguageFrom);
+                        if (isLanguageFrom)
+                            callback.getConnectionManager().getAccount().setLanguageNative(entryValues[p].toString());
+                        else
+                            callback.getConnectionManager().getAccount().setLanguageLearning(entryValues[p].toString());
+                        callback.notifyLanguageChanged(isLanguageFrom);
                     }
 
                     editor.putString(mKey, entryValues[p].toString());

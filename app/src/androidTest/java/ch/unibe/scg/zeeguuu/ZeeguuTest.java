@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ch.unibe.scg.zeeguuu.Core.ZeeguuActivity;
-import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
+import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>

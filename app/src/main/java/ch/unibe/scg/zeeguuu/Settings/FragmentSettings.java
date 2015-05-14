@@ -7,10 +7,11 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.view.View;
 
 import ch.unibe.scg.zeeguuu.R;
-import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
-import ch.unibe.zeeguulibrary.ZeeguuCreateAccountDialog;
+import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
+import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLogoutDialog;
 
 /**
  * Zeeguu Application
@@ -20,11 +21,19 @@ public class FragmentSettings extends PreferenceFragment {
     private PreferenceListener listener;
     private SharedPreferences settings;
 
-    private SettingsCallbacks callback;
+    private ZeeguuSettingsCallbacks callback;
+
+    //preferences
+    PreferenceCategory preference_loginInfo;
+    Preference preference_email;
+    Preference preference_login_button;
+    Preference preference_logout_button;
 
 
-    public interface SettingsCallbacks {
+    public interface ZeeguuSettingsCallbacks {
         void showZeeguuLoginDialog(String title, String tmpEmail);
+
+        void showLoginButtonIfNotLoggedIn();
 
         void returnToMainActivity();
 
@@ -44,11 +53,19 @@ public class FragmentSettings extends PreferenceFragment {
         settings.registerOnSharedPreferenceChangeListener(listener);
 
         //add Email and Session ID to info box when logged in or not show at all
-        PreferenceCategory preference_loginInfo = (PreferenceCategory) findPreference(getString(R.string.category_user_information));
-        Preference preference_email = findPreference(getString(R.string.preference_email));
-        Preference preference_login_button = findPreference(getString(R.string.preference_login));
-        Preference preference_logout_button = findPreference(getString(R.string.preference_logout));
+        preference_loginInfo = (PreferenceCategory) findPreference(getString(R.string.category_user_information));
+        preference_email = findPreference(getString(R.string.preference_email));
+        preference_login_button = findPreference(getString(R.string.preference_login));
+        preference_logout_button = findPreference(getString(R.string.preference_logout));
+    }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        updateView();
+    }
+
+    private void updateView() {
         if (callback.getConnectionManager().getAccount().isUserLoggedIn()) {
             String email = callback.getConnectionManager().getAccount().getEmail();
             preference_email.setSummary(email);
@@ -60,7 +77,7 @@ public class FragmentSettings extends PreferenceFragment {
             preference_logout_button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    ZeeguuCreateAccountDialog.ZeeguuLogoutDialog zeeguuLogoutDialog = new ZeeguuCreateAccountDialog.ZeeguuLogoutDialog();
+                    ZeeguuLogoutDialog zeeguuLogoutDialog = new ZeeguuLogoutDialog();
                     zeeguuLogoutDialog.show(getFragmentManager(), "logout?");
                     return true;
                 }
@@ -87,7 +104,7 @@ public class FragmentSettings extends PreferenceFragment {
 
         // Make sure that the interface is implemented in the container activity
         try {
-            callback = (SettingsCallbacks) activity;
+            callback = (ZeeguuSettingsCallbacks) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement SettingsCallbacks");
         }
@@ -98,7 +115,10 @@ public class FragmentSettings extends PreferenceFragment {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(getActivity().getString(R.string.preference_app_design))) {
+            if (key.equals("pref_zeeguu_username")) {
+                updateView();
+                callback.showLoginButtonIfNotLoggedIn();
+            } else if (key.equals("APP_DESIGN")) {
                 //TODO: implement interface for theme change
             } else { /* Do nothing yet */ }
         }

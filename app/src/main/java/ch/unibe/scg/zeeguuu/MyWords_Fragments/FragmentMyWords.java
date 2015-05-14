@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.zeeguulibrary.MyWords.MyWordsHeader;
-import ch.unibe.zeeguulibrary.ZeeguuConnectionManager;
+import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 
 /**
  * Created by Pascal on 12/01/15.
@@ -151,11 +151,6 @@ public class FragmentMyWords extends ZeeguuFragment {
         if (mode != null) {
             mode.finish();
         }
-    }
-
-    @Override
-    public void refreshLanguages() {
-        //maybe integrate a filter here which only shows words of the selected language pair
     }
 
     public void notifyDataSetChanged() {
