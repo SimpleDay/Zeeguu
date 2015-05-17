@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/listview_refresh"
-        android:icon="@drawable/ic_action_refresh_holo_light"
+        android:icon="@android:drawable/ic_popup_sync"
         android:title="@string/mywords_refresh"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/listview_expand_collapse"
-        android:icon="@drawable/ic_action_collapse_holo_light"
+        android:icon="@drawable/ic_action_mywords_open"
         android:title="@string/mywords_collapse"
         app:showAsAction="ifRoom" />
 
@@ -18,6 +18,6 @@
         android:id="@+id/action_settings"
         android:icon="?attr/customIconSettings"
         android:title="@string/action_preference"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>

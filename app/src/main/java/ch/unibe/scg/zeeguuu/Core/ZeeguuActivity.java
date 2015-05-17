@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import ch.unibe.scg.zeeguuu.MyWords_Fragments.FragmentMyWords;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
-import ch.unibe.scg.zeeguuu.Settings.FragmentSettings;
+import ch.unibe.scg.zeeguuu.Settings.FragmentPreference;
 import ch.unibe.scg.zeeguuu.Settings.LanguageListPreference;
 import ch.unibe.scg.zeeguuu.Sliding_menu.SlidingFragment;
 import ch.unibe.scg.zeeguuu.Sliding_menu.ZeeguuFragmentPagerAdapter;
@@ -38,7 +38,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
         FragmentSearch.ZeeguuFragmentTextCallbacks,
         FragmentMyWords.ZeeguuFragmentMyWordsCallbacks,
         ZeeguuFragmentPagerAdapter.ZeeguuSlidingFragmentInterface,
-        FragmentSettings.ZeeguuSettingsCallbacks,
+        FragmentPreference.ZeeguuSettingsCallbacks,
         LanguageListPreference.ZeeguuLanguageListCallbacks,
         ZeeguuDialogCallbacks {
 
@@ -48,12 +48,9 @@ public class ZeeguuActivity extends AppCompatActivity implements
     //fragments
     private SlidingFragment fragmentSlidingMenu;
     private boolean transactionActive = false;
-    private ZeeguuLoginDialog zeeguuLoginDialog;
-    private ZeeguuCreateAccountDialog zeeguuCreateAccountDialog;
     private DataFragment dataFragment;
     private FragmentSearch fragmentSearch;
     private FragmentMyWords fragmentMyWords;
-    private FragmentSettings fragmentSettings;
 
     private ActionBar actionBar;
     private boolean isInSettings = false;
@@ -75,14 +72,6 @@ public class ZeeguuActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         actionBar.setLogo(R.drawable.ic_launcher);
-
-        // Login Dialog
-        zeeguuLoginDialog = (ZeeguuLoginDialog) fragmentManager.findFragmentByTag("zeeguuLoginDialog");
-        if (zeeguuLoginDialog == null) zeeguuLoginDialog = new ZeeguuLoginDialog();
-
-        // Create Account Dialog
-        zeeguuCreateAccountDialog = (ZeeguuCreateAccountDialog) fragmentManager.findFragmentByTag("zeeguuCreateAccountDialog");
-        if (zeeguuCreateAccountDialog == null) zeeguuCreateAccountDialog = new ZeeguuCreateAccountDialog();
 
         // Data fragment so that the instance of the ConnectionManager is never destroyed
         dataFragment = (DataFragment) fragmentManager.findFragmentByTag("data");
@@ -109,10 +98,6 @@ public class ZeeguuActivity extends AppCompatActivity implements
             fragmentSlidingMenu = new SlidingFragment();
         }
         switchActiveFragmentTo(fragmentSlidingMenu, "slidingMenu");
-
-        // Settings fragment
-        fragmentSettings = (FragmentSettings) fragmentManager.findFragmentByTag("fragmentSettings");
-        if (fragmentSettings == null) fragmentSettings = new FragmentSettings();
 
         //TODO: Language change affects whole app
     }
@@ -169,7 +154,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
                 return true;
 
             case R.id.action_settings:
-                switchActiveFragmentTo(fragmentSettings, "fragmentSettings");
+                switchActiveFragmentTo(new FragmentPreference(), "fragmentSettings");
                 return true;
 
             default:
@@ -231,6 +216,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public void showZeeguuLoginDialog(String message, String email) {
+        ZeeguuLoginDialog zeeguuLoginDialog = new ZeeguuLoginDialog();
         zeeguuLoginDialog.setEmail(email);
         zeeguuLoginDialog.setMessage(message);
         zeeguuLoginDialog.show(fragmentManager, "zeeguuLoginDialog");
@@ -245,6 +231,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public void showZeeguuCreateAccountDialog(String message, String username, String email) {
+        ZeeguuCreateAccountDialog zeeguuCreateAccountDialog = new ZeeguuCreateAccountDialog();
         zeeguuCreateAccountDialog.setMessage(message);
         zeeguuCreateAccountDialog.setUsername(username);
         zeeguuCreateAccountDialog.setEmail(email);
@@ -266,6 +253,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     @Override
     public void notifyDataChanged(boolean myWordsChanged) {
         fragmentMyWords.notifyDataSetChanged(myWordsChanged);
+        showLoginButtonIfNotLoggedIn(); //when account info changes, check if
     }
 
     //// user interaction interface ////

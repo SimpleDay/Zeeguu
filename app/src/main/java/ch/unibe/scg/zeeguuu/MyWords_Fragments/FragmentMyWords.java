@@ -37,7 +37,8 @@ public class FragmentMyWords extends ZeeguuFragment {
     private boolean listviewRefreshing;
 
     private ActionMode mode;
-    private MenuItem menuItem;
+    private MenuItem menuItemExpandCollapse;
+    private MenuItem menuItemRefresh;
 
     public interface ZeeguuFragmentMyWordsCallbacks {
         ZeeguuConnectionManager getConnectionManager();
@@ -84,7 +85,6 @@ public class FragmentMyWords extends ZeeguuFragment {
         //Set text when listview empty
         TextView emptyText = (TextView) view.findViewById(R.id.mywords_empty);
         myWordsListView.setEmptyView(emptyText);
-        expandMyWordsList();
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.mywords_listview_swipe_refresh_layout);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -115,7 +115,8 @@ public class FragmentMyWords extends ZeeguuFragment {
         inflater.inflate(R.menu.menu_mywords, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
-        menuItem = menu.findItem(R.id.listview_expand_collapse);
+        menuItemExpandCollapse = menu.findItem(R.id.listview_expand_collapse);
+        menuItemRefresh = menu.findItem(R.id.listview_refresh);
         updateOptionMenuItemsIcons();
     }
 
@@ -154,7 +155,7 @@ public class FragmentMyWords extends ZeeguuFragment {
     }
 
     public void notifyDataSetChanged(boolean myWordsChanged) {
-        if(myWordsChanged) {
+        if (myWordsChanged) {
             adapter.notifyDataSetChanged();
             expandMyWordsList();
         }
@@ -181,14 +182,20 @@ public class FragmentMyWords extends ZeeguuFragment {
     }
 
     private void updateOptionMenuItemsIcons() {
-        if (menuItem != null) {
+        if (menuItemExpandCollapse != null && menuItemRefresh != null) {
+            boolean showListMenus = connectionManager.getAccount().isUserInSession();
+
+            menuItemRefresh.setVisible(showListMenus);
+            menuItemExpandCollapse.setVisible(showListMenus);
+
             if (listviewExpanded)
-                menuItem.setTitle(R.string.mywords_collapse)
-                        .setIcon(R.drawable.ic_action_collapse_holo_light);
+                menuItemExpandCollapse.setTitle(R.string.mywords_collapse)
+                        .setIcon(R.drawable.ic_action_mywords_closed);
             else
-                menuItem.setTitle(R.string.mywords_expand)
-                        .setIcon(R.drawable.ic_action_expand_holo_light);
+                menuItemExpandCollapse.setTitle(R.string.mywords_expand)
+                        .setIcon(R.drawable.ic_action_mywords_open);
         }
+
     }
 
     private void refreshMyWords() {
@@ -197,7 +204,7 @@ public class FragmentMyWords extends ZeeguuFragment {
         } else if (listviewRefreshing) {
             toast(getString(R.string.error_refreshing_already_running));
         } else {
-            if(connectionManager.getMyWordsFromServer()) //if request send, set boolean true
+            if (connectionManager.getMyWordsFromServer()) //if request send, set boolean true
                 listviewRefreshing = true;
         }
     }
@@ -216,7 +223,7 @@ public class FragmentMyWords extends ZeeguuFragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.item_delete:
-                    if(connectionManager.getAccount().deleteWord(id) != null) {
+                    if (connectionManager.getAccount().deleteWord(id) != null) {
                         connectionManager.removeBookmarkFromServer(id);
                         toast(getString(R.string.successful_bookmark_deleted));
                     } else {

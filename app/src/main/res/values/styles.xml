@@ -16,7 +16,6 @@
         <item name="customIconVoice">@drawable/btn_mic_holo_light</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_light</item>
         <item name="customIconSettings">@drawable/ab_settings_holo_dark</item>
-        <item name="customIconSave">@drawable/btn_bookmark_holo_light</item>
         <item name="customIconSound">@drawable/btn_tts_holo_light</item>
         <item name="customIconPaste">@drawable/btn_paste_holo_light</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_light</item>
@@ -27,8 +26,7 @@
         <item name="customIconText">@drawable/ic_action_edit_holo_light</item>
         <item name="customIconVoice">@drawable/btn_mic_holo_light</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_light</item>
-        <item name="customIconSettings">@drawable/ab_settings_holo_light</item>
-        <item name="customIconSave">@drawable/btn_bookmark_holo_light</item>
+        <item name="customIconSettings">@drawable/ab_settings_holo_dark</item>
         <item name="customIconSound">@drawable/btn_tts_holo_light</item>
         <item name="customIconPaste">@drawable/btn_paste_holo_light</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_light</item>
@@ -40,7 +38,6 @@
         <item name="customIconVoice">@drawable/btn_mic_holo_dark</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_dark</item>
         <item name="customIconSettings">@drawable/ab_settings_holo_dark</item>
-        <item name="customIconSave">@drawable/btn_bookmark_holo_dark</item>
         <item name="customIconSound">@drawable/btn_tts_holo_dark</item>
         <item name="customIconPaste">@drawable/btn_paste_halo_dark</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_dark</item>

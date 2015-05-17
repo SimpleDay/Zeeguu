@@ -21,10 +21,6 @@
         <attr name="customIconTranslate" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="customAttrsSave">
-        <attr name="customIconSave" format="reference" />
-    </declare-styleable>
-
     <declare-styleable name="customAttrsSound">
         <attr name="customIconSound" format="reference" />
     </declare-styleable>
