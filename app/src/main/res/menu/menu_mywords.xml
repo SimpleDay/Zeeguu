@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/listview_refresh"
+    <item
+        android:id="@+id/listview_refresh"
         android:icon="@drawable/ic_action_refresh_holo_light"
-        android:title="@string/mywords_refresh" />
+        android:title="@string/mywords_refresh"
+        app:showAsAction="ifRoom" />
 
-    <item android:id="@+id/listview_expand_collapse"
+    <item
+        android:id="@+id/listview_expand_collapse"
         android:icon="@drawable/ic_action_collapse_holo_light"
-        android:title="@string/mywords_collapse" />
+        android:title="@string/mywords_collapse"
+        app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_settings"
+        android:icon="?attr/customIconSettings"
+        android:title="@string/action_preference"
+        app:showAsAction="ifRoom" />
 
 </menu>

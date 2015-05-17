@@ -2,47 +2,41 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:key="@string/category_user_information"
-        android:title="@string/category_login_settings">
+        android:key="@string/preference_category_user_information_tag"
+        android:title="@string/preference_category_login">
 
         <EditTextPreference
             android:inputType="textEmailAddress"
-            android:key="@string/preference_email"
+            android:key="@string/preference_email_tag"
             android:selectable="false"
-            android:summary="@string/email_info"
             android:title="@string/email" />
 
         <Preference
-            android:key="@string/preference_logout"
-            android:summary="Logout from your Zeeguu Account"
+            android:key="@string/preference_logInOut_tag"
+            android:summary="@string/preference_logout_message"
             android:title="Logout" />
-
-        <Preference
-            android:key="@string/preference_login"
-            android:summary="Connect with you Zeeguu Account"
-            android:title="Login" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="category_app_settings"
-        android:title="@string/category_app_settings">
+        android:title="@string/preference_category_app">
 
         <ListPreference
-            android:defaultValue="@string/language_default"
-            android:dialogTitle="@string/app_language_dialog"
+            android:defaultValue="@string/preference_language_default"
+            android:dialogTitle="@string/preference_app_language_dialog"
             android:entries="@array/languages"
             android:entryValues="@array/language_keys"
             android:key="app_language"
-            android:title="@string/app_language" />
+            android:title="@string/preference_app_language" />
 
         <ListPreference
-            android:defaultValue="@string/theme_default"
-            android:dialogTitle="@string/app_design_dialog"
+            android:defaultValue="@string/preference_theme_default"
+            android:dialogTitle="@string/preference_app_design_dialog"
             android:entries="@array/themes"
             android:entryValues="@array/theme_keys"
-            android:key="@string/preference_app_design"
-            android:title="@string/app_design" />
+            android:key="@string/preference_app_design_tag"
+            android:title="@string/preference_app_design" />
 
     </PreferenceCategory>
 

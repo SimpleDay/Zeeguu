@@ -3,10 +3,11 @@
 
     <!-- app strings -->
     <string name="app_name">Zeeguu Translate</string>
+    <string name="app_name_actionbar">Zeeguu</string>
     <string name="menu_login_button">Login</string>
 
     <!-- sliding menu strings -->
-    <string name="action_settings">Settings</string>
+    <string name="action_preference">Settings</string>
     <string name="search_menu">Search</string>
     <string name="mywords_menu">My Words</string>
 
@@ -19,42 +20,45 @@
     <string name="mywords_collapse">Collapse list</string>
     <string name="mywords_refresh">Refresh list</string>
 
-    <!-- Textview -->
+    <!-- Search Fragment -->
     <string name="text_view_translate_button">Translate</string>
+    <string name="language_to_dialog">Translate To</string>
+    <string name="language_from_dialog">Translate From</string>
+
+    <!-- Preference strings -->
+    <string name="preference_title">Settings</string>
+
+    <string name="preference_category_login">Zeeguu Account information</string>
+    <string name="preference_login">Log in</string>
+    <string name="preference_login_message">Press here to login into your Zeeguu account</string>
+    <string name="preference_logout">Log out</string>
+    <string name="preference_logout_message">Press here to logout from your Zeeguu account</string>
+
+    <string name="preference_category_app">App Settings</string>
+    <string name="preference_app_language">App Language</string>
+    <string name="preference_app_language_dialog">Change the language of the app</string>
+    <string name="preference_language_default">en</string>
+
+    <string name="preference_app_design">Zeeguu Design</string>
+    <string name="preference_app_design_dialog">Change the design of the app</string>
+    <string name="preference_theme_default">AppThemeLightActionbarDark</string>
 
 
     <!-- preference tags  -->
-    <string name="category_user_information">category_user_information</string>
-    <string name="preference_email">EMAIL</string>
-    <string name="preference_password">PASSWORD</string>
-    <string name="preference_user_session_id">SESSIONID</string>
-    <string name="preference_login">LOGIN</string>
-    <string name="preference_logout">LOGIN</string>
-    <string name="preference_app_design">APP_DESIGN</string>
-    <string name="preference_language_from">language_from</string> <!-- needs to be same tag as server URL -->
-    <string name="preference_language_to">language_to</string> <!-- needs to be same tag as server URL -->
-
+    <string name="preference_category_user_information_tag">category_user_information</string>
+    <string name="preference_email_tag">pref_zeeguu_email</string>
+    <string name="preference_password_tag">pref_zeeguu_password</string>
+    <string name="preference_user_session_id_tag">pref_zeeguu_session_id</string>
+    <string name="preference_logInOut_tag">pref_zeeguu_account</string>
+    <string name="preference_app_design_tag">pref_zeeguu_design</string>
+    <string name="preference_language_from_tag">pref_zeeguu_language_from</string>
+    <string name="preference_language_to_tag">pref_zeeguu_language_to</string>
 
     <!-- bookmark tags  -->
     <string name="bookmark_url_code">android:zeeguu_app</string>
     <string name="bookmark_title">Android Application</string>
 
-    <!-- setting strings -->
-    <string name="title_activity_settings">Settings</string>
-    <string name="category_login_settings">Zeeguu Account information</string>
-    <string name="password_info">Please enter your password here</string>
-    <string name="email_info">You are not logged in yet</string>
-
-    <string name="category_app_settings">App Settings</string>
-    <string name="app_language">App Language</string>
-    <string name="app_language_dialog">Change the language of the app</string>
-    <string name="language_default">en</string>
-
-    <!-- language dialog strings -->
-    <string name="language_to_dialog">Translate To</string>
-    <string name="language_from_dialog">Translate From</string>
-
-    <!-- choosable languages  -->
+    <!-- choosable languages arrays -->
     <string-array name="languages">
         <item>English</item>
         <item>Deutsch</item>
@@ -69,10 +73,7 @@
         <item>it</item>
     </string-array>
 
-    <string name="app_design">Zeeguu Design</string>
-    <string name="app_design_dialog">Change the design of the app</string>
-    <string name="theme_default">AppThemeLightActionbarDark</string>
-
+    <!-- choosable design arrays -->
     <string-array name="themes">
         <item>Light</item>
         <item>Light/Dark</item>
@@ -110,7 +111,6 @@
     <string name="error_mywords_not_saved">Ops! An error has occurred with your local memory, your words have not been saved on your phone </string>
     <string name="error_mywords_not_loaded">Ops! An error has occurred with your local memory, could not load your words from your phone </string>
 
-
     <!-- success messages  -->
     <string name="successful_login">Successfully logged in</string>
     <string name="successful_language_from_changed">Successfully changed your language on the server to: </string>
@@ -120,9 +120,7 @@
     <string name="successful_bookmarked">Successful bookmarked </string>
     <string name="successful_bookmark_deleted">Bookmark deleted successfully! </string>
 
-    <!-- tags  -->
-    <string name="logging_tag">logging_zeeguu</string>
-    <string name="login_title">Zeeguu Login</string>
-
+    <!-- String that is used to log -->
+    <string name="logging_tag">Zeeguu_logging</string>
 
 </resources>

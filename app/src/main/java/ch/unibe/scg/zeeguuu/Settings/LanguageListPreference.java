@@ -81,7 +81,8 @@ public class LanguageListPreference extends ListPreference {
     public void showDialog(Activity activity, boolean isLanguageFrom) {
         entries = getEntries();
         entryValues = getEntryValues();
-        mKey = isLanguageFrom ? activity.getString(R.string.preference_language_from) : activity.getString(R.string.preference_language_to);
+        mKey = isLanguageFrom ? activity.getString(R.string.preference_language_from_tag)
+                : activity.getString(R.string.preference_language_to_tag);
         selectedEntry = updateSelectedEntry();
 
         if (iconListPreferenceAdapter == null)

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.android.SlidingTab.SlidingTabLayout;
 
-import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguuu.R;
 
 public class SlidingFragment extends Fragment {
@@ -17,26 +16,31 @@ public class SlidingFragment extends Fragment {
     private ViewPager viewPager;
     private ZeeguuFragmentPagerAdapter adapter;
 
+    private View view;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new ZeeguuFragmentPagerAdapter(getActivity(), getFragmentManager(), this);
-    }
-
-    public ZeeguuFragment getActiveFragment() {
-        return adapter.get(viewPager.getCurrentItem()).getFragment();
+        if (adapter == null)
+            adapter = new ZeeguuFragmentPagerAdapter(getActivity(), getFragmentManager(), this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_sliding_menu, container, false);
+        if(view == null)
+            return view = inflater.inflate(R.layout.fragment_sliding_menu, container, false);
+        else
+            return view;
     }
 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        if (viewPager != null && slidingTabLayout != null)
+            return;
+
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
 

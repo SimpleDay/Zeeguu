@@ -6,16 +6,16 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -28,11 +28,11 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
-import ch.unibe.zeeguulibrary.MyWords.MyWordsItem;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Settings.LanguageListPreference;
 import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
+import ch.unibe.zeeguulibrary.MyWords.MyWordsItem;
 
 /**
  * Created by Pascal on 12/01/15.
@@ -57,7 +57,6 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     private ImageView flagTranslateTo;
 
     private String switchedText;
-    private SharedPreferences settings;
 
     //buttons
     private ImageView btnttsLanguageFrom;
@@ -101,9 +100,6 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         flagTranslateFrom = (ImageView) view.findViewById(R.id.ic_flag_translate_from);
         flagTranslateTo = (ImageView) view.findViewById(R.id.ic_flag_translate_to);
 
-        //remembers if languages was switched
-        settings = PreferenceManager.getDefaultSharedPreferences(activity);
-
         //listeners for the flags to switch the flags by pressing on them
         flagTranslateFrom.setOnClickListener(new LanguageSwitchListener());
         flagTranslateTo.setOnClickListener(new LanguageSwitchListener());
@@ -114,9 +110,9 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         //if a text was entered and the screen rotated, the text will be added again here.
         if (savedInstanceState != null) {
             editTextLanguageFrom.setText(savedInstanceState.getString(
-                    getString(R.string.preference_language_from)));
+                    getString(R.string.preference_language_from_tag)));
             editTextLanguageTo.setText(savedInstanceState.getString(
-                    getString(R.string.preference_language_to)));
+                    getString(R.string.preference_language_to_tag)));
         }
 
         //set listeners
@@ -179,7 +175,14 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
             tutorial.setVisibility(View.GONE); //TODO only for usability testing, otherwise visible
         }
 
+        setHasOptionsMenu(true); //call onCreateOptionsMenu for this fragment to individualize it
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_search, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -233,8 +236,8 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(getString(R.string.preference_language_from), editTextLanguageFrom.getText().toString());
-        savedInstanceState.putString(getString(R.string.preference_language_to), editTextLanguageTo.getText().toString());
+        savedInstanceState.putString(getString(R.string.preference_language_from_tag), editTextLanguageFrom.getText().toString());
+        savedInstanceState.putString(getString(R.string.preference_language_to_tag), editTextLanguageTo.getText().toString());
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -307,7 +310,7 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     private void speak(TextToSpeech tts, EditText edit_text) {
 
         String text = edit_text.getText().toString();
-        if (text != null && !text.equals("")) {
+        if (!text.equals("")) {
             if (activeTextToSpeech != null) {
                 activeTextToSpeech.stop();
                 activeTextToSpeech = null;
@@ -330,8 +333,7 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     }
 
     private boolean hasClipboardEntry() {
-        if (clipboard == null) return false;
-        return clipboard.hasPrimaryClip() && !clipboard.getPrimaryClip().getItemAt(0).getText().equals("");
+        return clipboard != null && clipboard.hasPrimaryClip() && !clipboard.getPrimaryClip().getItemAt(0).getText().equals("");
     }
 
     private void translate() {

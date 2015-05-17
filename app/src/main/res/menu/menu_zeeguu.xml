@@ -1,18 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".Zeeguu">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <item
         android:id="@+id/action_log_in"
-        android:showAsAction="always"
-        android:title="@string/menu_login_button">
-    </item>
-
-    <item
-        android:id="@+id/action_settings"
-        android:showAsAction="always"
-        android:title="@string/action_settings"
-        android:icon="?attr/customIconSettings" >
-    </item>
+        android:title="@string/menu_login_button"
+        app:showAsAction="ifRoom" />
 
 </menu>

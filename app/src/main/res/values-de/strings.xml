@@ -1,41 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- app strings -->
-    <string name="app_name">Zeeguu</string>
-
-    <!-- sliding menu strings -->
-    <string name="action_settings">Einstellungen</string>
-    <string name="search_menu">Suche</string>
-    <string name="mywords_menu">Woerterliste</string>
-
-    <!-- fragment strings -->
-    <string name="search_text_title">Text Suche</string>
-    <string name="mywords_title">Meine Woerter</string>
-
-
-    <!-- sign in dialog strings -->
-    <string name="dialog_sign_in_title">Anmelden</string>
-    <string name="email">E-Mail</string>
-    <string name="password">Passwort</string>
-    <string name="button_sign_in">Anmelden</string>
-    <string name="button_cancel">Abbrechen</string>
-    <string name="dialog_sign_in_message">Bitte melden Sie sich mit Ihrem Zeeguu Account an</string>
-
-    <!-- setting strings -->
-    <string name="category_login_settings">Zeeguu Account informationen</string>
-    <string name="password_info">Bitte geben Sie hier das Passwort ein</string>
-    <string name="email_info">Bitte geben Sie hier Ihre E-Mail Adresse ein</string>
-
-    <string name="category_main_settings">Zeeguu Konto Einstellungen</string>
-
-    <string name="category_app_settings">App Einstellungen</string>
-    <string name="app_language">Sprache</string>
-    <string name="app_language_dialog">Wechseln sie die Sprache der App</string>
-
-    <!-- error messages  -->
-    <string name="error_mic_search_not_supported">Ops! Dein Handy unterstützt diese Funktion nicht.</string>
-
-    <!-- TODO: the rest of the words will be added in the end  -->
+    <!-- TODO: coming soon -->
 
 </resources>

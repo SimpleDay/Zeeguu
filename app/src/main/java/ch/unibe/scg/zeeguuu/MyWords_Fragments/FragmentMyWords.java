@@ -153,11 +153,13 @@ public class FragmentMyWords extends ZeeguuFragment {
         }
     }
 
-    public void notifyDataSetChanged() {
-        adapter.notifyDataSetChanged();
+    public void notifyDataSetChanged(boolean myWordsChanged) {
+        if(myWordsChanged) {
+            adapter.notifyDataSetChanged();
+            expandMyWordsList();
+        }
         listviewRefreshing = false;
         swipeLayout.setRefreshing(false);
-        expandMyWordsList();
     }
 
     //// private classes ////
@@ -192,11 +194,11 @@ public class FragmentMyWords extends ZeeguuFragment {
     private void refreshMyWords() {
         if (!connectionManager.getAccount().isUserLoggedIn()) {
             toast(getString(R.string.error_user_not_logged_in_yet));
-        } else if (!listviewRefreshing) {
-            listviewRefreshing = true;
-            connectionManager.getMyWordsFromServer();
-        } else {
+        } else if (listviewRefreshing) {
             toast(getString(R.string.error_refreshing_already_running));
+        } else {
+            if(connectionManager.getMyWordsFromServer()) //if request send, set boolean true
+                listviewRefreshing = true;
         }
     }
 

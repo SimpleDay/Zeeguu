@@ -1,6 +1,5 @@
 package ch.unibe.scg.zeeguuu.Core;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -8,7 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,8 +27,10 @@ import ch.unibe.scg.zeeguuu.Sliding_menu.SlidingFragment;
 import ch.unibe.scg.zeeguuu.Sliding_menu.ZeeguuFragmentPagerAdapter;
 import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
+import ch.unibe.zeeguulibrary.Dialogs.ZeeguuCreateAccountDialog;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuDialogCallbacks;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLoginDialog;
+import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLogoutDialog;
 
 public class ZeeguuActivity extends AppCompatActivity implements
         ZeeguuConnectionManager.ZeeguuConnectionManagerCallbacks,
@@ -43,17 +46,19 @@ public class ZeeguuActivity extends AppCompatActivity implements
     private ZeeguuConnectionManager connectionManager;
 
     //fragments
-    private static SlidingFragment fragmentSlidingMenu;
+    private SlidingFragment fragmentSlidingMenu;
+    private boolean transactionActive = false;
     private ZeeguuLoginDialog zeeguuLoginDialog;
+    private ZeeguuCreateAccountDialog zeeguuCreateAccountDialog;
     private DataFragment dataFragment;
     private FragmentSearch fragmentSearch;
     private FragmentMyWords fragmentMyWords;
     private FragmentSettings fragmentSettings;
 
+    private ActionBar actionBar;
     private boolean isInSettings = false;
 
     private Menu menu;
-    private final int SETTINGSCHANGED = 100;
 
 
     @Override
@@ -65,9 +70,19 @@ public class ZeeguuActivity extends AppCompatActivity implements
         //set default settings when app started, but don't overwrite active settings
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
+        //create toolbar and set it
+        Toolbar toolbar = (Toolbar) findViewById(R.id.zeeguu_toolbar);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setLogo(R.drawable.ic_launcher);
+
         // Login Dialog
         zeeguuLoginDialog = (ZeeguuLoginDialog) fragmentManager.findFragmentByTag("zeeguuLoginDialog");
         if (zeeguuLoginDialog == null) zeeguuLoginDialog = new ZeeguuLoginDialog();
+
+        // Create Account Dialog
+        zeeguuCreateAccountDialog = (ZeeguuCreateAccountDialog) fragmentManager.findFragmentByTag("zeeguuCreateAccountDialog");
+        if (zeeguuCreateAccountDialog == null) zeeguuCreateAccountDialog = new ZeeguuCreateAccountDialog();
 
         // Data fragment so that the instance of the ConnectionManager is never destroyed
         dataFragment = (DataFragment) fragmentManager.findFragmentByTag("data");
@@ -99,17 +114,23 @@ public class ZeeguuActivity extends AppCompatActivity implements
         fragmentSettings = (FragmentSettings) fragmentManager.findFragmentByTag("fragmentSettings");
         if (fragmentSettings == null) fragmentSettings = new FragmentSettings();
 
-        ActionBar actionBar = getActionBar();
-        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
         //TODO: Language change affects whole app
     }
 
     public void switchActiveFragmentTo(Fragment fragment, String title) {
-        isInSettings = title.equals("fragmentSettings");
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_menu, fragment, title);
-        transaction.commit();
+        if (!transactionActive) {
+            transactionActive = true;
+            isInSettings = title.equals("fragmentSettings");
+            actionBar.setDisplayHomeAsUpEnabled(isInSettings);
+            actionBar.setDisplayUseLogoEnabled(!isInSettings);
+            actionBar.setTitle(isInSettings ? getString(R.string.action_preference)
+                    : getString(R.string.app_name_actionbar));
+
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_menu, fragment, title);
+            transaction.commit();
+            transactionActive = false;
+        }
     }
 
     @Override
@@ -144,7 +165,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_log_in:
-                showZeeguuLoginDialog(getString(R.string.login_title), "");
+                showZeeguuLoginDialog("", "");
                 return true;
 
             case R.id.action_settings:
@@ -155,6 +176,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
     public void setTheme(boolean actualizeView) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -182,15 +204,25 @@ public class ZeeguuActivity extends AppCompatActivity implements
     }
 
 
+    //// INTERFACE METHODS ////
+
     @Override
-    public void onBackPressed() {if (isInSettings)
+    public void onBackPressed() {
+        if (isInSettings)
             switchActiveFragmentTo(fragmentSlidingMenu, "slidingMenu");
         else
             super.onBackPressed();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     //// ZeeguuLoginDialog interface ////
 
+    @Override
     public ZeeguuConnectionManager getConnectionManager() {
         return dataFragment.getConnectionManager();
     }
@@ -198,17 +230,25 @@ public class ZeeguuActivity extends AppCompatActivity implements
     //// ConnectionManager interface methods ////
 
     @Override
-    public void showZeeguuLoginDialog(String title, String email) {
-        if (title.equals(""))
-            title = getString(R.string.login_title);
-        zeeguuLoginDialog.setTitle(title);
+    public void showZeeguuLoginDialog(String message, String email) {
         zeeguuLoginDialog.setEmail(email);
+        zeeguuLoginDialog.setMessage(message);
         zeeguuLoginDialog.show(fragmentManager, "zeeguuLoginDialog");
     }
 
-    @Override
-    public void showZeeguuCreateAccountDialog(String recallUsername, String recallEmail) {
 
+    @Override
+    public void showZeeguuLogoutDialog() {
+        ZeeguuLogoutDialog zeeguuLogoutDialog = new ZeeguuLogoutDialog();
+        zeeguuLogoutDialog.show(getFragmentManager(), "logout?");
+    }
+
+    @Override
+    public void showZeeguuCreateAccountDialog(String message, String username, String email) {
+        zeeguuCreateAccountDialog.setMessage(message);
+        zeeguuCreateAccountDialog.setUsername(username);
+        zeeguuCreateAccountDialog.setEmail(email);
+        zeeguuCreateAccountDialog.show(fragmentManager, "zeeguuCreateAccountDialog");
     }
 
     @Override
@@ -224,8 +264,8 @@ public class ZeeguuActivity extends AppCompatActivity implements
     //// ZeeguuAccount interface ////
 
     @Override
-    public void notifyDataChanged() {
-        fragmentMyWords.notifyDataSetChanged();
+    public void notifyDataChanged(boolean myWordsChanged) {
+        fragmentMyWords.notifyDataSetChanged(myWordsChanged);
     }
 
     //// user interaction interface ////
@@ -240,12 +280,6 @@ public class ZeeguuActivity extends AppCompatActivity implements
         return fragmentMyWords;
     }
 
-    @Override
-    public void returnToMainActivity() {
-        onBackPressed();
-    }
-
-
     //// display messages interface ////
 
     @Override
@@ -255,22 +289,24 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public void displayMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    //// Settings interface ////
-
-    @Override
-    public void showLoginButtonIfNotLoggedIn() {
-        if (connectionManager != null) {
-            MenuItem item = menu.findItem(R.id.action_log_in);
-            item.setVisible(!connectionManager.getAccount().isUserInSession());
-        }
-    }
+    //// Preference interface ////
 
     @Override
     public void notifyLanguageChanged(boolean isLanguageFrom) {
         fragmentSearch.refreshLanguages(isLanguageFrom);
+    }
+
+    //// Private Methods ////
+
+    private void showLoginButtonIfNotLoggedIn() {
+        if (connectionManager != null) {
+            MenuItem item = menu.findItem(R.id.action_log_in);
+            if (item != null)
+                item.setVisible(!connectionManager.getAccount().isUserInSession());
+        }
     }
 
 }
