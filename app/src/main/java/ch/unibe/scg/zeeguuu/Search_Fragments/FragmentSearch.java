@@ -66,7 +66,7 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     private ImageView btnPaste;
 
     private ImageView btnBookmark;
-    private boolean bookmarked;
+    private long bookmarkID;
 
 
     public interface ZeeguuFragmentTextCallbacks {
@@ -129,7 +129,7 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
 
         btnBookmark = (ImageView) view.findViewById(R.id.btn_bookmark);
         btnBookmark.setOnClickListener(new BookmarkListener());
-        bookmarked = false;
+        bookmarkID = 0;
 
         //Set done button to translate
         editTextLanguageFrom.setOnKeyListener(new KeyboardTranslationListener());
@@ -242,10 +242,9 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    public void markEntriesAsBookmarked() {
-        bookmarked = true;
-        btnBookmark.setImageResource(R.drawable.btn_bookmark_filled);
-
+    public void setAsBookmarked(long bookmarkID) {
+        this.bookmarkID = bookmarkID;
+        this.btnBookmark.setImageResource(R.drawable.btn_bookmark_filled);
     }
 
     public void setTranslatedText(String text) {
@@ -350,7 +349,7 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
             else
                 setTranslatedText(myWordsSearch.getLanguageFromWord());
 
-            markEntriesAsBookmarked();
+            setAsBookmarked(myWordsSearch.getItemId());
         }
         closeKeyboard();
     }
@@ -420,7 +419,7 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     }
 
     private class LanguageChangeListener implements View.OnLongClickListener {
-        private boolean isLanguageFrom;
+        private final boolean isLanguageFrom;
 
         public LanguageChangeListener(boolean isLanguageFrom) {
             this.isLanguageFrom = isLanguageFrom;
@@ -468,86 +467,81 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     private class BookmarkListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            ZeeguuAccount account = connectionManager.getAccount();
-            if (!account.isUserLoggedIn())
-                toast(getString(R.string.error_user_not_logged_in_yet));
-            else if (editTextLanguageFrom.getText().length() != 0 && editTextLanguageTo.getText().length() != 0) {
-                if (!bookmarked) {
-                    String input = getEditTextTrimmed(editTextLanguageFrom);
-                    String translation = getEditTextTrimmed(editTextLanguageTo);
+            if (bookmarkID == 0) {
+                String input = getEditTextTrimmed(editTextLanguageFrom);
+                String translation = getEditTextTrimmed(editTextLanguageTo);
 
-                    connectionManager.bookmarkWithContext(input, account.getLanguageNative(), translation, account.getLanguageLearning(),
-                            getString(R.string.bookmark_title), activity.getString(R.string.bookmark_url_code), "");
-                } else {
-                    toast(getString(R.string.error_bookmarked_already)); //TODO: press it again when filled deletes bookmark
-                }
+                ZeeguuAccount account = connectionManager.getAccount();
+                connectionManager.bookmarkWithContext(input, account.getLanguageNative(), translation, account.getLanguageLearning(),
+                        getString(R.string.bookmark_title), activity.getString(R.string.bookmark_url_code), "");
             } else {
-                toast(getString(R.string.error_no_text_to_bookmark));
-            }
-        }
-    }
-
-    private class EditTextListener implements TextWatcher {
-        private boolean isLanguageToListener;
-
-        public EditTextListener(boolean isLanguageToListener) {
-            this.isLanguageToListener = isLanguageToListener;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            //Do nothing
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //also do nothing
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (isLanguageToListener) {
-                //when language to textfield changes, it can be bookmarked again.
-                bookmarked = false;
-                btnBookmark.setImageResource(R.drawable.btn_bookmark);
-
-                boolean editTextIsEmpty = editTextLanguageTo.getText().toString().equals("");
-                showActiveButton(btnCopy, !editTextIsEmpty);
-                showActiveButton(btnttsLanguageTo, !editTextIsEmpty);
-            } else {
-                showActiveButton(btnttsLanguageFrom, !editTextLanguageFrom.getText().toString().equals(""));
+                toast(getString(R.string.error_bookmark_already)); //TODO: press it again when filled deletes bookmark
             }
         }
     }
 
 
-    ///// Listeners for copy and paste functions /////
+private class EditTextListener implements TextWatcher {
+    private final boolean isLanguageToListener;
 
-    private class PasteListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
-            editTextLanguageFrom.getText().insert(editTextLanguageFrom.getSelectionStart(), item.getText());
-        }
+    public EditTextListener(boolean isLanguageToListener) {
+        this.isLanguageToListener = isLanguageToListener;
     }
 
-    private class CopyListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            ClipData clip = ClipData.newPlainText("paste", editTextLanguageTo.getText().toString());
-            clipboard.setPrimaryClip(clip);
-            //Feedback that text has been copied
-            toast(getString(R.string.successful_text_copied));
-        }
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        //Do nothing
     }
 
-    private class ClipboardChangeListener implements ClipboardManager.OnPrimaryClipChangedListener {
-        @Override
-        public void onPrimaryClipChanged() {
-            //initialize paste button because something is added to clipboard
-            showActiveButton(btnPaste, true);
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        //also do nothing
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        if (isLanguageToListener) {
+            //when language to textfield changes, it can be bookmarked again.
+            bookmarkID = 0;
+            btnBookmark.setImageResource(R.drawable.btn_bookmark);
+
+            boolean editTextIsEmpty = editTextLanguageTo.getText().toString().equals("");
+            showActiveButton(btnCopy, !editTextIsEmpty);
+            showActiveButton(btnttsLanguageTo, !editTextIsEmpty);
+        } else {
+            showActiveButton(btnttsLanguageFrom, !editTextLanguageFrom.getText().toString().equals(""));
         }
     }
+}
+
+
+///// Listeners for copy and paste functions /////
+
+private class PasteListener implements View.OnClickListener {
+    @Override
+    public void onClick(View view) {
+        ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+        editTextLanguageFrom.getText().insert(editTextLanguageFrom.getSelectionStart(), item.getText());
+    }
+}
+
+private class CopyListener implements View.OnClickListener {
+    @Override
+    public void onClick(View view) {
+        ClipData clip = ClipData.newPlainText("paste", editTextLanguageTo.getText().toString());
+        clipboard.setPrimaryClip(clip);
+        //Feedback that text has been copied
+        toast(getString(R.string.successful_text_copied));
+    }
+}
+
+private class ClipboardChangeListener implements ClipboardManager.OnPrimaryClipChangedListener {
+    @Override
+    public void onPrimaryClipChanged() {
+        //initialize paste button because something is added to clipboard
+        showActiveButton(btnPaste, true);
+    }
+}
 
 }
 

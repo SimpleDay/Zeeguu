@@ -21,35 +21,23 @@
 
             <EditText
                 android:id="@+id/edit_text_language_from"
-                android:textSize="22sp"
-                android:layout_width="320dp"
-                android:layout_height="200dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/rounded_textfield"
-                android:gravity="top"
-                android:imeOptions="actionSearch"
-                android:maxLines="6"
-                android:padding="10dp" />
+                style="@style/searchInputEditFields"/>
 
             <ImageView
                 android:id="@+id/ic_flag_translate_from"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:contentDescription="@string/content_description_flag_from"
                 android:layout_alignBottom="@+id/edit_text_language_from"
                 android:layout_alignEnd="@+id/edit_text_language_from"
                 android:layout_alignRight="@+id/edit_text_language_from"
-                android:layout_gravity="right|bottom"
-                android:layout_marginBottom="12dp"
-                android:layout_marginRight="15dp"
-                android:gravity="top" />
+                style="@style/flagImageView"/>
 
             <ImageView
                 android:id="@+id/btn_microphone_search"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
+                android:contentDescription="@string/content_description_microphone"
                 android:layout_alignTop="@+id/btn_camera_search"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
                 android:layout_toEndOf="@+id/btn_paste"
                 android:layout_toRightOf="@+id/btn_paste"
                 android:clickable="true"
@@ -59,8 +47,9 @@
                 android:id="@+id/btn_camera_search"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
+                android:contentDescription="@string/content_description_camera"
                 android:layout_alignBottom="@+id/ic_flag_translate_from"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
                 android:layout_toEndOf="@+id/btn_microphone_search"
                 android:layout_toRightOf="@+id/btn_microphone_search"
                 android:clickable="true"
@@ -70,6 +59,7 @@
                 android:id="@+id/btn_tts_language_from"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
+                android:contentDescription="@string/content_description_tts_from"
                 android:layout_alignBottom="@+id/ic_flag_translate_from"
                 android:layout_toLeftOf="@+id/ic_flag_translate_from"
                 android:layout_toStartOf="@+id/ic_flag_translate_from"
@@ -79,9 +69,11 @@
                 android:id="@+id/btn_paste"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
+                android:contentDescription="@string/content_description_paste"
                 android:layout_alignLeft="@+id/edit_text_language_from"
                 android:layout_alignStart="@+id/edit_text_language_from"
                 android:layout_alignTop="@+id/btn_microphone_search"
+                android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:src="?attr/customIconPaste" />
 
@@ -119,34 +111,21 @@
 
             <EditText
                 android:id="@+id/edit_text_language_to"
-                android:textSize="22sp"
-                android:layout_width="320dp"
-                android:layout_height="200dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/rounded_textfield"
-                android:clickable="false"
-                android:focusable="false"
-                android:gravity="top"
-                android:maxLines="6"
-                android:enabled="false"
-                android:padding="30dp" />
+                style="@style/searchInputEditFields"/>
 
             <ImageView
                 android:id="@+id/ic_flag_translate_to"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
                 android:layout_alignBottom="@+id/edit_text_language_to"
                 android:layout_alignEnd="@+id/edit_text_language_to"
                 android:layout_alignRight="@+id/edit_text_language_to"
-                android:layout_marginBottom="12dp"
-                android:layout_marginRight="15dp"
-                android:gravity="top" />
+                android:contentDescription="@string/content_description_flag_to"
+                style="@style/flagImageView" />
 
             <ImageView
                 android:id="@+id/btn_bookmark"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
+                android:contentDescription="@string/content_description_bookmark"
                 android:layout_alignBottom="@+id/ic_flag_translate_to"
                 android:layout_toEndOf="@+id/btn_copy"
                 android:layout_toRightOf="@+id/btn_copy"
@@ -156,6 +135,7 @@
                 android:id="@+id/btn_tts_language_to"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
+                android:contentDescription="@string/content_description_tts_to"
                 android:layout_alignBottom="@+id/ic_flag_translate_to"
                 android:layout_toLeftOf="@+id/ic_flag_translate_to"
                 android:layout_toStartOf="@+id/ic_flag_translate_to"
@@ -165,9 +145,11 @@
                 android:id="@+id/btn_copy"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
+                android:contentDescription="@string/content_description_copy"
                 android:layout_alignLeft="@+id/edit_text_language_to"
                 android:layout_alignStart="@+id/edit_text_language_to"
                 android:layout_alignTop="@+id/btn_bookmark"
+                android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:enabled="false"
                 android:src="?attr/customIconCopy" />

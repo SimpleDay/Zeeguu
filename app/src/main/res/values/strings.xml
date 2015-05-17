@@ -6,14 +6,8 @@
     <string name="app_name_actionbar">Zeeguu</string>
     <string name="menu_login_button">Login</string>
 
-    <!-- sliding menu strings -->
-    <string name="action_preference">Settings</string>
-    <string name="search_menu">Search</string>
-    <string name="mywords_menu">My Words</string>
-
     <!-- fragment strings -->
-    <string name="search_text_title">Text search</string>
-    <string name="mywords_title">Your words</string>
+    <string name="mywords_menu">My Words</string>
     <string name="mywords_empty">You do not have any words in your library yet, please log in or save your words to retrieve them.</string>
     <string name="mywords_delete_bookmark">Delete</string>
     <string name="mywords_expand">Expand list</string>
@@ -21,6 +15,7 @@
     <string name="mywords_refresh">Refresh list</string>
 
     <!-- Search Fragment -->
+    <string name="search_menu">Search</string>
     <string name="text_view_translate_button">Translate</string>
     <string name="language_to_dialog">Translate To</string>
     <string name="language_from_dialog">Translate From</string>
@@ -89,38 +84,36 @@
 
     <!-- error messages  -->
     <string name="error_mic_search_not_supported">Ops! Your device does not support Speech to Text</string>
-    <string name="error_change_language_from_on_server_not_possible">Ops! There occurred an error, we could not change the language on the server. Do you have connection to the internet?</string>
     <string name="error_no_internet_connection">Ops! Your device is not connected to the internet</string>
-    <string name="error_user_login_wrong">Ops! Your username or password is not correct</string>
-    <string name="error_account_not_created">Ops! Account could not be created, please try later again</string>
     <string name="error_language_speaking_not_supported">Ops! The language you choose cannot be read</string>
     <string name="error_TTS_not_inititalized">Ops! There occurred a problem with the text to speech software. </string>
-    <string name="error_bookmarked_already">Ops! It was already bookmarked, it cannot be done twice. </string>
-    <string name="error_no_text_to_bookmark">Ops! One or both text fields are empty. Not possible to bookmark </string>
     <string name="error_no_text_to_read">Ops! There is no text that could be read. Please enter first the text and then try it again </string>
     <string name="error_refreshing_already_running">Ops! There is already one refreshing operation running </string>
-    <string name="error_listpreference_array">ListPreference requires an entries array and an entryValues array which are both the same length</string>
     <string name="error_bookmark_delete">Ops! The bookmark could not be deleted. Please try later again.</string>
-    <string name="error_user_logged_out">You have been logged out. Please enter again valid account information in the settings.</string>
+    <string name="error_bookmark_already">Ops! It was already bookmarked, it cannot be done twice. </string>
+    <string name="error_bookmark">Ops! There occurred an error while trying to bookmark, please try later again </string>
     <string name="error_user_not_logged_in_yet">Please log in first before you use these functions</string>
-    <string name="error_email_not_valid">Email address is not valid, please try again</string>
-    <string name="error_unknown_error">Ops! An error has occurred. Please try again later</string>
-    <string name="error_connection_error">Ops! There has been a problem with the connection to the server, please check if you are online and try it later again </string>
-    <string name="error_same_language">Ops! You have two times the same language, please change one </string>
-    <string name="error_userinfo_invalid">Ops! You have entered invalid or not complete user information, please try again </string>
-    <string name="error_mywords_not_saved">Ops! An error has occurred with your local memory, your words have not been saved on your phone </string>
-    <string name="error_mywords_not_loaded">Ops! An error has occurred with your local memory, could not load your words from your phone </string>
 
     <!-- success messages  -->
-    <string name="successful_login">Successfully logged in</string>
-    <string name="successful_language_from_changed">Successfully changed your language on the server to: </string>
-    <string name="successful_language_to_changed">Successfully changed your language on the server to: </string>
     <string name="successful_text_copied">Text has been copied </string>
     <string name="successful_mywords_updated">Your Words have been updated </string>
-    <string name="successful_bookmarked">Successful bookmarked </string>
     <string name="successful_bookmark_deleted">Bookmark deleted successfully! </string>
 
     <!-- String that is used to log -->
     <string name="logging_tag">Zeeguu_logging</string>
+
+    <!-- content descriptions -->
+    <string name="content_description_microphone">Microphone to activate voice search</string>
+    <string name="content_description_camera">Camera button to activate visual search</string>
+    <string name="content_description_flag_from">ImageView that holds the from flag</string>
+    <string name="content_description_flag_to">ImageView that holds the to flag</string>
+    <string name="content_description_tts_from">Text to Speech button to read the from EditText field to you</string>
+    <string name="content_description_tts_to">Text to Speech button to read the to EditText field to you</string>
+    <string name="content_description_copy">Copy button that lets you copy the text in the field into your clipboard</string>
+    <string name="content_description_paste">Paste button that lets you insert your clipboard</string>
+    <string name="content_description_bookmark">Bookmark button that lets you bookmark your word combination</string>
+    <string name="content_description_text_from">EditText field to enter your request word</string>
+    <string name="content_description_text_to">d</string>
+
 
 </resources>

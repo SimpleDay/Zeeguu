@@ -102,22 +102,6 @@ public class ZeeguuActivity extends AppCompatActivity implements
         //TODO: Language change affects whole app
     }
 
-    public void switchActiveFragmentTo(Fragment fragment, String title) {
-        if (!transactionActive) {
-            transactionActive = true;
-            isInSettings = title.equals("fragmentSettings");
-            actionBar.setDisplayHomeAsUpEnabled(isInSettings);
-            actionBar.setDisplayUseLogoEnabled(!isInSettings);
-            actionBar.setTitle(isInSettings ? getString(R.string.action_preference)
-                    : getString(R.string.app_name_actionbar));
-
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_menu, fragment, title);
-            transaction.commit();
-            transactionActive = false;
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -160,25 +144,6 @@ public class ZeeguuActivity extends AppCompatActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-
-    public void setTheme(boolean actualizeView) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        String theme = settings.getString(getString(R.string.preference_app_design), "").toString();
-        switch (theme) {
-            case "AppThemeLight":
-                setTheme(R.style.AppThemeLight);
-                break;
-            case "AppThemeLightActionbarDark":
-                setTheme(R.style.AppThemeLightActionbarDark);
-                break;
-            case "AppThemeDark":
-                setTheme(R.style.AppThemeDark);
-                break;
-        }
-        if (actualizeView)
-            recreate();
     }
 
     @Override
@@ -248,6 +213,15 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void bookmarkWord(String bookmarkID) {
+        try {
+            fragmentSearch.setAsBookmarked(Long.parseLong(bookmarkID));
+        } catch (Exception e) {
+            displayMessage(getString(R.string.error_bookmark));
+        }
+    }
+
     //// ZeeguuAccount interface ////
 
     @Override
@@ -289,6 +263,22 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     //// Private Methods ////
 
+    private void switchActiveFragmentTo(Fragment fragment, String title) {
+        if (!transactionActive) {
+            transactionActive = true;
+            isInSettings = title.equals("fragmentSettings");
+            actionBar.setDisplayHomeAsUpEnabled(isInSettings);
+            actionBar.setDisplayUseLogoEnabled(!isInSettings);
+            actionBar.setTitle(isInSettings ? getString(R.string.preference_title)
+                    : getString(R.string.app_name_actionbar));
+
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_menu, fragment, title);
+            transaction.commit();
+            transactionActive = false;
+        }
+    }
+
     private void showLoginButtonIfNotLoggedIn() {
         if (connectionManager != null) {
             MenuItem item = menu.findItem(R.id.action_log_in);
@@ -297,4 +287,21 @@ public class ZeeguuActivity extends AppCompatActivity implements
         }
     }
 
+    private void setTheme(boolean actualizeView) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        String theme = settings.getString(getString(R.string.preference_app_design), "").toString();
+        switch (theme) {
+            case "AppThemeLight":
+                setTheme(R.style.AppThemeLight);
+                break;
+            case "AppThemeLightActionbarDark":
+                setTheme(R.style.AppThemeLightActionbarDark);
+                break;
+            case "AppThemeDark":
+                setTheme(R.style.AppThemeDark);
+                break;
+        }
+        if (actualizeView)
+            recreate();
+    }
 }

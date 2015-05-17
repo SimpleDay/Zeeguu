@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
+<item
         android:id="@+id/listview_refresh"
         android:icon="@android:drawable/ic_popup_sync"
         android:title="@string/mywords_refresh"
@@ -17,7 +17,7 @@
     <item
         android:id="@+id/action_settings"
         android:icon="?attr/customIconSettings"
-        android:title="@string/action_preference"
+        android:title="@string/preference_title"
         app:showAsAction="always" />
 
 </menu>

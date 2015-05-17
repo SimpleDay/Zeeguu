@@ -53,8 +53,4 @@ public abstract class ZeeguuFragment extends Fragment {
         if (debugOn)
             Log.d(tag, message);
     }
-
-    public void onResume() {
-        super.onResume();
-    }
 }

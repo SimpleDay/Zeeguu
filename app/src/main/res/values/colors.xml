@@ -2,9 +2,6 @@
 <resources>
 
 
-    <color name="transparent">#00000000</color>
-    <color name="tab_highlight">#ff9ecfbf</color>
-
     <!-- sliding menu colors -->
     <color name="sliding_menu_line">#ffe6001d</color>
     <color name="sliding_menu_divider">#41938f94</color>
@@ -22,7 +19,6 @@
     <color name="round_button_shadow">#437e7276</color>
 
     <!-- text search tab -->
-    <color name="translation_button_background">#ffff1a0e</color>
     <color name="translation_language_textfield">#fffaf8f7</color>
     <color name="translation_language_textfield_shadow">#ffdbd9d8</color>
 
@@ -33,6 +29,5 @@
     <color name="navy">#000080</color>
 
     <color name="primary_color_dark">#4a4a4a</color>
-    <color name="primary_color_light">#f6f6f6</color>
 
 </resources>

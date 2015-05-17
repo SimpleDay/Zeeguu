@@ -22,9 +22,9 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public interface ZeeguuSlidingFragmentInterface {
 
-        public FragmentSearch getFragmentSearch();
+        FragmentSearch getFragmentSearch();
 
-        public FragmentMyWords getFragmentMyWords();
+        FragmentMyWords getFragmentMyWords();
     }
 
     ZeeguuFragmentPagerAdapter(Activity activity, FragmentManager fm, Fragment fragment) {

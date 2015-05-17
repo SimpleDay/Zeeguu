@@ -32,7 +32,6 @@ public class LanguageListPreference extends ListPreference {
     private CharSequence[] entries;
     private CharSequence[] entryValues;
     private SharedPreferences prefs;
-    private SharedPreferences.Editor editor;
     private String mKey;
     private int selectedEntry = -1;
 
@@ -60,8 +59,6 @@ public class LanguageListPreference extends ListPreference {
         mInflater = LayoutInflater.from(context);
         mKey = getKey();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        editor = prefs.edit();
-
     }
 
     @Override
@@ -132,7 +129,7 @@ public class LanguageListPreference extends ListPreference {
         return -1;
     }
 
-    protected void closeDialog() {
+    private void closeDialog() {
         if (mDialog != null) {
             mDialog.dismiss();
             mDialog = null;
@@ -204,6 +201,7 @@ public class LanguageListPreference extends ListPreference {
                         callback.notifyLanguageChanged(isLanguageFrom);
                     }
 
+                    SharedPreferences.Editor editor = prefs.edit();
                     editor.putString(mKey, entryValues[p].toString());
                     selectedEntry = p;
                     editor.commit();

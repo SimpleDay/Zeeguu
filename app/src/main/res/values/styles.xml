@@ -12,7 +12,6 @@
     </style>
 
     <style name="AppThemeLightActionbarDark" parent="AppTheme">
-        <item name="customIconText">@drawable/ic_action_edit_holo_light</item>
         <item name="customIconVoice">@drawable/btn_mic_holo_light</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_light</item>
         <item name="customIconSettings">@drawable/ab_settings_holo_dark</item>
@@ -23,7 +22,6 @@
     </style>
 
     <style name="AppThemeLight" parent="AppTheme">
-        <item name="customIconText">@drawable/ic_action_edit_holo_light</item>
         <item name="customIconVoice">@drawable/btn_mic_holo_light</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_light</item>
         <item name="customIconSettings">@drawable/ab_settings_holo_dark</item>
@@ -34,7 +32,6 @@
     </style>
 
     <style name="AppThemeDark" parent="AppTheme">
-        <item name="customIconText">@drawable/ic_action_edit_holo_dark</item>
         <item name="customIconVoice">@drawable/btn_mic_holo_dark</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_dark</item>
         <item name="customIconSettings">@drawable/ab_settings_holo_dark</item>
@@ -42,6 +39,30 @@
         <item name="customIconPaste">@drawable/btn_paste_halo_dark</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_dark</item>
 
+    </style>
+
+
+    <style name="searchInputEditFields">
+        <item name="android:textSize">22sp</item>
+        <item name="android:layout_width">320dp</item>
+        <item name="android:layout_height">200dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">@drawable/rounded_textfield</item>
+        <item name="android:maxLines">6</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:inputType">text</item>
+        <item name="android:imeOptions">actionSearch</item>
+        <item name="android:gravity">top</item>
+
+    </style>
+
+    <style name="flagImageView">
+        <item name="android:layout_width">45dp</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:gravity">top</item>
     </style>
 
 

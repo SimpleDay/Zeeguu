@@ -20,8 +20,8 @@ import ch.unibe.zeeguulibrary.MyWords.MyWordsHeader;
 public class MyWordsExpandableAdapter extends BaseExpandableListAdapter {
 
     private final ArrayList<MyWordsHeader> headers;
-    public LayoutInflater inflater;
-    public Activity activity;
+    private LayoutInflater inflater;
+    private Activity activity;
 
     public MyWordsExpandableAdapter(Activity act, ArrayList<MyWordsHeader> headers) {
         this.activity = act;
