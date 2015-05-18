@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ch.unibe.scg.zeeguuu.Search_Fragments.MainFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ch.unibe.scg.zeeguuu.Search_Fragments.MainLinearLayout
+    <LinearLayout
         android:id="@+id/fragment_text_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
@@ -155,7 +155,7 @@
                 android:src="?attr/customIconCopy" />
 
         </RelativeLayout>
-    </ch.unibe.scg.zeeguuu.Search_Fragments.MainLinearLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/fragment_text_tutorial"
@@ -185,4 +185,5 @@
             android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
-</FrameLayout>
+
+</ch.unibe.scg.zeeguuu.Search_Fragments.MainFrameLayout>

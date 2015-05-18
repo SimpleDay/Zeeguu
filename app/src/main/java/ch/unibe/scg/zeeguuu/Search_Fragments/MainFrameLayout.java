@@ -3,7 +3,7 @@ package ch.unibe.scg.zeeguuu.Search_Fragments;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
 import ch.unibe.scg.zeeguuu.R;
 
@@ -11,9 +11,9 @@ import ch.unibe.scg.zeeguuu.R;
  * Zeeguu Application
  * Created by Pascal on 29/04/15.
  */
-public class MainLinearLayout extends LinearLayout {
+public class MainFrameLayout extends FrameLayout {
 
-    public MainLinearLayout(Context context, AttributeSet attributeSet) {
+    public MainFrameLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
@@ -23,15 +23,16 @@ public class MainLinearLayout extends LinearLayout {
         Log.d("Search Layout", "Handling Keyboard Window shown");
 
         final int proposedheight = MeasureSpec.getSize(heightMeasureSpec);
-        final int actualHeight = getHeight();
+        final int height = getHeight();
 
-        if (actualHeight > proposedheight) {
-            //when keyboard is closed
-            findViewById(R.id.relativeLayout_text_translated).setVisibility(GONE);
-        } else if (actualHeight < proposedheight) {
+        if (height > proposedheight) {
             //when keyboard is opened
+            findViewById(R.id.relativeLayout_text_translated).setVisibility(GONE);
+        } else if (height < proposedheight) {
+            //when keyboard is closed
             findViewById(R.id.relativeLayout_text_translated).setVisibility(VISIBLE);
         }
+
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 }

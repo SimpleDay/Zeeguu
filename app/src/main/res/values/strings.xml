@@ -90,7 +90,6 @@
     <string name="error_no_text_to_read">Ops! There is no text that could be read. Please enter first the text and then try it again </string>
     <string name="error_refreshing_already_running">Ops! There is already one refreshing operation running </string>
     <string name="error_bookmark_delete">Ops! The bookmark could not be deleted. Please try later again.</string>
-    <string name="error_bookmark_already">Ops! It was already bookmarked, it cannot be done twice. </string>
     <string name="error_bookmark">Ops! There occurred an error while trying to bookmark, please try later again </string>
     <string name="error_user_not_logged_in_yet">Please log in first before you use these functions</string>
 

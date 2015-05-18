@@ -3,9 +3,10 @@
 
 
     <!-- sliding menu colors -->
-    <color name="sliding_menu_line">#ffe6001d</color>
-    <color name="sliding_menu_divider">#41938f94</color>
-    <color name="sliding_menu_background">#32c6c7be</color>
+    <color name="sliding_menu_line">@color/red</color>
+    <color name="sliding_menu_divider">@color/red</color>
+    <color name="sliding_menu_background">@color/primary_color_dark</color>
+    <color name="sliding_menu_title_color">@color/white</color>
 
     <!-- page colors -->
     <color name="view_pager_background_color">#32a2a39b</color>

@@ -27,9 +27,8 @@ public class SlidingFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if(view == null)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (view == null)
             return view = inflater.inflate(R.layout.fragment_sliding_menu, container, false);
         else
             return view;

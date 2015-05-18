@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlActivated">@color/zeeguu_red</item>
-        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:actionBarStyle">@style/CustomActionBarTheme</item>
 
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/primary_color_dark</item>
@@ -39,6 +39,11 @@
         <item name="customIconPaste">@drawable/btn_paste_halo_dark</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_dark</item>
 
+    </style>
+
+    <!-- the theme applied to the application or activity -->
+    <style name="CustomActionBarTheme" parent="@android:style/Theme.Holo">
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
 

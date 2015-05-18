@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
+import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Sliding_menu.ZeeguuFragmentPagerAdapter;
 
 /**
@@ -221,9 +222,14 @@ public class SlidingTabLayout extends HorizontalScrollView {
             }
 
             tabTitleView.setText(adapter.getPageTitle(i));
+            tabTitleView.setTextColor(getResources().getColorStateList(R.color.sliding_tab));
             tabView.setOnClickListener(tabClickListener);
 
             mTabStrip.addView(tabView);
+
+            if (i == mViewPager.getCurrentItem()) {
+                tabView.setSelected(true);
+            }
         }
     }
 
@@ -305,7 +311,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 mTabStrip.onViewPagerPageChanged(position, 0f);
                 scrollToTab(position, 0);
             }
-
+            for (int i = 0; i < mTabStrip.getChildCount(); i++) {
+                mTabStrip.getChildAt(i).setSelected(position == i);
+            }
             if (mViewPagerPageChangeListener != null) {
                 mViewPagerPageChangeListener.onPageSelected(position);
             }

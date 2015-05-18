@@ -84,7 +84,7 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_text, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         //initialize class variables
         editTextLanguageFrom = (EditText) view.findViewById(R.id.edit_text_language_from);
@@ -101,11 +101,8 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         flagTranslateTo = (ImageView) view.findViewById(R.id.ic_flag_translate_to);
 
         //listeners for the flags to switch the flags by pressing on them
-        flagTranslateFrom.setOnClickListener(new LanguageSwitchListener());
-        flagTranslateTo.setOnClickListener(new LanguageSwitchListener());
-
-        flagTranslateFrom.setOnLongClickListener(new LanguageChangeListener(true));
-        flagTranslateTo.setOnLongClickListener(new LanguageChangeListener(false));
+        flagTranslateFrom.setOnClickListener(new LanguageChangeListener(true));
+        flagTranslateTo.setOnClickListener(new LanguageChangeListener(false));
 
         //if a text was entered and the screen rotated, the text will be added again here.
         if (savedInstanceState != null) {
@@ -134,8 +131,9 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         //Set done button to translate
         editTextLanguageFrom.setOnKeyListener(new KeyboardTranslationListener());
 
-        editTextLanguageFrom.addTextChangedListener(new EditTextListener(false));
-        editTextLanguageTo.addTextChangedListener(new EditTextListener(true));
+        editTextLanguageFrom.addTextChangedListener(new EditTextListener(true));
+        editTextLanguageTo.addTextChangedListener(new EditTextListener(false));
+        editTextLanguageTo.setOnFocusChangeListener(new LanguageSwitchListener());
 
         //Clipboard button listeners
         btnPaste = (ImageView) view.findViewById(R.id.btn_paste);
@@ -244,7 +242,8 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
 
     public void setAsBookmarked(long bookmarkID) {
         this.bookmarkID = bookmarkID;
-        this.btnBookmark.setImageResource(R.drawable.btn_bookmark_filled);
+        this.btnBookmark.setImageResource(bookmarkID != 0 ?
+                R.drawable.btn_bookmark_filled : R.drawable.btn_bookmark);
     }
 
     public void setTranslatedText(String text) {
@@ -397,28 +396,31 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         }
     }
 
-    private class LanguageSwitchListener implements View.OnClickListener {
+    private class LanguageSwitchListener implements View.OnFocusChangeListener {
         @Override
-        public void onClick(View v) {
-            connectionManager.getAccount().switchLanguages();
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                connectionManager.getAccount().switchLanguages();
 
-            String tmpLanguageFromWord = getEditTextTrimmed(editTextLanguageFrom);
-            String tmpLanguageToWord = getEditTextTrimmed(editTextLanguageTo);
-            if (tmpLanguageToWord.equals(""))
-                editTextLanguageFrom.setText(switchedText);
-            else
-                editTextLanguageFrom.setText(tmpLanguageToWord);
+                String tmpLanguageFromWord = getEditTextTrimmed(editTextLanguageFrom);
+                String tmpLanguageToWord = getEditTextTrimmed(editTextLanguageTo);
+                if (tmpLanguageToWord.equals(""))
+                    editTextLanguageFrom.setText(switchedText);
+                else
+                    editTextLanguageFrom.setText(tmpLanguageToWord);
 
-            switchedText = tmpLanguageFromWord;
-            editTextLanguageTo.setText("");
+                switchedText = tmpLanguageFromWord;
+                editTextLanguageTo.setText("");
 
-            //initialize back the view
-            showActiveButton(btnCopy, false);
-            setLanguagesTextFields();
+                //initialize back the view
+                showActiveButton(btnCopy, false);
+                setLanguagesTextFields();
+            }
         }
     }
 
-    private class LanguageChangeListener implements View.OnLongClickListener {
+
+    private class LanguageChangeListener implements View.OnClickListener {
         private final boolean isLanguageFrom;
 
         public LanguageChangeListener(boolean isLanguageFrom) {
@@ -426,7 +428,7 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         }
 
         @Override
-        public boolean onLongClick(View v) {
+        public void onClick(View v) {
             LanguageListPreference listPreference = new LanguageListPreference(activity, null);
 
             Resources res = activity.getResources();
@@ -434,7 +436,6 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
             listPreference.setEntryValues(res.getStringArray(R.array.language_keys));
 
             listPreference.showDialog(activity, isLanguageFrom);
-            return true;
         }
     }
 
@@ -475,73 +476,73 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
                 connectionManager.bookmarkWithContext(input, account.getLanguageNative(), translation, account.getLanguageLearning(),
                         getString(R.string.bookmark_title), activity.getString(R.string.bookmark_url_code), "");
             } else {
-                toast(getString(R.string.error_bookmark_already)); //TODO: press it again when filled deletes bookmark
+                connectionManager.removeBookmarkFromServer(bookmarkID);
             }
         }
     }
 
 
-private class EditTextListener implements TextWatcher {
-    private final boolean isLanguageToListener;
+    private class EditTextListener implements TextWatcher {
+        private final boolean isLanguageFromListener;
 
-    public EditTextListener(boolean isLanguageToListener) {
-        this.isLanguageToListener = isLanguageToListener;
-    }
+        public EditTextListener(boolean isLanguageFromListener) {
+            this.isLanguageFromListener = isLanguageFromListener;
+        }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        //Do nothing
-    }
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            //Do nothing
+        }
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        //also do nothing
-    }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            //also do nothing
+        }
 
-    @Override
-    public void afterTextChanged(Editable s) {
-        if (isLanguageToListener) {
-            //when language to textfield changes, it can be bookmarked again.
-            bookmarkID = 0;
-            btnBookmark.setImageResource(R.drawable.btn_bookmark);
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (isLanguageFromListener) {
+                showActiveButton(btnttsLanguageFrom, !editTextLanguageFrom.getText().toString().equals(""));
+            } else {
+                //when language to textfield changes, it can be bookmarked again.
+                bookmarkID = 0;
+                btnBookmark.setImageResource(R.drawable.btn_bookmark);
 
-            boolean editTextIsEmpty = editTextLanguageTo.getText().toString().equals("");
-            showActiveButton(btnCopy, !editTextIsEmpty);
-            showActiveButton(btnttsLanguageTo, !editTextIsEmpty);
-        } else {
-            showActiveButton(btnttsLanguageFrom, !editTextLanguageFrom.getText().toString().equals(""));
+                boolean editTextIsEmpty = editTextLanguageTo.getText().toString().equals("");
+                showActiveButton(btnCopy, !editTextIsEmpty);
+                showActiveButton(btnttsLanguageTo, !editTextIsEmpty);
+            }
         }
     }
-}
 
 
 ///// Listeners for copy and paste functions /////
 
-private class PasteListener implements View.OnClickListener {
-    @Override
-    public void onClick(View view) {
-        ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
-        editTextLanguageFrom.getText().insert(editTextLanguageFrom.getSelectionStart(), item.getText());
+    private class PasteListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+            editTextLanguageFrom.getText().insert(editTextLanguageFrom.getSelectionStart(), item.getText());
+        }
     }
-}
 
-private class CopyListener implements View.OnClickListener {
-    @Override
-    public void onClick(View view) {
-        ClipData clip = ClipData.newPlainText("paste", editTextLanguageTo.getText().toString());
-        clipboard.setPrimaryClip(clip);
-        //Feedback that text has been copied
-        toast(getString(R.string.successful_text_copied));
+    private class CopyListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            ClipData clip = ClipData.newPlainText("paste", editTextLanguageTo.getText().toString());
+            clipboard.setPrimaryClip(clip);
+            //Feedback that text has been copied
+            toast(getString(R.string.successful_text_copied));
+        }
     }
-}
 
-private class ClipboardChangeListener implements ClipboardManager.OnPrimaryClipChangedListener {
-    @Override
-    public void onPrimaryClipChanged() {
-        //initialize paste button because something is added to clipboard
-        showActiveButton(btnPaste, true);
+    private class ClipboardChangeListener implements ClipboardManager.OnPrimaryClipChangedListener {
+        @Override
+        public void onPrimaryClipChanged() {
+            //initialize paste button because something is added to clipboard
+            showActiveButton(btnPaste, true);
+        }
     }
-}
 
 }
 
