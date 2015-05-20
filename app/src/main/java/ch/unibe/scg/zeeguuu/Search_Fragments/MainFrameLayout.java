@@ -27,10 +27,10 @@ public class MainFrameLayout extends FrameLayout {
 
         if (height > proposedheight) {
             //when keyboard is opened
-            findViewById(R.id.relativeLayout_text_translated).setVisibility(GONE);
+            findViewById(R.id.relativeLayout_text_to).setVisibility(GONE);
         } else if (height < proposedheight) {
             //when keyboard is closed
-            findViewById(R.id.relativeLayout_text_translated).setVisibility(VISIBLE);
+            findViewById(R.id.relativeLayout_text_to).setVisibility(VISIBLE);
         }
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

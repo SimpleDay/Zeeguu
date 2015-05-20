@@ -8,7 +8,8 @@
 
     <!-- fragment strings -->
     <string name="mywords_menu">My Words</string>
-    <string name="mywords_empty">You do not have any words in your library yet, please log in or save your words to retrieve them.</string>
+    <string name="mywords_empty">You do not have any words in your library yet. To create your own words library please bookmark the word combinations after you translated them</string>
+    <string name="mywords_no_internet_connection"></string>
     <string name="mywords_delete_bookmark">Delete</string>
     <string name="mywords_expand">Expand list</string>
     <string name="mywords_collapse">Collapse list</string>

@@ -40,8 +40,16 @@ public class FragmentMyWords extends ZeeguuFragment {
     private MenuItem menuItemExpandCollapse;
     private MenuItem menuItemRefresh;
 
+    private TextView emptyText;
+
     public interface ZeeguuFragmentMyWordsCallbacks {
         ZeeguuConnectionManager getConnectionManager();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        connectionManager = callback.getConnectionManager();
     }
 
     @Override
@@ -83,8 +91,10 @@ public class FragmentMyWords extends ZeeguuFragment {
         });
 
         //Set text when listview empty
-        TextView emptyText = (TextView) view.findViewById(R.id.mywords_empty);
+        emptyText = (TextView) view.findViewById(R.id.mywords_empty);
         myWordsListView.setEmptyView(emptyText);
+        if(adapter.isEmpty())
+            setEmptyViewText();
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.mywords_listview_swipe_refresh_layout);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -104,7 +114,6 @@ public class FragmentMyWords extends ZeeguuFragment {
         // Make sure that the interface is implemented in the container activity
         try {
             callback = (ZeeguuFragmentMyWordsCallbacks) activity;
-            connectionManager = callback.getConnectionManager();
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement ZeeguuFragmentTextCallbacks");
         }
@@ -143,8 +152,12 @@ public class FragmentMyWords extends ZeeguuFragment {
 
     @Override
     public void focusFragment() {
-        if (adapter != null)
+        if (adapter != null) {
             adapter.notifyDataSetChanged();
+
+            if (adapter.isEmpty())
+                setEmptyViewText();
+        }
     }
 
     @Override
@@ -207,6 +220,13 @@ public class FragmentMyWords extends ZeeguuFragment {
             if (connectionManager.getMyWordsFromServer()) //if request send, set boolean true
                 listviewRefreshing = true;
         }
+    }
+
+    private void setEmptyViewText() {
+        if(connectionManager.isNetworkAvailable())
+            emptyText.setText(getString(R.string.mywords_empty));
+        else
+            emptyText.setText(getString(R.string.mywords_no_internet_connection));
     }
 
     private class ActionBarCallBack implements ActionMode.Callback {

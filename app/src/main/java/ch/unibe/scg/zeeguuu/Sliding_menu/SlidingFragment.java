@@ -22,8 +22,6 @@ public class SlidingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (adapter == null)
-            adapter = new ZeeguuFragmentPagerAdapter(getActivity(), getFragmentManager(), this);
     }
 
     @Override
@@ -37,14 +35,17 @@ public class SlidingFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        if (viewPager != null && slidingTabLayout != null)
+        if (viewPager != null && slidingTabLayout != null && adapter != null)
             return;
+        adapter = new ZeeguuFragmentPagerAdapter(getActivity(), getFragmentManager(), this);
 
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
 
         slidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+        slidingTabLayout.setCallback(getActivity());
         slidingTabLayout.setViewPager(viewPager);
+        slidingTabLayout.setDistributeEvenly(true);
 
         //to customize the indicator and divider
         slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
@@ -52,11 +53,6 @@ public class SlidingFragment extends Fragment {
             @Override
             public int getIndicatorColor(int position) {
                 return adapter.get(position).getIndicatorColor();
-            }
-
-            @Override
-            public int getDividerColor(int position) {
-                return adapter.get(position).getDividerColor();
             }
 
         });

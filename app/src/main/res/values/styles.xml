@@ -8,10 +8,9 @@
 
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/primary_color_dark</item>
-
-
     </style>
 
+    <!-- Individualized themes -->
     <style name="AppThemeLightActionbarDark" parent="AppTheme">
         <item name="customIconVoice">@drawable/btn_mic_holo_light</item>
         <item name="customIconCamera">@drawable/btn_camera_holo_light</item>
@@ -19,7 +18,6 @@
         <item name="customIconSound">@drawable/btn_tts_holo_light</item>
         <item name="customIconPaste">@drawable/btn_paste_holo_light</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_light</item>
-
     </style>
 
     <style name="AppThemeLight" parent="AppTheme">
@@ -29,7 +27,6 @@
         <item name="customIconSound">@drawable/btn_tts_holo_light</item>
         <item name="customIconPaste">@drawable/btn_paste_holo_light</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_light</item>
-
     </style>
 
     <style name="AppThemeDark" parent="AppTheme">
@@ -39,23 +36,28 @@
         <item name="customIconSound">@drawable/btn_tts_holo_dark</item>
         <item name="customIconPaste">@drawable/btn_paste_halo_dark</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_dark</item>
-
     </style>
 
-
-    <style name="searchInputEditFields">
+    <!-- input boxes themes -->
+    <style name="searchInputEditFields" >
         <item name="android:textSize">22sp</item>
+        <item name="android:background">@drawable/rounded_textfield</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:maxLines">6</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:gravity">top</item>
+    </style>
+
+    <style name="searchInputEditFields.normal">
         <item name="android:layout_width">320dp</item>
         <item name="android:layout_height">200dp</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:background">@drawable/rounded_textfield</item>
-        <item name="android:maxLines">6</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:inputType">text</item>
-        <item name="android:imeOptions">actionSearch</item>
-        <item name="android:gravity">top</item>
+    </style>
 
+    <style name="searchInputEditFields.landscape">
+        <item name="android:layout_width">255dp</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
 
     <style name="flagImageView">

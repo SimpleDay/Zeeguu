@@ -13,7 +13,7 @@
 
 
         <RelativeLayout
-            android:id="@+id/relativeLayout_text_to_translate"
+            android:id="@+id/relativeLayout_text_from"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:layout_weight="61">
@@ -21,7 +21,7 @@
 
             <EditText
                 android:id="@+id/edit_text_language_from"
-                style="@style/searchInputEditFields"/>
+                style="@style/searchInputEditFields.normal"/>
 
             <ImageView
                 android:id="@+id/ic_flag_translate_from"
@@ -80,7 +80,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/ic_menu_middle_layout"
+            android:id="@+id/relativeLayout_center_menu"
             android:layout_width="fill_parent"
             android:layout_height="54dp"
             android:layout_weight="1" >
@@ -104,14 +104,14 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/relativeLayout_text_translated"
+            android:id="@+id/relativeLayout_text_to"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:layout_weight="61">
 
             <EditText
                 android:id="@+id/edit_text_language_to"
-                style="@style/searchInputEditFields"/>
+                style="@style/searchInputEditFields.normal"/>
 
             <ImageView
                 android:id="@+id/ic_flag_translate_to"
