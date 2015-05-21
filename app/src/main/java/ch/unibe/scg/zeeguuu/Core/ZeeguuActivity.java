@@ -67,10 +67,9 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        loadDataFragment(); //load the datafragment so that all fragments can call it afterwards
-
         super.onCreate(savedInstanceState);
-        setTheme(false);
+        restoreDataFragment();
+        //setTheme(false);
         setContentView(R.layout.activity_zeeguu);
 
         //set default settings when app started, but don't overwrite active settings
@@ -92,13 +91,13 @@ public class ZeeguuActivity extends AppCompatActivity implements
         if (fragmentSlidingMenu == null) fragmentSlidingMenu = new SlidingFragment();
 
         //load last active fragment, if none, start search fragment
-        if (savedInstanceState != null) {
-            if (savedInstanceState.getBoolean(fragmentPreference))
-                switchActiveFragmentTo(new FragmentPreference(), fragmentPreference);
-            else
-                switchActiveFragmentTo(fragmentSlidingMenu, fragmentSlidingMenuTag);
-        } else
-            switchActiveFragmentTo(fragmentSlidingMenu, fragmentSlidingMenuTag);
+        switchMainFragmentTo(fragmentSlidingMenu, fragmentSlidingMenuTag);
+
+        if (savedInstanceState != null && savedInstanceState.getBoolean(fragmentPreference))
+            switchMainFragmentTo(new FragmentPreference(), fragmentPreference);
+
+        //Datafragment
+        createDataFragment();
 
         //TODO: Language change affects whole app
     }
@@ -139,7 +138,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
                 return true;
 
             case R.id.action_settings:
-                switchActiveFragmentTo(new FragmentPreference(), fragmentPreference);
+                switchMainFragmentTo(new FragmentPreference(), fragmentPreference);
                 return true;
 
             default:
@@ -160,7 +159,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         if (isInSettings)
-            switchActiveFragmentTo(fragmentSlidingMenu, fragmentSlidingMenuTag);
+            switchMainFragmentTo(fragmentSlidingMenu, fragmentSlidingMenuTag);
         else
             super.onBackPressed();
     }
@@ -265,7 +264,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     //// SlidingTabLayoutInterface ////
     @Override
     public void focusFragment(int number) {
-        if(number == 0) {
+        if (number == 0) {
             fragmentMyWords.defocusFragment();
             fragmentSearch.focusFragment();
         } else {
@@ -277,7 +276,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     //// Private Methods ////
 
-    private void switchActiveFragmentTo(Fragment fragment, String title) {
+    private void switchMainFragmentTo(Fragment fragment, String title) {
         if (!transactionActive) {
             transactionActive = true;
             isInSettings = title.equals(fragmentPreference);
@@ -319,17 +318,26 @@ public class ZeeguuActivity extends AppCompatActivity implements
             recreate();
     }
 
-    private void loadDataFragment() {
+    private void createDataFragment() {
         // Data fragment so that the instance of the ConnectionManager is never destroyed
-        dataFragment = (DataFragment) fragmentManager.findFragmentByTag("data");
         if (dataFragment == null) {
             dataFragment = new DataFragment();
-            fragmentManager.beginTransaction()
-                    .add(dataFragment, "data")
-                    .commit();
+            addFragment(dataFragment, "data");
+
             connectionManager = new ZeeguuConnectionManager(this);
             dataFragment.setConnectionManager(connectionManager);
         }
+    }
+
+    private void restoreDataFragment() {
+        dataFragment = (DataFragment) fragmentManager.findFragmentByTag("data");
+        if(dataFragment != null) dataFragment.onRestore(this);
+    }
+
+    private void addFragment(Fragment fragment, String title) {
+        fragmentManager.beginTransaction()
+                .add(fragment, title)
+                .commit();
     }
 
     @Override
