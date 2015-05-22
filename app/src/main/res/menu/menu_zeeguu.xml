@@ -7,4 +7,10 @@
         android:title="@string/menu_login_button"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_settings"
+        android:icon="?attr/customIconSettings"
+        android:title="@string/preference_title"
+        app:showAsAction="always" />
+
 </menu>

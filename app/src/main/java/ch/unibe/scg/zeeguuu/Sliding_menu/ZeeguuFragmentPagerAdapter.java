@@ -8,10 +8,9 @@ import android.support.v13.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
-import ch.unibe.scg.zeeguuu.MyWords_Fragments.FragmentMyWords;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
+import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
 
 /**
  * Zeeguu Application
@@ -62,7 +61,7 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
      * @return fragment for tab i
      */
     @Override
-    public ZeeguuFragment getItem(int position) {
+    public Fragment getItem(int position) {
         return tabs.get(position).getFragment();
     }
 

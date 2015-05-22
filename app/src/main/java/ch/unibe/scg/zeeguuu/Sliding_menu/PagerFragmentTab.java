@@ -1,6 +1,6 @@
 package ch.unibe.scg.zeeguuu.Sliding_menu;
 
-import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
+import android.app.Fragment;
 
 /**
  * Zeeguu Application
@@ -14,9 +14,9 @@ public class PagerFragmentTab {
     private final CharSequence title;
     private final int indicatorColor;
     private final int dividerColor;
-    private final ZeeguuFragment fragment;
+    private final Fragment fragment;
 
-    public PagerFragmentTab(CharSequence title, int indicatorColor, int dividerColor, ZeeguuFragment fragment) {
+    public PagerFragmentTab(CharSequence title, int indicatorColor, int dividerColor, Fragment fragment) {
         this.title = title;
         this.indicatorColor = indicatorColor; //possible to give every indicator a separate color
         this.dividerColor = dividerColor;
@@ -26,7 +26,7 @@ public class PagerFragmentTab {
     /**
      * @return the fragment which the tab represents
      */
-    public ZeeguuFragment getFragment() {
+    public Fragment getFragment() {
         return fragment;
     }
 

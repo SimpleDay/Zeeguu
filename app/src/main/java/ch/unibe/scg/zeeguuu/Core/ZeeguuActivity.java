@@ -21,7 +21,7 @@ import com.android.SlidingTab.SlidingTabLayout;
 
 import java.lang.reflect.Method;
 
-import ch.unibe.scg.zeeguuu.MyWords_Fragments.FragmentMyWords;
+import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
 import ch.unibe.scg.zeeguuu.Settings.FragmentPreference;
@@ -281,7 +281,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
             fragmentSearch.focusFragment();
         } else {
             fragmentSearch.defocusFragment();
-            fragmentSearch.focusFragment();
+            fragmentMyWords.focusFragment();
         }
 
     }
