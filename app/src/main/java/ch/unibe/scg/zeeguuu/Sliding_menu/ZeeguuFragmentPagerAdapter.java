@@ -8,10 +8,9 @@ import android.support.v13.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
-import ch.unibe.scg.zeeguuu.MyWords_Fragments.FragmentMyWords;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
+import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
 
 /**
  * Zeeguu Application
@@ -22,9 +21,9 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public interface ZeeguuSlidingFragmentInterface {
 
-        FragmentSearch getFragmentSearch();
+        void setFragmentSearch(FragmentSearch fragment);
 
-        FragmentMyWords getFragmentMyWords();
+        void setFragmentMyWords(FragmentMyWords fragment);
     }
 
     ZeeguuFragmentPagerAdapter(Activity activity, FragmentManager fm, Fragment fragment) {
@@ -35,19 +34,24 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
          * Add tabs to the sliding menu
          */
         tabs = new ArrayList<>();
+
+        FragmentSearch search = new FragmentSearch();
         tabs.add(new PagerFragmentTab(
                 fragment.getString(R.string.search_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                callbacks.getFragmentSearch() //fragment which the tab represents
+                search //fragment which the tab represents
         ));
+        callbacks.setFragmentSearch(search);
 
+        FragmentMyWords mywords = new FragmentMyWords();
         tabs.add(new PagerFragmentTab(
                 fragment.getString(R.string.mywords_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                callbacks.getFragmentMyWords() //fragment which the tab represents
+                mywords//fragment which the tab represents
         ));
+        callbacks.setFragmentMyWords(mywords);
     }
 
     /**
@@ -57,7 +61,7 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
      * @return fragment for tab i
      */
     @Override
-    public ZeeguuFragment getItem(int position) {
+    public Fragment getItem(int position) {
         return tabs.get(position).getFragment();
     }
 

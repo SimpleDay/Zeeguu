@@ -169,7 +169,6 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity = getActivity();
         connectionManager = callback.getConnectionManager();
 
         clipboard = (ClipboardManager) activity.getSystemService(Activity.CLIPBOARD_SERVICE);
@@ -207,6 +206,7 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         super.onAttach(activity);
         // Make sure that the interface is implemented in the container activity
         try {
+            this.activity = activity;
             callback = (ZeeguuFragmentTextCallbacks) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement ZeeguuFragmentTextCallbacks");

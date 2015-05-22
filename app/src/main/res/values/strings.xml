@@ -6,15 +6,6 @@
     <string name="app_name_actionbar">Zeeguu</string>
     <string name="menu_login_button">Login</string>
 
-    <!-- fragment strings -->
-    <string name="mywords_menu">My Words</string>
-    <string name="mywords_empty">You do not have any words in your library yet. To create your own words library please bookmark the word combinations after you translated them</string>
-    <string name="mywords_no_internet_connection"></string>
-    <string name="mywords_delete_bookmark">Delete</string>
-    <string name="mywords_expand">Expand list</string>
-    <string name="mywords_collapse">Collapse list</string>
-    <string name="mywords_refresh">Refresh list</string>
-
     <!-- Search Fragment -->
     <string name="search_menu">Search</string>
     <string name="text_view_translate_button">Translate</string>
@@ -23,7 +14,6 @@
 
     <!-- Preference strings -->
     <string name="preference_title">Settings</string>
-
     <string name="preference_category_login">Zeeguu Account information</string>
     <string name="preference_login">Log in</string>
     <string name="preference_login_message">Press here to login into your Zeeguu account</string>
@@ -89,10 +79,8 @@
     <string name="error_language_speaking_not_supported">Ops! The language you choose cannot be read</string>
     <string name="error_TTS_not_inititalized">Ops! There occurred a problem with the text to speech software. </string>
     <string name="error_no_text_to_read">Ops! There is no text that could be read. Please enter first the text and then try it again </string>
-    <string name="error_refreshing_already_running">Ops! There is already one refreshing operation running </string>
     <string name="error_bookmark_delete">Ops! The bookmark could not be deleted. Please try later again.</string>
     <string name="error_bookmark">Ops! There occurred an error while trying to bookmark, please try later again </string>
-    <string name="error_user_not_logged_in_yet">Please log in first before you use these functions</string>
 
     <!-- success messages  -->
     <string name="successful_text_copied">Text has been copied </string>
