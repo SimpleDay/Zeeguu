@@ -21,12 +21,10 @@ public class MyWordsExpandableAdapter extends BaseExpandableListAdapter {
 
     private final ArrayList<MyWordsHeader> headers;
     private LayoutInflater inflater;
-    private Activity activity;
 
-    public MyWordsExpandableAdapter(Activity act, ArrayList<MyWordsHeader> headers) {
-        this.activity = act;
+    public MyWordsExpandableAdapter(Activity activity, ArrayList<MyWordsHeader> headers) {
         this.headers = headers;
-        this.inflater = act.getLayoutInflater();
+        this.inflater = activity.getLayoutInflater();
     }
 
     @Override

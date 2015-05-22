@@ -18,8 +18,8 @@ import java.util.ArrayList;
 
 import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
 import ch.unibe.scg.zeeguuu.R;
-import ch.unibe.zeeguulibrary.MyWords.MyWordsHeader;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
+import ch.unibe.zeeguulibrary.MyWords.MyWordsHeader;
 
 /**
  * Created by Pascal on 12/01/15.
@@ -52,12 +52,6 @@ public class FragmentMyWords extends ZeeguuFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        connectionManager = callback.getConnectionManager();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_mywords, container, false);
@@ -68,10 +62,8 @@ public class FragmentMyWords extends ZeeguuFragment {
         listviewRefreshing = false;
 
         //create listview for myWordsListView and customize it
-        ArrayList<MyWordsHeader> list = connectionManager.getAccount().getMyWords();
-        adapter = new MyWordsExpandableAdapter(getActivity(), list);
+        emptyText = (TextView) view.findViewById(R.id.mywords_empty);
         myWordsListView = (ExpandableListView) view.findViewById(R.id.mywords_listview);
-        myWordsListView.setAdapter(adapter);
 
         //open actionbar menu for deleting the items when longclick
         myWordsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -95,12 +87,6 @@ public class FragmentMyWords extends ZeeguuFragment {
             }
         });
 
-        //Set text when listview empty
-        emptyText = (TextView) view.findViewById(R.id.mywords_empty);
-        myWordsListView.setEmptyView(emptyText);
-        if(adapter.isEmpty())
-            setEmptyViewText();
-
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.mywords_listview_swipe_refresh_layout);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -111,6 +97,21 @@ public class FragmentMyWords extends ZeeguuFragment {
 
         //activate the menu for fragments
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        connectionManager = callback.getConnectionManager();
+
+        ArrayList<MyWordsHeader> list = connectionManager.getAccount().getMyWords();
+        adapter = new MyWordsExpandableAdapter(getActivity(), list);
+        myWordsListView.setAdapter(adapter);
+
+        myWordsListView.setEmptyView(emptyText);
+        if (adapter.isEmpty())
+            setEmptyViewText();
+
     }
 
     @Override
@@ -228,7 +229,7 @@ public class FragmentMyWords extends ZeeguuFragment {
     }
 
     private void setEmptyViewText() {
-        if(connectionManager.isNetworkAvailable())
+        if (connectionManager.isNetworkAvailable())
             emptyText.setText(getString(R.string.mywords_empty));
         else
             emptyText.setText(getString(R.string.mywords_no_internet_connection));
