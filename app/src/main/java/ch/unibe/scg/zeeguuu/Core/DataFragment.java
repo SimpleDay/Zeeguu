@@ -1,5 +1,6 @@
 package ch.unibe.scg.zeeguuu.Core;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 
@@ -15,6 +16,10 @@ public class DataFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // Retain this fragment
         setRetainInstance(true);
+    }
+
+    public void onRestore(Activity activity) {
+        connectionManager.onRestore(activity);
     }
 
     // Getters and Setters

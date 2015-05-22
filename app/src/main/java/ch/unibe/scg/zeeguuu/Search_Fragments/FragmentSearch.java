@@ -43,6 +43,9 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     private ZeeguuConnectionManager connectionManager;
     private ClipboardManager clipboard;
 
+    //layouts
+    RelativeLayout tutorial;
+
     //text fields
     private EditText editTextLanguageFrom;
     private EditText editTextLanguageTo;
@@ -77,8 +80,6 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = getActivity();
-        connectionManager = callback.getConnectionManager();
     }
 
     @Override
@@ -86,15 +87,12 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
+        //initialize the layout variables
+        tutorial = (RelativeLayout) view.findViewById(R.id.fragment_text_tutorial);
+
         //initialize class variables
         editTextLanguageFrom = (EditText) view.findViewById(R.id.edit_text_language_from);
         editTextLanguageTo = (EditText) view.findViewById(R.id.edit_text_language_to);
-        clipboard = (ClipboardManager) activity.getSystemService(Activity.CLIPBOARD_SERVICE);
-
-        //TTS
-        textToSpeechLanguageFrom = new TextToSpeech(activity, this);
-        textToSpeechLanguageTo = new TextToSpeech(activity, this);
-        activeTextToSpeech = null;
 
         //initialize flags
         flagTranslateFrom = (ImageView) view.findViewById(R.id.ic_flag_translate_from);
@@ -113,8 +111,6 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         }
 
         //set listeners
-        clipboard.addPrimaryClipChangedListener(new ClipboardChangeListener());
-
         ImageView btn_mic = (ImageView) view.findViewById(R.id.btn_microphone_search);
         btn_mic.setOnClickListener(new VoiceRecognitionListener());
 
@@ -142,13 +138,12 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         btnCopy = (ImageView) view.findViewById(R.id.btn_copy);
         btnCopy.setOnClickListener(new CopyListener());
 
-
         //See if something has been added to clipboard and if activate paste button
         showActiveButton(btnPaste, hasClipboardEntry());
         showActiveButton(btnCopy, !editTextLanguageTo.getText().toString().isEmpty());
 
 
-        //TTS
+        //TTS Buttons
         btnttsLanguageFrom = (ImageView) view.findViewById(R.id.btn_tts_language_from);
         btnttsLanguageFrom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,15 +162,29 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         });
         showActiveButton(btnttsLanguageTo, !editTextLanguageTo.getText().toString().equals(""));
 
-        //Open tutorial when the app is first opened
-        if (connectionManager.getAccount().isFirstLogin()) {
-            RelativeLayout tutorial = (RelativeLayout) view.findViewById(R.id.fragment_text_tutorial);
-            tutorial.setVisibility(View.GONE); //TODO only for usability testing, otherwise visible
-        }
-
         setHasOptionsMenu(true); //call onCreateOptionsMenu for this fragment to individualize it
         return view;
     }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        activity = getActivity();
+        connectionManager = callback.getConnectionManager();
+
+        clipboard = (ClipboardManager) activity.getSystemService(Activity.CLIPBOARD_SERVICE);
+        clipboard.addPrimaryClipChangedListener(new ClipboardChangeListener());
+
+        //TTS
+        textToSpeechLanguageFrom = new TextToSpeech(activity, this);
+        textToSpeechLanguageTo = new TextToSpeech(activity, this);
+        activeTextToSpeech = null;
+
+        if (connectionManager.getAccount().isFirstLogin()) {
+            tutorial.setVisibility(View.GONE); //TODO only for usability testing, otherwise visible
+        }
+    }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
