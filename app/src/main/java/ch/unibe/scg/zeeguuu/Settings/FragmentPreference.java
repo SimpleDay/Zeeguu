@@ -8,19 +8,16 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 
 /**
- * Zeeguu Application
- * Created by Pascal on 12/01/15.
+ * Fragment that handles all preferences and settings that a user can change
+ * Used a fragment to keep it as small and fast as possible
  */
 public class FragmentPreference extends PreferenceFragment {
-    private Activity activity;
     private ZeeguuSettingsCallbacks callback;
     private PreferenceChangeListener listener; //Keep it here, otherwise Garbage Collection deletes it
 
@@ -32,9 +29,7 @@ public class FragmentPreference extends PreferenceFragment {
 
     public interface ZeeguuSettingsCallbacks {
         ZeeguuConnectionManager getConnectionManager();
-
         void showZeeguuLogoutDialog();
-
         void showZeeguuLoginDialog(String message, String email);
     }
 
@@ -50,22 +45,15 @@ public class FragmentPreference extends PreferenceFragment {
 
         //add Email and Session ID to info box when logged in or not show at all
         preference_loginInfo = (PreferenceCategory) findPreference(
-                activity.getString(R.string.preference_category_user_information_tag));
-        preference_email = findPreference(activity.getString(R.string.preference_email_tag));
-        preference_logInOut_button = findPreference(activity.getString(R.string.preference_logInOut_tag));
+                getActivity().getString(R.string.preference_category_user_information_tag));
+        preference_email = findPreference(getActivity().getString(R.string.preference_email_tag));
+        preference_logInOut_button = findPreference(getActivity().getString(R.string.preference_logInOut_tag));
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setHasOptionsMenu(true);
         updateView();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
     }
 
     private void updateView() {
@@ -75,12 +63,12 @@ public class FragmentPreference extends PreferenceFragment {
             preference_email.setSummary(email);
             preference_email.setEnabled(false);
 
-            preference_logInOut_button.setTitle(activity.getString(R.string.preference_logout));
-            preference_logInOut_button.setSummary(activity.getString(R.string.preference_logout_message));
+            preference_logInOut_button.setTitle(getActivity().getString(R.string.preference_logout));
+            preference_logInOut_button.setSummary(getActivity().getString(R.string.preference_logout_message));
         } else {
             preference_loginInfo.removePreference(preference_email);
-            preference_logInOut_button.setTitle(activity.getString(R.string.preference_login));
-            preference_logInOut_button.setSummary(activity.getString(R.string.preference_login_message));
+            preference_logInOut_button.setTitle(getActivity().getString(R.string.preference_login));
+            preference_logInOut_button.setSummary(getActivity().getString(R.string.preference_login_message));
         }
     }
 
@@ -91,7 +79,6 @@ public class FragmentPreference extends PreferenceFragment {
         // Make sure that the interface is implemented in the container activity
         try {
             callback = (ZeeguuSettingsCallbacks) activity;
-            this.activity = activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement SettingsCallbacks");
         }
@@ -100,7 +87,7 @@ public class FragmentPreference extends PreferenceFragment {
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         // Open Zeeguu login dialog
-        if (preference.getKey().equals(activity.getString(R.string.preference_logInOut_tag))) {
+        if (preference.getKey().equals(getActivity().getString(R.string.preference_logInOut_tag))) {
             if (callback.getConnectionManager().getAccount().isUserInSession())
                 callback.showZeeguuLogoutDialog();
             else
@@ -113,7 +100,7 @@ public class FragmentPreference extends PreferenceFragment {
     private class PreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(activity.getString(R.string.preference_user_session_id_tag)))
+            if (key.equals(getActivity().getString(R.string.preference_user_session_id_tag)))
                 updateView();
             else if (key.equals("APP_DESIGN"));
                 //TODO: implement interface for theme change

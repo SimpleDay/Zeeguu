@@ -1,6 +1,7 @@
 package ch.unibe.scg.zeeguuu.Search_Fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -12,10 +13,9 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -23,11 +23,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
+import ch.unibe.scg.zeeguuu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Settings.LanguageListPreference;
 import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
@@ -35,9 +36,11 @@ import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 import ch.unibe.zeeguulibrary.MyWords.MyWordsItem;
 
 /**
- * Created by Pascal on 12/01/15.
+ * Fragment that handles all search request for new words
  */
-public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnInitListener {
+public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListener {
+    protected int RESULT_SPEECH = 1;
+
     private Activity activity;
     private ZeeguuFragmentTextCallbacks callback;
     private ZeeguuConnectionManager connectionManager;
@@ -169,6 +172,8 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        this.activity = getActivity();
+        callback = (ZeeguuFragmentTextCallbacks) activity;
         connectionManager = callback.getConnectionManager();
 
         clipboard = (ClipboardManager) activity.getSystemService(Activity.CLIPBOARD_SERVICE);
@@ -182,13 +187,6 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         if (connectionManager.getAccount().isFirstLogin()) {
             tutorial.setVisibility(View.GONE); //TODO only for usability testing, otherwise visible
         }
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_search, menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -206,7 +204,6 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         super.onAttach(activity);
         // Make sure that the interface is implemented in the container activity
         try {
-            this.activity = activity;
             callback = (ZeeguuFragmentTextCallbacks) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement ZeeguuFragmentTextCallbacks");
@@ -214,13 +211,8 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
     }
 
     @Override
-    public void focusFragment() {
-        //Method that gets called when this fragement is focused
-    }
-
-    @Override
-    public void defocusFragment() {
-        //Method that gets called when this fragment is not in focus anymore. Then we will close the keyboard
+    public void onPause() {
+        super.onPause();
         closeKeyboard();
     }
 
@@ -279,10 +271,10 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
 
     private void setLanguagesTextFields() {
         ZeeguuAccount account = connectionManager.getAccount();
-        setFlag(flagTranslateFrom, account.getLanguageNative());
+        ZeeguuActivity.setFlag(flagTranslateFrom, account.getLanguageNative());
         setTTS(textToSpeechLanguageFrom, account.getLanguageNative());
 
-        setFlag(flagTranslateTo, account.getLanguageLearning());
+        ZeeguuActivity.setFlag(flagTranslateTo, account.getLanguageLearning());
         setTTS(textToSpeechLanguageTo, account.getLanguageLearning());
     }
 
@@ -552,6 +544,17 @@ public class FragmentSearch extends ZeeguuFragment implements TextToSpeech.OnIni
         }
     }
 
-}
 
+    private void toast(String text) {
+        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
+    }
+
+    private void logging(String message) {
+        logging(getString(R.string.logging_tag), message);
+    }
+
+    private void logging(String tag, String message) {
+        Log.d(tag, message);
+    }
+}
 

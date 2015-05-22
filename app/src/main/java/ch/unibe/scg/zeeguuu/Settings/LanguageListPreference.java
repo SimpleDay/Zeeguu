@@ -16,14 +16,12 @@ import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 
-import ch.unibe.scg.zeeguuu.Core.ZeeguuFragment;
+import ch.unibe.scg.zeeguuu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 
 /**
  * New Preference List extended from ListPreference that allows to add flags in front of the language names.
- *
- * @author Pascal
  */
 public class LanguageListPreference extends ListPreference {
 
@@ -185,7 +183,7 @@ public class LanguageListPreference extends ListPreference {
             holder.language.setClickable(false);
             holder.language.setChecked(selectedEntry == position);
 
-            ZeeguuFragment.setFlag(holder.flag, (String) entryValues[position]);
+            ZeeguuActivity.setFlag(holder.flag, (String) entryValues[position]);
 
             convertView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {

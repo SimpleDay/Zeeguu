@@ -1,7 +1,6 @@
 package com.android.SlidingTab;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
@@ -49,19 +48,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     }
 
-    /**
-     * Allows to control the focus and defocus of certain fragments
-     */
-    public interface SlidingTabLayoutCallback {
-        void focusFragment(int number);
-    }
-
     private static final int TITLE_OFFSET_DIPS = 24;
     private static final int TAB_VIEW_PADDING_DIPS = 16;
     private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
 
     private int mTitleOffset;
-    private SlidingTabLayoutCallback callback;
 
     private int mTabViewLayoutId;
     private int mTabViewTextViewId;
@@ -95,13 +86,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
         addView(mTabStrip, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     }
 
-    public void setCallback(Activity activity) {
-        try {
-            callback = (SlidingTabLayoutCallback) activity;
-        } catch (Exception E) {
-            throw new ClassCastException("Activity must implement ZeeguuFragmentTextCallbacks");
-        }
-    }
 
     /**
      * Set the custom {@link TabColorizer} to be used.
@@ -308,8 +292,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
             if (mViewPagerPageChangeListener != null) {
                 mViewPagerPageChangeListener.onPageSelected(position);
             }
-            if (callback != null)
-                callback.focusFragment(position);
         }
 
     }
@@ -320,8 +302,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
             for (int i = 0; i < mTabStrip.getChildCount(); i++) {
                 if (v == mTabStrip.getChildAt(i)) {
                     mViewPager.setCurrentItem(i);
-                    if (callback != null)
-                        callback.focusFragment(i);
                     return;
                 }
             }

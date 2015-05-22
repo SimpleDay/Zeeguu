@@ -13,45 +13,38 @@ import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
 import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
 
 /**
- * Zeeguu Application
- * Created by Pascal on 25/01/15.
+ * Adapter that handles all fragments which are in the sliding menu
  */
 public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
     private List<PagerFragmentTab> tabs;
 
     public interface ZeeguuSlidingFragmentInterface {
-
-        void setFragmentSearch(FragmentSearch fragment);
-
-        void setFragmentMyWords(FragmentMyWords fragment);
+        FragmentSearch getFragmentSearch();
+        FragmentMyWords getFragmentMyWords();
     }
 
     ZeeguuFragmentPagerAdapter(Activity activity, FragmentManager fm, Fragment fragment) {
         super(fm);
 
-        ZeeguuSlidingFragmentInterface callbacks = (ZeeguuSlidingFragmentInterface) activity;
+        ZeeguuSlidingFragmentInterface callback = (ZeeguuSlidingFragmentInterface) activity;
         /**
          * Add tabs to the sliding menu
          */
         tabs = new ArrayList<>();
 
-        FragmentSearch search = new FragmentSearch();
         tabs.add(new PagerFragmentTab(
                 fragment.getString(R.string.search_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                search //fragment which the tab represents
+                callback.getFragmentSearch() //fragment which the tab represents
         ));
-        callbacks.setFragmentSearch(search);
 
-        FragmentMyWords mywords = new FragmentMyWords();
         tabs.add(new PagerFragmentTab(
                 fragment.getString(R.string.mywords_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                mywords//fragment which the tab represents
+                callback.getFragmentMyWords()//fragment which the tab represents
         ));
-        callbacks.setFragmentMyWords(mywords);
     }
 
     /**

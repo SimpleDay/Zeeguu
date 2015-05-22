@@ -1,13 +1,14 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorControlActivated">@color/zeeguu_red</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="windowActionModeOverlay">true</item>
-
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/primary_color_dark</item>
+        <!-- Remove shadow below action bar Android < 5.0 -->
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <!-- Individualized themes -->
