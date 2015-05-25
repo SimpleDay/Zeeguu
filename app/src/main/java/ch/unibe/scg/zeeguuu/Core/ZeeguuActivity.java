@@ -46,6 +46,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
         ZeeguuFragmentPagerAdapter.ZeeguuSlidingFragmentInterface,
         FragmentPreference.ZeeguuPreferenceCallbacks,
         LanguageListPreference.ZeeguuLanguageListCallbacks,
+        SlidingFragment.SlidingFragmentCallback,
         ZeeguuDialogCallbacks {
 
     public static int ITEMIDSEARCH = 100;
@@ -275,6 +276,21 @@ public class ZeeguuActivity extends AppCompatActivity implements
         fragmentSearch.refreshLanguages(isLanguageFrom);
     }
 
+    //// SlidingTabLayoutInterface ////
+    @Override
+    public void focusFragment(int number) {
+        switch(number) {
+            case 0:
+                fragmentMyWords.onPause();
+                fragmentSearch.onResume();
+                break;
+            case 1:
+                fragmentSearch.onPause();
+                fragmentMyWords.onResume();
+                break;
+        }
+    }
+
     //// Private Methods ////
 
     private void showLoginButtonIfNotLoggedIn() {
@@ -306,7 +322,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
         dataFragment = (DataFragment) fragmentManager.findFragmentByTag("data");
         if (dataFragment != null)
             dataFragment.onRestore(this);
-        else  {
+        else {
             dataFragment = new DataFragment();
             addFragment(dataFragment, "data");
 

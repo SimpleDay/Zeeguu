@@ -363,7 +363,8 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     private void closeKeyboard() {
         if (isAdded()) {
             InputMethodManager iMM = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            iMM.hideSoftInputFromWindow(editTextLanguageFrom.getWindowToken(), 0);
+            if (editTextLanguageFrom != null)
+                iMM.hideSoftInputFromWindow(editTextLanguageFrom.getWindowToken(), 0);
         }
     }
 

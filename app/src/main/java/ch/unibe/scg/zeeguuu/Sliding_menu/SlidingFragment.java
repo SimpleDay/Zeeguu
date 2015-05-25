@@ -19,6 +19,12 @@ public class SlidingFragment extends Fragment {
     private ViewPager viewPager;
     private ZeeguuFragmentPagerAdapter adapter;
 
+    private SlidingFragmentCallback callback;
+
+    public interface SlidingFragmentCallback {
+        void focusFragment(int number);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_sliding_menu, container, false);
@@ -41,6 +47,7 @@ public class SlidingFragment extends Fragment {
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
         slidingTabLayout.setViewPager(viewPager);
+        slidingTabLayout.setOnPageChangeListener(new ZeeguuPageChangeListener());
         slidingTabLayout.setDistributeEvenly(true);
 
         //to customize the indicator and divider
@@ -51,5 +58,31 @@ public class SlidingFragment extends Fragment {
                 return adapter.get(position).getIndicatorColor();
             }
         });
+
+        try {
+            callback = (SlidingFragmentCallback) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement SlidingFragmentCallback");
+        }
+    }
+
+    private class ZeeguuPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (callback != null)
+                callback.focusFragment(position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+
+        }
     }
 }
