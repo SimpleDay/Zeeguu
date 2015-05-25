@@ -4,54 +4,52 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.unibe.scg.zeeguuu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
 import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
 
 /**
- * Zeeguu Application
- * Created by Pascal on 25/01/15.
+ * Adapter that handles all fragments which are in the sliding menu
  */
 public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
+    private static int containerID;
     private List<PagerFragmentTab> tabs;
 
     public interface ZeeguuSlidingFragmentInterface {
-
-        void setFragmentSearch(FragmentSearch fragment);
-
-        void setFragmentMyWords(FragmentMyWords fragment);
+        FragmentSearch getFragmentSearch();
+        FragmentMyWords getFragmentMyWords();
     }
 
     ZeeguuFragmentPagerAdapter(Activity activity, FragmentManager fm, Fragment fragment) {
         super(fm);
 
-        ZeeguuSlidingFragmentInterface callbacks = (ZeeguuSlidingFragmentInterface) activity;
+        ZeeguuSlidingFragmentInterface callback = (ZeeguuSlidingFragmentInterface) activity;
         /**
          * Add tabs to the sliding menu
          */
         tabs = new ArrayList<>();
 
-        FragmentSearch search = new FragmentSearch();
         tabs.add(new PagerFragmentTab(
+                ZeeguuActivity.ITEMIDSEARCH,
                 fragment.getString(R.string.search_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                search //fragment which the tab represents
+                callback.getFragmentSearch() //fragment which the tab represents
         ));
-        callbacks.setFragmentSearch(search);
 
-        FragmentMyWords mywords = new FragmentMyWords();
         tabs.add(new PagerFragmentTab(
+                ZeeguuActivity.ITEMIDMYWORDS,
                 fragment.getString(R.string.mywords_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
-                mywords//fragment which the tab represents
+                callback.getFragmentMyWords()//fragment which the tab represents
         ));
-        callbacks.setFragmentMyWords(mywords);
     }
 
     /**
@@ -64,6 +62,13 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         return tabs.get(position).getFragment();
     }
+
+    @Override
+    public long getItemId(int position) {
+        return tabs.get(position).getItemId();
+    }
+
+    public static int getContainerID() { return containerID; }
 
     /**
      * @return the number of all tabs
@@ -91,4 +96,9 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
         return tabs.get(position).getTitle();
     }
 
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        this.containerID = container.getId();
+        return super.instantiateItem(container, position);
+    }
 }

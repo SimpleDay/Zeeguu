@@ -9,19 +9,17 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.android.SlidingTab.SlidingTabLayout;
 
 import java.lang.reflect.Method;
 
-import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
 import ch.unibe.scg.zeeguuu.Settings.FragmentPreference;
@@ -34,17 +32,24 @@ import ch.unibe.zeeguulibrary.Dialogs.ZeeguuCreateAccountDialog;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuDialogCallbacks;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLoginDialog;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLogoutDialog;
+import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
 
+/**
+ * Main activity that handles all fragments and the interaction between them
+ * Works with interfaces to keep the fragments and classes as decoupled as possible
+ */
 public class ZeeguuActivity extends AppCompatActivity implements
         ZeeguuConnectionManager.ZeeguuConnectionManagerCallbacks,
         ZeeguuAccount.ZeeguuAccountCallbacks,
         FragmentSearch.ZeeguuFragmentTextCallbacks,
         FragmentMyWords.ZeeguuFragmentMyWordsCallbacks,
         ZeeguuFragmentPagerAdapter.ZeeguuSlidingFragmentInterface,
-        FragmentPreference.ZeeguuSettingsCallbacks,
+        FragmentPreference.ZeeguuPreferenceCallbacks,
         LanguageListPreference.ZeeguuLanguageListCallbacks,
-        SlidingTabLayout.SlidingTabLayoutCallback,
         ZeeguuDialogCallbacks {
+
+    public static int ITEMIDSEARCH = 100;
+    public static int ITEMIDMYWORDS = 101;
 
     private FragmentManager fragmentManager = getFragmentManager();
     private ZeeguuConnectionManager connectionManager;
@@ -54,9 +59,10 @@ public class ZeeguuActivity extends AppCompatActivity implements
     private DataFragment dataFragment;
     private FragmentSearch fragmentSearch;
     private FragmentMyWords fragmentMyWords;
+    private FragmentPreference fragmentPreference;
 
-    private View slidingTabLayoutView;
-    private View preferenceView;
+    private FrameLayout slidingTabLayoutView;
+    private FrameLayout preferenceView;
 
     //tags
     private String fragmentSlidingMenuTag = "fragmentSlidingMenu";
@@ -78,37 +84,33 @@ public class ZeeguuActivity extends AppCompatActivity implements
         //set default settings when app started, but don't overwrite active settings
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        //create toolbar and set it
-        Toolbar toolbar = (Toolbar) findViewById(R.id.zeeguu_toolbar);
-        setSupportActionBar(toolbar);
+        connectionManager = dataFragment.getConnectionManager();
         actionBar = getSupportActionBar();
-        actionBar.setLogo(R.drawable.ic_launcher);
+        actionBar.setElevation(0);
 
-        slidingTabLayoutView = findViewById(R.id.fragment_menu);
-        preferenceView = findViewById(R.id.fragment_preferences);
-
-        fragmentSearch = (FragmentSearch) fragmentManager.findFragmentByTag("fragmentText");
-        if (fragmentSearch == null) fragmentSearch = new FragmentSearch();
-
-        fragmentMyWords = (FragmentMyWords) fragmentManager.findFragmentByTag("fragmentMyWords");
-        if (fragmentMyWords == null) fragmentMyWords = new FragmentMyWords();
+        slidingTabLayoutView = (FrameLayout) findViewById(R.id.fragment_slidingmenu);
+        preferenceView = (FrameLayout) findViewById(R.id.fragment_preferences);
 
         fragmentSlidingMenu = (SlidingFragment) fragmentManager.findFragmentByTag(fragmentSlidingMenuTag);
         if (fragmentSlidingMenu == null) fragmentSlidingMenu = new SlidingFragment();
 
-        //load last active fragment, if none, start search fragment
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_menu, fragmentSlidingMenu, fragmentSlidingMenuTag);
+        fragmentSearch = (FragmentSearch) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDSEARCH));
+        if (fragmentSearch == null) fragmentSearch = new FragmentSearch();
 
+        fragmentMyWords = (FragmentMyWords) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDMYWORDS));
+        if (fragmentMyWords == null) fragmentMyWords = new FragmentMyWords();
+
+        //add the fragments to the layout when added the first time
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        //add the fragments to the layout when added the first time
+        transaction.replace(R.id.fragment_slidingmenu, fragmentSlidingMenu, fragmentSlidingMenuTag);
         transaction.replace(R.id.fragment_preferences, new FragmentPreference(), fragmentPreferenceTag);
         transaction.commit();
 
-        if (savedInstanceState != null && savedInstanceState.getBoolean(fragmentPreferenceTag)) {
-            switchMainFragmentTo(fragmentPreferenceTag);
-        }
 
-        //Datafragment
-        createDataFragment();
+        //starts the settings task when entered in settings before rotation
+        if (savedInstanceState != null && savedInstanceState.getBoolean(fragmentPreferenceTag))
+            switchMainFragmentTo(fragmentPreferenceTag);
 
         //TODO: Language change affects whole app
     }
@@ -222,7 +224,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public void highlight(String word) {
-
+        //not used in this application
     }
 
     @Override
@@ -245,13 +247,13 @@ public class ZeeguuActivity extends AppCompatActivity implements
     //// user interaction interface ////
 
     @Override
-    public void setFragmentSearch(FragmentSearch fragmentSearch) {
-        this.fragmentSearch = fragmentSearch;
+    public FragmentSearch getFragmentSearch() {
+        return fragmentSearch;
     }
 
     @Override
-    public void setFragmentMyWords(FragmentMyWords fragmentMyWords) {
-        this.fragmentMyWords = fragmentMyWords;
+    public FragmentMyWords getFragmentMyWords() {
+        return fragmentMyWords;
     }
 
     //// display messages interface ////
@@ -273,27 +275,13 @@ public class ZeeguuActivity extends AppCompatActivity implements
         fragmentSearch.refreshLanguages(isLanguageFrom);
     }
 
-    //// SlidingTabLayoutInterface ////
-    @Override
-    public void focusFragment(int number) {
-        if (number == 0) {
-            fragmentMyWords.defocusFragment();
-            fragmentSearch.focusFragment();
-        } else {
-            fragmentSearch.defocusFragment();
-            fragmentMyWords.focusFragment();
-        }
-
-    }
-
     //// Private Methods ////
 
     private void showLoginButtonIfNotLoggedIn() {
-        if (connectionManager != null) {
-            MenuItem item = menu.findItem(R.id.action_log_in);
-            if (item != null)
-                item.setVisible(!connectionManager.getAccount().isUserInSession());
-        }
+        MenuItem item = menu.findItem(R.id.action_log_in);
+        if (item != null && connectionManager != null)
+            item.setVisible(!connectionManager.getAccount().isUserInSession());
+
     }
 
     private void setTheme(boolean actualizeView) {
@@ -314,20 +302,19 @@ public class ZeeguuActivity extends AppCompatActivity implements
             recreate();
     }
 
-    private void createDataFragment() {
-        // Data fragment so that the instance of the ConnectionManager is never destroyed
-        if (dataFragment == null) {
+    private void restoreDataFragment() {
+        dataFragment = (DataFragment) fragmentManager.findFragmentByTag("data");
+        if (dataFragment != null)
+            dataFragment.onRestore(this);
+        else  {
             dataFragment = new DataFragment();
             addFragment(dataFragment, "data");
 
-            connectionManager = new ZeeguuConnectionManager(this);
-            dataFragment.setConnectionManager(connectionManager);
+            dataFragment.setConnectionManager(new ZeeguuConnectionManager(this));
         }
-    }
 
-    private void restoreDataFragment() {
-        dataFragment = (DataFragment) fragmentManager.findFragmentByTag("data");
-        if (dataFragment != null) dataFragment.onRestore(this);
+        // Data fragment so that the instance of the ConnectionManager is never destroyed
+
     }
 
     private void addFragment(Fragment fragment, String title) {
@@ -343,8 +330,13 @@ public class ZeeguuActivity extends AppCompatActivity implements
         actionBar.setDisplayHomeAsUpEnabled(isInSettings);
         actionBar.setDisplayUseLogoEnabled(!isInSettings);
 
-        preferenceView.setVisibility(isInSettings? View.VISIBLE : View.GONE);
-        slidingTabLayoutView.setVisibility(isInSettings? View.GONE : View.VISIBLE);
+        preferenceView.setVisibility(isInSettings ? View.VISIBLE : View.GONE);
+        slidingTabLayoutView.setVisibility(isInSettings ? View.GONE : View.VISIBLE);
+
+        if (isInSettings && menu != null)
+            menu.clear();
+        else
+            invalidateOptionsMenu();
     }
 
 
@@ -359,6 +351,27 @@ public class ZeeguuActivity extends AppCompatActivity implements
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(fragmentPreferenceTag, isInSettings);
+    }
+
+    public static void setFlag(ImageView flag, String language) {
+        switch (language) {
+            case "en":
+                flag.setImageResource(R.drawable.flag_uk);
+                break;
+            case "de":
+                flag.setImageResource(R.drawable.flag_german);
+                break;
+            case "fr":
+                flag.setImageResource(R.drawable.flag_france);
+                break;
+            case "it":
+                flag.setImageResource(R.drawable.flag_italy);
+                break;
+        }
+    }
+
+    private String getFragmentTag(long id) {
+        return "android:switcher:" + ZeeguuFragmentPagerAdapter.getContainerID() + ":" + id;
     }
 
 }

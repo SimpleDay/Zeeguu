@@ -4,17 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar xmlns:local="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/zeeguu_toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:elevation="2dp"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        local:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <FrameLayout
-        android:id="@+id/fragment_menu"
+        android:id="@+id/fragment_slidingmenu"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

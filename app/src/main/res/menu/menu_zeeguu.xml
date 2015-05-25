@@ -5,6 +5,7 @@
     <item
         android:id="@+id/action_log_in"
         android:title="@string/menu_login_button"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 
     <item
