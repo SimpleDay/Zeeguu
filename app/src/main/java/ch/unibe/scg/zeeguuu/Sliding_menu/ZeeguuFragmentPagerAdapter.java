@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
  * Adapter that handles all fragments which are in the sliding menu
  */
 public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
+    private static int containerID;
     private List<PagerFragmentTab> tabs;
 
     public interface ZeeguuSlidingFragmentInterface {
@@ -66,6 +68,8 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
         return tabs.get(position).getItemId();
     }
 
+    public static int getContainerID() { return containerID; }
+
     /**
      * @return the number of all tabs
      */
@@ -92,4 +96,9 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
         return tabs.get(position).getTitle();
     }
 
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        this.containerID = container.getId();
+        return super.instantiateItem(container, position);
+    }
 }

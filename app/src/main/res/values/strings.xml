@@ -30,15 +30,15 @@
     <string name="preference_theme_default">AppThemeLightActionbarDark</string>
 
 
-    <!-- preference tags  -->
+    <!-- preference tags // need to be the same as in the Zeeguu library! -->
     <string name="preference_category_user_information_tag">category_user_information</string>
     <string name="preference_email_tag">pref_zeeguu_email</string>
     <string name="preference_password_tag">pref_zeeguu_password</string>
     <string name="preference_user_session_id_tag">pref_zeeguu_session_id</string>
     <string name="preference_logInOut_tag">pref_zeeguu_account</string>
     <string name="preference_app_design_tag">pref_zeeguu_design</string>
-    <string name="preference_language_from_tag">pref_zeeguu_language_from</string>
-    <string name="preference_language_to_tag">pref_zeeguu_language_to</string>
+    <string name="preference_language_from_tag">pref_zeeguu_language_native</string>
+    <string name="preference_language_to_tag">pref_zeeguu_language_learning</string>
 
     <!-- bookmark tags  -->
     <string name="bookmark_url_code">android:zeeguu_app</string>

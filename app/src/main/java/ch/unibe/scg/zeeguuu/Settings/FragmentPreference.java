@@ -18,7 +18,7 @@ import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
  * Used a fragment to keep it as small and fast as possible
  */
 public class FragmentPreference extends PreferenceFragment {
-    private ZeeguuSettingsCallbacks callback;
+    private ZeeguuPreferenceCallbacks callback;
     private PreferenceChangeListener listener; //Keep it here, otherwise Garbage Collection deletes it
 
     //preferences
@@ -27,7 +27,7 @@ public class FragmentPreference extends PreferenceFragment {
     private Preference preference_logInOut_button;
 
 
-    public interface ZeeguuSettingsCallbacks {
+    public interface ZeeguuPreferenceCallbacks {
         ZeeguuConnectionManager getConnectionManager();
         void showZeeguuLogoutDialog();
         void showZeeguuLoginDialog(String message, String email);
@@ -37,11 +37,6 @@ public class FragmentPreference extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
-
-        //initialize default sharedPrefs and add change listener
-        listener = new PreferenceChangeListener();
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sharedPrefs.registerOnSharedPreferenceChangeListener(listener);
 
         //add Email and Session ID to info box when logged in or not show at all
         preference_loginInfo = (PreferenceCategory) findPreference(
@@ -54,6 +49,17 @@ public class FragmentPreference extends PreferenceFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         updateView();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        callback = (ZeeguuPreferenceCallbacks) getActivity();
+
+        //initialize default sharedPrefs and add change listener
+        listener = new PreferenceChangeListener(getActivity());
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPrefs.registerOnSharedPreferenceChangeListener(listener);
     }
 
     private void updateView() {
@@ -78,7 +84,7 @@ public class FragmentPreference extends PreferenceFragment {
 
         // Make sure that the interface is implemented in the container activity
         try {
-            callback = (ZeeguuSettingsCallbacks) activity;
+            callback = (ZeeguuPreferenceCallbacks) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement SettingsCallbacks");
         }
@@ -98,9 +104,16 @@ public class FragmentPreference extends PreferenceFragment {
     }
 
     private class PreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
+        private Activity activity;
+
+        public PreferenceChangeListener(Activity activity) {
+            super();
+            this.activity = activity;
+        }
+
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(getActivity().getString(R.string.preference_user_session_id_tag)))
+            if (key.equals(activity.getString(R.string.preference_user_session_id_tag)))
                 updateView();
             else if (key.equals("APP_DESIGN"));
                 //TODO: implement interface for theme change

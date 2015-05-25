@@ -178,7 +178,6 @@ public class LanguageListPreference extends ListPreference {
             }
 
             holder.language.setText(entries[position]);
-            holder.language.setChecked(selectedEntry == position);
             holder.language.setId(position);
             holder.language.setClickable(false);
             holder.language.setChecked(selectedEntry == position);
@@ -202,7 +201,7 @@ public class LanguageListPreference extends ListPreference {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString(mKey, entryValues[p].toString());
                     selectedEntry = p;
-                    editor.commit();
+                    editor.apply();
 
                     closeDialog();
                 }
