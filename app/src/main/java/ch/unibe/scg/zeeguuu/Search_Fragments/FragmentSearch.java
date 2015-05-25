@@ -41,7 +41,6 @@ import ch.unibe.zeeguulibrary.MyWords.MyWordsItem;
 public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListener {
     protected int RESULT_SPEECH = 1;
 
-    private Activity activity;
     private ZeeguuFragmentTextCallbacks callback;
     private ZeeguuConnectionManager connectionManager;
     private ClipboardManager clipboard;
@@ -77,12 +76,6 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
     public interface ZeeguuFragmentTextCallbacks {
         ZeeguuConnectionManager getConnectionManager();
-    }
-
-    //TODO: separate onCreate and onCreateView
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -172,16 +165,15 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.activity = getActivity();
-        callback = (ZeeguuFragmentTextCallbacks) activity;
+        callback = (ZeeguuFragmentTextCallbacks) getActivity();
         connectionManager = callback.getConnectionManager();
 
-        clipboard = (ClipboardManager) activity.getSystemService(Activity.CLIPBOARD_SERVICE);
+        clipboard = (ClipboardManager) getActivity().getSystemService(Activity.CLIPBOARD_SERVICE);
         clipboard.addPrimaryClipChangedListener(new ClipboardChangeListener());
 
         //TTS
-        textToSpeechLanguageFrom = new TextToSpeech(activity, this);
-        textToSpeechLanguageTo = new TextToSpeech(activity, this);
+        textToSpeechLanguageFrom = new TextToSpeech(getActivity(), this);
+        textToSpeechLanguageTo = new TextToSpeech(getActivity(), this);
         activeTextToSpeech = null;
 
         if (connectionManager.getAccount().isFirstLogin()) {
@@ -369,8 +361,8 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     }
 
     private void closeKeyboard() {
-        if (activity != null) {
-            InputMethodManager iMM = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (isAdded()) {
+            InputMethodManager iMM = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             iMM.hideSoftInputFromWindow(editTextLanguageFrom.getWindowToken(), 0);
         }
     }
@@ -429,13 +421,13 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
         @Override
         public void onClick(View v) {
-            LanguageListPreference listPreference = new LanguageListPreference(activity, null);
+            LanguageListPreference listPreference = new LanguageListPreference(getActivity(), null);
 
-            Resources res = activity.getResources();
+            Resources res = getActivity().getResources();
             listPreference.setEntries(res.getStringArray(R.array.languages));
             listPreference.setEntryValues(res.getStringArray(R.array.language_keys));
 
-            listPreference.showDialog(activity, isLanguageFrom);
+            listPreference.showDialog(getActivity(), isLanguageFrom);
         }
     }
 
@@ -474,7 +466,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
                 ZeeguuAccount account = connectionManager.getAccount();
                 connectionManager.bookmarkWithContext(input, account.getLanguageNative(), translation, account.getLanguageLearning(),
-                        getString(R.string.bookmark_title), activity.getString(R.string.bookmark_url_code), "");
+                        getString(R.string.bookmark_title), getString(R.string.bookmark_url_code), "");
             } else {
                 connectionManager.removeBookmarkFromServer(bookmarkID);
             }

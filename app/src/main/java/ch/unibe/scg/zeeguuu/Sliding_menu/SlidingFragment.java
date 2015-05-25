@@ -26,14 +26,20 @@ public class SlidingFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        // Get the ViewPager and slidingtablayout
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        slidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         adapter = new ZeeguuFragmentPagerAdapter(getActivity(), getFragmentManager(), this);
         viewPager.setAdapter(adapter);
 
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
-        slidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         slidingTabLayout.setViewPager(viewPager);
         slidingTabLayout.setDistributeEvenly(true);
 
@@ -44,8 +50,6 @@ public class SlidingFragment extends Fragment {
             public int getIndicatorColor(int position) {
                 return adapter.get(position).getIndicatorColor();
             }
-
         });
     }
-
 }

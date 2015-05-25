@@ -48,6 +48,9 @@ public class ZeeguuActivity extends AppCompatActivity implements
         LanguageListPreference.ZeeguuLanguageListCallbacks,
         ZeeguuDialogCallbacks {
 
+    public static int ITEMIDSEARCH = 100;
+    public static int ITEMIDMYWORDS = 101;
+
     private FragmentManager fragmentManager = getFragmentManager();
     private ZeeguuConnectionManager connectionManager;
 
@@ -83,27 +86,25 @@ public class ZeeguuActivity extends AppCompatActivity implements
         actionBar = getSupportActionBar();
         actionBar.setElevation(0);
 
-        slidingTabLayoutView = (FrameLayout) findViewById(R.id.fragment_menu);
+        slidingTabLayoutView = (FrameLayout) findViewById(R.id.fragment_slidingmenu);
         preferenceView = (FrameLayout) findViewById(R.id.fragment_preferences);
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
         fragmentSlidingMenu = (SlidingFragment) fragmentManager.findFragmentByTag(fragmentSlidingMenuTag);
-        if (fragmentSlidingMenu == null){
+        if (fragmentSlidingMenu == null) {
             fragmentSlidingMenu = new SlidingFragment();
-
-            //add the fragments to the layout when added the first time
-            transaction.replace(R.id.fragment_menu, fragmentSlidingMenu, fragmentSlidingMenuTag);
-            transaction.replace(R.id.fragment_preferences, new FragmentPreference(), fragmentPreferenceTag);
-            transaction.commit();
         }
+
+        //add the fragments to the layout when added the first time
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        //add the fragments to the layout when added the first time
+        transaction.replace(R.id.fragment_slidingmenu, fragmentSlidingMenu, fragmentSlidingMenuTag);
+        transaction.replace(R.id.fragment_preferences, new FragmentPreference(), fragmentPreferenceTag);
+        transaction.commit();
+
 
         //starts the settings task when entered in settings before rotation
         if (savedInstanceState != null && savedInstanceState.getBoolean(fragmentPreferenceTag))
             switchMainFragmentTo(fragmentPreferenceTag);
-
-        //Datafragment
-        createDataFragment();
 
         //TODO: Language change affects whole app
     }
@@ -241,21 +242,17 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public FragmentSearch getFragmentSearch() {
-        fragmentSearch = dataFragment.getFragmentSearch();
-        if (fragmentSearch == null){
-            fragmentSearch = new FragmentSearch();
-            dataFragment.setFragmentSearch(fragmentSearch);
-        }
+        fragmentSearch = (FragmentSearch) fragmentManager.findFragmentById(ITEMIDSEARCH);
+        if (fragmentSearch == null) fragmentSearch = new FragmentSearch();
+
         return fragmentSearch;
     }
 
     @Override
     public FragmentMyWords getFragmentMyWords() {
-        fragmentMyWords = dataFragment.getFragmentMyWords();
-        if (fragmentMyWords == null) {
-            fragmentMyWords = new FragmentMyWords();
-            dataFragment.setFragmentMyWords(fragmentMyWords);
-        }
+        fragmentMyWords = (FragmentMyWords) fragmentManager.findFragmentById(ITEMIDMYWORDS);
+        if (fragmentMyWords == null) fragmentMyWords = new FragmentMyWords();
+
         return fragmentMyWords;
     }
 
@@ -305,20 +302,20 @@ public class ZeeguuActivity extends AppCompatActivity implements
             recreate();
     }
 
-    private void createDataFragment() {
-        // Data fragment so that the instance of the ConnectionManager is never destroyed
-        if (dataFragment == null) {
+    private void restoreDataFragment() {
+        dataFragment = (DataFragment) fragmentManager.findFragmentByTag("data");
+        if (dataFragment != null)
+            dataFragment.onRestore(this);
+        else  {
             dataFragment = new DataFragment();
             addFragment(dataFragment, "data");
 
             connectionManager = new ZeeguuConnectionManager(this);
             dataFragment.setConnectionManager(connectionManager);
         }
-    }
 
-    private void restoreDataFragment() {
-        dataFragment = (DataFragment) fragmentManager.findFragmentByTag("data");
-        if (dataFragment != null) dataFragment.onRestore(this);
+        // Data fragment so that the instance of the ConnectionManager is never destroyed
+
     }
 
     private void addFragment(Fragment fragment, String title) {

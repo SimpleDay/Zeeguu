@@ -8,6 +8,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.unibe.scg.zeeguuu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
 import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
@@ -33,6 +34,7 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
         tabs = new ArrayList<>();
 
         tabs.add(new PagerFragmentTab(
+                ZeeguuActivity.ITEMIDSEARCH,
                 fragment.getString(R.string.search_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
@@ -40,6 +42,7 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
         ));
 
         tabs.add(new PagerFragmentTab(
+                ZeeguuActivity.ITEMIDMYWORDS,
                 fragment.getString(R.string.mywords_menu), // Title
                 fragment.getResources().getColor(R.color.sliding_menu_line), // Indicator color
                 fragment.getResources().getColor(R.color.sliding_menu_divider), // Divider color
@@ -56,6 +59,11 @@ public class ZeeguuFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         return tabs.get(position).getFragment();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return tabs.get(position).getItemId();
     }
 
     /**
