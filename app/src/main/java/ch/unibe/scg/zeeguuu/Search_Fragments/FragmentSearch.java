@@ -81,6 +81,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         //initialize the layout variables
@@ -98,14 +99,6 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         flagTranslateFrom.setOnClickListener(new LanguageChangeListener(true));
         flagTranslateTo.setOnClickListener(new LanguageChangeListener(false));
 
-        //if a text was entered and the screen rotated, the text will be added again here.
-        if (savedInstanceState != null) {
-            editTextLanguageFrom.setText(savedInstanceState.getString(
-                    getString(R.string.preference_language_from_tag)));
-            editTextLanguageTo.setText(savedInstanceState.getString(
-                    getString(R.string.preference_language_to_tag)));
-        }
-
         //set listeners
         ImageView btn_mic = (ImageView) view.findViewById(R.id.btn_microphone_search);
         btn_mic.setOnClickListener(new VoiceRecognitionListener());
@@ -118,7 +111,6 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
         btnBookmark = (ImageView) view.findViewById(R.id.btn_bookmark);
         btnBookmark.setOnClickListener(new BookmarkListener());
-        bookmarkID = 0;
 
         //Set done button to translate
         editTextLanguageFrom.setOnKeyListener(new KeyboardTranslationListener());
@@ -176,6 +168,16 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         textToSpeechLanguageTo = new TextToSpeech(getActivity(), this);
         activeTextToSpeech = null;
 
+        //if a text was entered/bookmarked and the screen rotated, the text will be added again here.
+        if (savedInstanceState != null) {
+            editTextLanguageFrom.setText(savedInstanceState.getString(
+                    getString(R.string.preference_language_from_tag)));
+            editTextLanguageTo.setText(savedInstanceState.getString(
+                    getString(R.string.preference_language_to_tag)));
+            setAsBookmarked(savedInstanceState.getLong(
+                    getString(R.string.preference_bookmark_id_tag)));
+        }
+
         if (connectionManager.getAccount().isFirstLogin()) {
             tutorial.setVisibility(View.GONE); //TODO only for usability testing, otherwise visible
         }
@@ -228,6 +230,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putString(getString(R.string.preference_language_from_tag), editTextLanguageFrom.getText().toString());
         savedInstanceState.putString(getString(R.string.preference_language_to_tag), editTextLanguageTo.getText().toString());
+        savedInstanceState.putLong(getString(R.string.preference_bookmark_id_tag), bookmarkID);
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -329,6 +332,10 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     private void translate() {
         String input = getEditTextTrimmed(editTextLanguageFrom);
         ZeeguuAccount account = connectionManager.getAccount();
+
+        if(input.equals(""))
+            setTranslatedText("");
+
         //search in MyWords if i already bookmarked that word
         MyWordsItem myWordsSearch = connectionManager.getAccount().checkMyWordsForTranslation(input, account.getLanguageNative(), account.getLanguageLearning());
 

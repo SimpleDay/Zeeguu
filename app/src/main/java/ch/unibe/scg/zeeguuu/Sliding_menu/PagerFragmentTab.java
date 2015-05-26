@@ -13,15 +13,13 @@ public class PagerFragmentTab {
      */
     private final CharSequence title;
     private final int indicatorColor;
-    private final int dividerColor;
     private final Fragment fragment;
     private long itemId;
 
-    public PagerFragmentTab(long itemId,CharSequence title, int indicatorColor, int dividerColor, Fragment fragment) {
+    public PagerFragmentTab(long itemId,CharSequence title, int indicatorColor, Fragment fragment) {
         this.itemId = itemId;
         this.title = title;
         this.indicatorColor = indicatorColor; //possible to give every indicator a separate color
-        this.dividerColor = dividerColor;
         this.fragment = fragment;
     }
 
@@ -44,13 +42,6 @@ public class PagerFragmentTab {
      */
     public int getIndicatorColor() {
         return indicatorColor;
-    }
-
-    /**
-     * @return color of divider
-     */
-    public int getDividerColor() {
-        return dividerColor;
     }
 
     public long getItemId() {

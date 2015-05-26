@@ -12,6 +12,9 @@
     <string name="language_to_dialog">Translate To</string>
     <string name="language_from_dialog">Translate From</string>
 
+    <!-- Games Fragment -->
+    <string name="games_menu">Web Games</string>
+
     <!-- Preference strings -->
     <string name="preference_title">Settings</string>
     <string name="preference_category_login">Zeeguu Account information</string>
@@ -102,6 +105,7 @@
     <string name="content_description_bookmark">Bookmark button that lets you bookmark your word combination</string>
     <string name="content_description_text_from">EditText field to enter your request word</string>
     <string name="content_description_text_to">d</string>
+    <string name="preference_bookmark_id_tag">zeeguu_bookmark_id_tag</string>
 
 
 </resources>

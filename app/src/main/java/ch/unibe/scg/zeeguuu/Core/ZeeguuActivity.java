@@ -20,12 +20,12 @@ import android.widget.Toast;
 
 import java.lang.reflect.Method;
 
+import ch.unibe.scg.zeeguuu.Games.FragmentWebGames;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
 import ch.unibe.scg.zeeguuu.Settings.FragmentPreference;
 import ch.unibe.scg.zeeguuu.Settings.LanguageListPreference;
 import ch.unibe.scg.zeeguuu.Sliding_menu.SlidingFragment;
-import ch.unibe.scg.zeeguuu.Sliding_menu.ZeeguuFragmentPagerAdapter;
 import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuCreateAccountDialog;
@@ -43,14 +43,15 @@ public class ZeeguuActivity extends AppCompatActivity implements
         ZeeguuAccount.ZeeguuAccountCallbacks,
         FragmentSearch.ZeeguuFragmentTextCallbacks,
         FragmentMyWords.ZeeguuFragmentMyWordsCallbacks,
-        ZeeguuFragmentPagerAdapter.ZeeguuSlidingFragmentInterface,
         FragmentPreference.ZeeguuPreferenceCallbacks,
+        FragmentWebGames.ZeeguuFragmentWebGamesCallback,
         LanguageListPreference.ZeeguuLanguageListCallbacks,
         SlidingFragment.SlidingFragmentCallback,
         ZeeguuDialogCallbacks {
 
     public static int ITEMIDSEARCH = 100;
     public static int ITEMIDMYWORDS = 101;
+    public static int ITEMIDGames = 102;
 
     private FragmentManager fragmentManager = getFragmentManager();
     private ZeeguuConnectionManager connectionManager;
@@ -60,7 +61,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     private DataFragment dataFragment;
     private FragmentSearch fragmentSearch;
     private FragmentMyWords fragmentMyWords;
-    private FragmentPreference fragmentPreference;
+    private FragmentWebGames fragmentWebGames;
 
     private FrameLayout slidingTabLayoutView;
     private FrameLayout preferenceView;
@@ -92,18 +93,20 @@ public class ZeeguuActivity extends AppCompatActivity implements
         slidingTabLayoutView = (FrameLayout) findViewById(R.id.fragment_slidingmenu);
         preferenceView = (FrameLayout) findViewById(R.id.fragment_preferences);
 
-        fragmentSlidingMenu = (SlidingFragment) fragmentManager.findFragmentByTag(fragmentSlidingMenuTag);
-        if (fragmentSlidingMenu == null) fragmentSlidingMenu = new SlidingFragment();
-
         fragmentSearch = (FragmentSearch) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDSEARCH));
         if (fragmentSearch == null) fragmentSearch = new FragmentSearch();
 
         fragmentMyWords = (FragmentMyWords) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDMYWORDS));
         if (fragmentMyWords == null) fragmentMyWords = new FragmentMyWords();
 
+        fragmentWebGames = (FragmentWebGames) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDGames));
+        if (fragmentWebGames == null) fragmentWebGames = new FragmentWebGames();
+
+        fragmentSlidingMenu = (SlidingFragment) fragmentManager.findFragmentByTag(fragmentSlidingMenuTag);
+        if (fragmentSlidingMenu == null) fragmentSlidingMenu = new SlidingFragment();
+
         //add the fragments to the layout when added the first time
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        //add the fragments to the layout when added the first time
         transaction.replace(R.id.fragment_slidingmenu, fragmentSlidingMenu, fragmentSlidingMenuTag);
         transaction.replace(R.id.fragment_preferences, new FragmentPreference(), fragmentPreferenceTag);
         transaction.commit();
@@ -257,6 +260,11 @@ public class ZeeguuActivity extends AppCompatActivity implements
         return fragmentMyWords;
     }
 
+    @Override
+    public FragmentWebGames getFragmentWebGames() {
+        return fragmentWebGames;
+    }
+
     //// display messages interface ////
 
     @Override
@@ -279,7 +287,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     //// SlidingTabLayoutInterface ////
     @Override
     public void focusFragment(int number) {
-        switch(number) {
+        switch (number) {
             case 0:
                 fragmentMyWords.onPause();
                 fragmentSearch.onResume();
@@ -387,7 +395,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     }
 
     private String getFragmentTag(long id) {
-        return "android:switcher:" + ZeeguuFragmentPagerAdapter.getContainerID() + ":" + id;
+        return "android:switcher:" + SlidingFragment.getContainerID() + ":" + id;
     }
 
 }
