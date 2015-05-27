@@ -333,22 +333,21 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         String input = getEditTextTrimmed(editTextLanguageFrom);
         ZeeguuAccount account = connectionManager.getAccount();
 
-        if(input.equals(""))
+        if (input.equals(""))
             setTranslatedText("");
 
         //search in MyWords if i already bookmarked that word
         MyWordsItem myWordsSearch = connectionManager.getAccount().checkMyWordsForTranslation(input, account.getLanguageNative(), account.getLanguageLearning());
 
-        if (myWordsSearch == null)
-            connectionManager.translate(input, account.getLanguageNative(), account.getLanguageLearning());
-        else {
+        if (myWordsSearch != null) {
             if (myWordsSearch.getLanguageFrom().equals(account.getLanguageNative()))
                 setTranslatedText(myWordsSearch.getLanguageToWord());
             else
                 setTranslatedText(myWordsSearch.getLanguageFromWord());
-
             setAsBookmarked(myWordsSearch.getItemId());
-        }
+        } else
+            connectionManager.translate(input, account.getLanguageNative(), account.getLanguageLearning());
+
         closeKeyboard();
     }
 

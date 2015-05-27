@@ -79,6 +79,7 @@ public class SlidingFragment extends Fragment {
                 callback.getFragmentWebGames()));
 
         adapter = new ZeeguuFragmentPagerAdapter(getFragmentManager());
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
 
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
