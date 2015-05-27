@@ -18,6 +18,7 @@
 
     </PreferenceCategory>
 
+    <!--
     <PreferenceCategory
         android:key="category_app_settings"
         android:title="@string/preference_category_app">
@@ -38,7 +39,7 @@
             android:key="@string/preference_app_design_tag"
             android:title="@string/preference_app_design" />
 
-    </PreferenceCategory>
+    </PreferenceCategory> -->
 
 
 </PreferenceScreen>

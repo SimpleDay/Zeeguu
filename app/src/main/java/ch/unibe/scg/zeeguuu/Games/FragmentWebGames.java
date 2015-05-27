@@ -69,7 +69,7 @@ public class FragmentWebGames extends Fragment {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (!url.equals("https://www.zeeguu.unibe.ch/login"))
-                    view.loadUrl("https://www.zeeguu.unibe.ch/recognize");
+                    view.loadUrl("https://www.zeeguu.unibe.ch/m_recognize");
 
                 // return true; //Indicates WebView to NOT load the url;
                 return false; //Allow WebView to load url
