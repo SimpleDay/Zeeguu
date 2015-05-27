@@ -21,60 +21,71 @@
 
             <EditText
                 android:id="@+id/edit_text_language_from"
-                style="@style/searchInputEditFields.normal"/>
+                style="@style/searchInputEditFields.normal" />
+
+            <ImageView
+                android:id="@+id/ic_edit_text_clear_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/ic_flag_translate_from"
+                android:layout_alignRight="@+id/ic_flag_translate_from"
+                android:layout_alignTop="@+id/edit_text_language_from"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/content_description_edit_text_clear"
+                android:src="@android:drawable/ic_delete" />
 
             <ImageView
                 android:id="@+id/ic_flag_translate_from"
-                android:contentDescription="@string/content_description_flag_from"
+                style="@style/flagImageView"
                 android:layout_alignBottom="@+id/edit_text_language_from"
                 android:layout_alignEnd="@+id/edit_text_language_from"
                 android:layout_alignRight="@+id/edit_text_language_from"
-                style="@style/flagImageView"/>
+                android:contentDescription="@string/content_description_flag_from" />
 
             <ImageView
                 android:id="@+id/btn_microphone_search"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:contentDescription="@string/content_description_microphone"
                 android:layout_alignTop="@+id/btn_camera_search"
                 android:layout_gravity="start"
                 android:layout_toEndOf="@+id/btn_paste"
                 android:layout_toRightOf="@+id/btn_paste"
                 android:clickable="true"
+                android:contentDescription="@string/content_description_microphone"
                 android:src="?attr/customIconVoice" />
 
             <ImageView
                 android:id="@+id/btn_camera_search"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:contentDescription="@string/content_description_camera"
                 android:layout_alignBottom="@+id/ic_flag_translate_from"
                 android:layout_gravity="start"
                 android:layout_toEndOf="@+id/btn_microphone_search"
                 android:layout_toRightOf="@+id/btn_microphone_search"
                 android:clickable="true"
+                android:contentDescription="@string/content_description_camera"
                 android:src="?attr/customIconCamera" />
 
             <ImageView
                 android:id="@+id/btn_tts_language_from"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:contentDescription="@string/content_description_tts_from"
                 android:layout_alignBottom="@+id/ic_flag_translate_from"
                 android:layout_toLeftOf="@+id/ic_flag_translate_from"
                 android:layout_toStartOf="@+id/ic_flag_translate_from"
+                android:contentDescription="@string/content_description_tts_from"
                 android:src="?attr/customIconSound" />
 
             <ImageView
                 android:id="@+id/btn_paste"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:contentDescription="@string/content_description_paste"
                 android:layout_alignLeft="@+id/edit_text_language_from"
                 android:layout_alignStart="@+id/edit_text_language_from"
                 android:layout_alignTop="@+id/btn_microphone_search"
-                android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/content_description_paste"
                 android:src="?attr/customIconPaste" />
 
         </RelativeLayout>
@@ -83,7 +94,7 @@
             android:id="@+id/relativeLayout_center_menu"
             android:layout_width="fill_parent"
             android:layout_height="54dp"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
 
             <TextView
@@ -111,52 +122,64 @@
 
             <EditText
                 android:id="@+id/edit_text_language_to"
-                style="@style/searchInputEditFields.normal"/>
+                style="@style/searchInputEditFields.normal" />
+
+            <ImageView
+                android:id="@+id/ic_edit_text_clear_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/ic_flag_translate_to"
+                android:layout_alignRight="@+id/ic_flag_translate_to"
+                android:layout_alignTop="@+id/edit_text_language_to"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/content_description_edit_text_clear"
+                android:src="@android:drawable/ic_delete" />
 
             <ImageView
                 android:id="@+id/ic_flag_translate_to"
+                style="@style/flagImageView"
                 android:layout_alignBottom="@+id/edit_text_language_to"
                 android:layout_alignEnd="@+id/edit_text_language_to"
                 android:layout_alignRight="@+id/edit_text_language_to"
-                android:contentDescription="@string/content_description_flag_to"
-                style="@style/flagImageView" />
+                android:contentDescription="@string/content_description_flag_to" />
 
             <ImageView
                 android:id="@+id/btn_bookmark"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:contentDescription="@string/content_description_bookmark"
                 android:layout_alignBottom="@+id/ic_flag_translate_to"
                 android:layout_toEndOf="@+id/btn_copy"
                 android:layout_toRightOf="@+id/btn_copy"
+                android:contentDescription="@string/content_description_bookmark"
                 android:src="@drawable/btn_bookmark" />
 
             <ImageView
                 android:id="@+id/btn_tts_language_to"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:contentDescription="@string/content_description_tts_to"
                 android:layout_alignBottom="@+id/ic_flag_translate_to"
                 android:layout_toLeftOf="@+id/ic_flag_translate_to"
                 android:layout_toStartOf="@+id/ic_flag_translate_to"
+                android:contentDescription="@string/content_description_tts_to"
                 android:src="?attr/customIconSound" />
 
             <ImageView
                 android:id="@+id/btn_copy"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:contentDescription="@string/content_description_copy"
                 android:layout_alignLeft="@+id/edit_text_language_to"
                 android:layout_alignStart="@+id/edit_text_language_to"
                 android:layout_alignTop="@+id/btn_bookmark"
-                android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/content_description_copy"
                 android:enabled="false"
                 android:src="?attr/customIconCopy" />
 
         </RelativeLayout>
     </LinearLayout>
 
+    <!-- ////   TUTORIAL  ////  -->
     <RelativeLayout
         android:id="@+id/fragment_text_tutorial"
         android:layout_width="match_parent"
@@ -167,22 +190,22 @@
             android:id="@+id/editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_marginTop="211dp"
             android:text="You can swipe left and right to switch between the windows"
-            android:textStyle="bold"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:textStyle="bold" />
 
         <ImageView
+            android:id="@+id/tutorial_arrow"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:src="@drawable/double_headed_arrow"
+            android:layout_below="@+id/editText"
+            android:layout_centerHorizontal="true"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
-            android:id="@+id/tutorial_arrow"
-            android:layout_below="@+id/editText"
-            android:layout_centerHorizontal="true" />
+            android:src="@drawable/double_headed_arrow" />
 
     </RelativeLayout>
 

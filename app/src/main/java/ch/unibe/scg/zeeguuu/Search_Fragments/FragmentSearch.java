@@ -69,6 +69,8 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
     private ImageView btnCopy;
     private ImageView btnPaste;
+    private ImageView btnClearTextFrom;
+    private ImageView btnClearTextTo;
 
     private ImageView btnBookmark;
     private long bookmarkID;
@@ -83,6 +85,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_search, container, false);
+        setHasOptionsMenu(true); //call onCreateOptionsMenu for this fragment to individualize it
 
         //initialize the layout variables
         tutorial = (RelativeLayout) view.findViewById(R.id.fragment_text_tutorial);
@@ -115,8 +118,8 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         //Set done button to translate
         editTextLanguageFrom.setOnKeyListener(new KeyboardTranslationListener());
 
-        editTextLanguageFrom.addTextChangedListener(new EditTextListener(true));
-        editTextLanguageTo.addTextChangedListener(new EditTextListener(false));
+        editTextLanguageFrom.addTextChangedListener(new EditTextListener());
+        editTextLanguageTo.addTextChangedListener(new EditTextListener());
         editTextLanguageTo.setOnFocusChangeListener(new LanguageSwitchListener());
 
         //Clipboard button listeners
@@ -126,10 +129,10 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         btnCopy = (ImageView) view.findViewById(R.id.btn_copy);
         btnCopy.setOnClickListener(new CopyListener());
 
-        //See if something has been added to clipboard and if activate paste button
-        showActiveButton(btnPaste, hasClipboardEntry());
-        showActiveButton(btnCopy, !editTextLanguageTo.getText().toString().isEmpty());
-
+        btnClearTextFrom = (ImageView) view.findViewById(R.id.ic_edit_text_clear_from);
+        btnClearTextFrom.setOnClickListener(new ClearTextListener(editTextLanguageFrom));
+        btnClearTextTo = (ImageView) view.findViewById(R.id.ic_edit_text_clear_to);
+        btnClearTextTo.setOnClickListener(new ClearTextListener(editTextLanguageTo));
 
         //TTS Buttons
         btnttsLanguageFrom = (ImageView) view.findViewById(R.id.btn_tts_language_from);
@@ -139,7 +142,6 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
                 speak(textToSpeechLanguageFrom, editTextLanguageFrom);
             }
         });
-        showActiveButton(btnttsLanguageFrom, !editTextLanguageFrom.getText().toString().equals(""));
 
         btnttsLanguageTo = (ImageView) view.findViewById(R.id.btn_tts_language_to);
         btnttsLanguageTo.setOnClickListener(new View.OnClickListener() {
@@ -148,9 +150,8 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
                 speak(textToSpeechLanguageTo, editTextLanguageTo);
             }
         });
-        showActiveButton(btnttsLanguageTo, !editTextLanguageTo.getText().toString().equals(""));
 
-        setHasOptionsMenu(true); //call onCreateOptionsMenu for this fragment to individualize it
+        updateButtons();
         return view;
     }
 
@@ -243,7 +244,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
     public void setTranslatedText(String text) {
         editTextLanguageTo.setText(text);
-        showActiveButton(btnCopy, !text.equals(""));
+        updateButtons();
     }
 
     @Override
@@ -302,20 +303,33 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
     private void speak(TextToSpeech tts, EditText edit_text) {
 
-        String text = edit_text.getText().toString();
-        if (!text.equals("")) {
+        if (isNotEmpty(edit_text)) {
             if (activeTextToSpeech != null) {
                 activeTextToSpeech.stop();
                 activeTextToSpeech = null;
             } else {
                 activeTextToSpeech = tts;
-                activeTextToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+                activeTextToSpeech.speak(edit_text.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
             }
         } else
             toast(getString(R.string.error_no_text_to_read));
     }
 
-    private void showActiveButton(ImageView imageView, Boolean enabled) {
+    private void updateButtons() {
+        //copy button
+        setButtonVisibility(btnCopy, isNotEmpty(editTextLanguageTo));
+        //paste button
+        setButtonVisibility(btnPaste, hasClipboardEntry());
+        //both tts
+        setButtonVisibility(btnttsLanguageFrom, isNotEmpty(editTextLanguageFrom));
+        setButtonVisibility(btnttsLanguageTo, isNotEmpty(editTextLanguageTo));
+        //both remove text
+        setButtonVisibility(btnClearTextFrom, isNotEmpty(editTextLanguageFrom));
+        setButtonVisibility(btnClearTextTo, isNotEmpty(editTextLanguageTo));
+
+    }
+
+    private void setButtonVisibility(ImageView imageView, Boolean enabled) {
         if (enabled) {
             imageView.setEnabled(true);
             imageView.setAlpha(1f);
@@ -325,16 +339,22 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         }
     }
 
+    private boolean isNotEmpty(EditText editText) {
+        return editText.getText().toString().length() > 0;
+    }
+
     private boolean hasClipboardEntry() {
-        return clipboard != null && clipboard.hasPrimaryClip() && !clipboard.getPrimaryClip().getItemAt(0).getText().equals("");
+        return clipboard != null && clipboard.hasPrimaryClip(); // && !clipboard.getPrimaryClip().getItemAt(0).getText().equals("");
     }
 
     private void translate() {
+        if (!isNotEmpty(editTextLanguageFrom)) {
+            setTranslatedText("");
+            return;
+        }
+
         String input = getEditTextTrimmed(editTextLanguageFrom);
         ZeeguuAccount account = connectionManager.getAccount();
-
-        if (input.equals(""))
-            setTranslatedText("");
 
         //search in MyWords if i already bookmarked that word
         MyWordsItem myWordsSearch = connectionManager.getAccount().checkMyWordsForTranslation(input, account.getLanguageNative(), account.getLanguageLearning());
@@ -363,7 +383,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
             editTextLanguageTo.setText("");
 
         switchedText = "";
-        showActiveButton(btnCopy, false);
+        updateButtons();
     }
 
     private void closeKeyboard() {
@@ -412,7 +432,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
                 editTextLanguageTo.setText("");
 
                 //initialize back the view
-                showActiveButton(btnCopy, false);
+                updateButtons();
                 setLanguagesTextFields();
             }
         }
@@ -482,12 +502,6 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
 
     private class EditTextListener implements TextWatcher {
-        private final boolean isLanguageFromListener;
-
-        public EditTextListener(boolean isLanguageFromListener) {
-            this.isLanguageFromListener = isLanguageFromListener;
-        }
-
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             //Do nothing
@@ -500,17 +514,11 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (isLanguageFromListener) {
-                showActiveButton(btnttsLanguageFrom, !editTextLanguageFrom.getText().toString().equals(""));
-            } else {
-                //when language to textfield changes, it can be bookmarked again.
-                bookmarkID = 0;
-                btnBookmark.setImageResource(R.drawable.btn_bookmark);
+            //when language to textfield changes, it can be bookmarked again.
+            bookmarkID = 0;
+            btnBookmark.setImageResource(R.drawable.btn_bookmark);
 
-                boolean editTextIsEmpty = editTextLanguageTo.getText().toString().equals("");
-                showActiveButton(btnCopy, !editTextIsEmpty);
-                showActiveButton(btnttsLanguageTo, !editTextIsEmpty);
-            }
+            updateButtons();
         }
     }
 
@@ -539,7 +547,21 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         @Override
         public void onPrimaryClipChanged() {
             //initialize paste button because something is added to clipboard
-            showActiveButton(btnPaste, true);
+            setButtonVisibility(btnPaste, true);
+        }
+    }
+
+    private class ClearTextListener implements View.OnClickListener {
+        private EditText editText;
+
+        public ClearTextListener(EditText editText) {
+            this.editText = editText;
+        }
+
+        @Override
+        public void onClick(View v) {
+            editText.setText("");
+            updateButtons();
         }
     }
 

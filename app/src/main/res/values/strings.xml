@@ -42,6 +42,7 @@
     <string name="preference_app_design_tag">pref_zeeguu_design</string>
     <string name="preference_language_from_tag">pref_zeeguu_language_native</string>
     <string name="preference_language_to_tag">pref_zeeguu_language_learning</string>
+    <string name="preference_bookmark_id_tag">zeeguu_bookmark_id_tag</string>
 
     <!-- bookmark tags  -->
     <string name="bookmark_url_code">android:zeeguu_app</string>
@@ -105,7 +106,7 @@
     <string name="content_description_bookmark">Bookmark button that lets you bookmark your word combination</string>
     <string name="content_description_text_from">EditText field to enter your request word</string>
     <string name="content_description_text_to">d</string>
-    <string name="preference_bookmark_id_tag">zeeguu_bookmark_id_tag</string>
+    <string name="content_description_edit_text_clear">Wipes the edit text field empty</string>
 
 
 </resources>
