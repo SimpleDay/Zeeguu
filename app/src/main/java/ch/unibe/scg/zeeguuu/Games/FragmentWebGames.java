@@ -1,22 +1,20 @@
 package ch.unibe.scg.zeeguuu.Games;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import org.apache.http.util.EncodingUtils;
 
 import ch.unibe.scg.zeeguuu.R;
+import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 
 /**
@@ -31,6 +29,7 @@ public class FragmentWebGames extends Fragment {
 
 
     private WebView mWebView;
+    private TextView textViewMessage;
 
     /**
      * The system calls this when creating the fragment. Within your implementation, you should
@@ -52,6 +51,9 @@ public class FragmentWebGames extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_web_view, container, false);
+        callback = (ZeeguuFragmentWebGamesCallback) getActivity();
+
+        textViewMessage = (TextView) mainView.findViewById(R.id.main_webview_error_message);
         mWebView = (WebView) mainView.findViewById(R.id.main_webview);
         // Enable Javascript
         WebSettings webSettings = mWebView.getSettings();
@@ -60,8 +62,7 @@ public class FragmentWebGames extends Fragment {
         mWebView.setWebViewClient(new WebViewClient());
 
         //login to the website
-        String postData = "email=p.giehl@gmx.ch&password=Micky&login=1";
-        mWebView.postUrl("https://www.zeeguu.unibe.ch/login", EncodingUtils.getBytes(postData, "BASE64"));
+        reloginWebView();
 
         //as soon as logged in, always open recognize tab - allow no other
         mWebView.setWebViewClient(new WebViewClient() {
@@ -101,30 +102,36 @@ public class FragmentWebGames extends Fragment {
         super.onPause();
     }
 
-    /**
-     * Allow to use the Android back button to navigate back in the WebView
-     */
-    public boolean onBackPressed() {
-        if (mWebView == null)
-            return true;
-        else if (mWebView.canGoBack()) {
-            mWebView.goBack();
-            return false;
-        } else
-            return true;
+    @Override
+    public void onResume() {
+        super.onResume();
+        setEmptyViewText();
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void getSelection() {
-        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentApiVersion >= android.os.Build.VERSION_CODES.KITKAT)
-            mWebView.evaluateJavascript("window.getSelection().toString()", new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String value) {
-                    Toast.makeText(getActivity(), value.substring(1, value.length() - 1), Toast.LENGTH_SHORT).show();
-                }
-            });
-        else
-            Toast.makeText(getActivity(), "Not supported on your android version", Toast.LENGTH_SHORT).show();
+    public void reloginWebView() {
+        mWebView.clearCache(true);
+
+        ZeeguuAccount account = callback.getConnectionManager().getAccount();
+        if (account.isUserInSession()) {
+            mWebView.setVisibility(View.VISIBLE);
+            textViewMessage.setVisibility(View.GONE);
+
+            String postData = "email=" + account.getEmail() + "&password=" + account.getPassword() + "&login=1";
+            mWebView.postUrl("https://www.zeeguu.unibe.ch/login", EncodingUtils.getBytes(postData, "BASE64"));
+        } else {
+            mWebView.setVisibility(View.GONE);
+            textViewMessage.setVisibility(View.VISIBLE);
+
+            setEmptyViewText();
+        }
+
     }
+
+    private void setEmptyViewText() {
+        if(callback.getConnectionManager().isNetworkAvailable())
+            textViewMessage.setText(getString(ch.unibe.R.string.login_zeeguu_sign_in_message));
+        else
+            textViewMessage.setText(getString(ch.unibe.R.string.error_no_internet_connection));
+    }
+
 }

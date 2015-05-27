@@ -245,6 +245,8 @@ public class ZeeguuActivity extends AppCompatActivity implements
     @Override
     public void notifyDataChanged(boolean myWordsChanged) {
         fragmentMyWords.notifyDataSetChanged(myWordsChanged);
+
+        fragmentWebGames.reloginWebView();
         showLoginButtonIfNotLoggedIn(); //when account info changes, check if
     }
 
@@ -289,13 +291,17 @@ public class ZeeguuActivity extends AppCompatActivity implements
     public void focusFragment(int number) {
         switch (number) {
             case 0:
-                fragmentMyWords.onPause();
                 fragmentSearch.onResume();
+                fragmentMyWords.onPause();
                 break;
             case 1:
                 fragmentSearch.onPause();
                 fragmentMyWords.onResume();
+                fragmentWebGames.onPause();
                 break;
+            case 2:
+                fragmentMyWords.onPause();
+                fragmentWebGames.onResume();
         }
     }
 
