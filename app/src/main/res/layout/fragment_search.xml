@@ -37,6 +37,7 @@
             <ImageView
                 android:id="@+id/ic_flag_translate_from"
                 style="@style/flagImageView"
+                android:src="@drawable/flag_uk"
                 android:layout_alignBottom="@+id/edit_text_language_from"
                 android:layout_alignEnd="@+id/edit_text_language_from"
                 android:layout_alignRight="@+id/edit_text_language_from"
@@ -138,6 +139,7 @@
             <ImageView
                 android:id="@+id/ic_flag_translate_to"
                 style="@style/flagImageView"
+                android:src="@drawable/flag_german"
                 android:layout_alignBottom="@+id/edit_text_language_to"
                 android:layout_alignEnd="@+id/edit_text_language_to"
                 android:layout_alignRight="@+id/edit_text_language_to"
