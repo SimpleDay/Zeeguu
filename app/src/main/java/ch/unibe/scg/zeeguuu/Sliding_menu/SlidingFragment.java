@@ -44,29 +44,6 @@ public class SlidingFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        tabs.add(new PagerFragmentTab(
-                ZeeguuActivity.ITEMIDSEARCH,
-                getString(R.string.search_menu),
-                getResources().getColor(R.color.sliding_menu_line),
-                callback.getFragmentSearch()));
-
-        tabs.add(new PagerFragmentTab(
-                ZeeguuActivity.ITEMIDMYWORDS,
-                getString(R.string.mywords_menu),
-                getResources().getColor(R.color.sliding_menu_line),
-                callback.getFragmentMyWords()));
-
-        /*tabs.add(new PagerFragmentTab(
-                ZeeguuActivity.ITEMIDGames,
-                getString(R.string.games_menu),
-                getResources().getColor(R.color.sliding_menu_line),
-                callback.getFragmentWebGames()));*/
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_sliding_menu, container, false);
     }
@@ -82,8 +59,26 @@ public class SlidingFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         callback = (SlidingFragmentCallback) getActivity();
-        adapter = new ZeeguuFragmentPagerAdapter(getFragmentManager());
 
+        tabs.add(new PagerFragmentTab(
+                ZeeguuActivity.ITEMIDSEARCH,
+                getString(R.string.search_menu),
+                getResources().getColor(R.color.sliding_menu_line),
+                callback.getFragmentSearch()));
+
+        tabs.add(new PagerFragmentTab(
+                ZeeguuActivity.ITEMIDMYWORDS,
+                getString(R.string.mywords_menu),
+                getResources().getColor(R.color.sliding_menu_line),
+                callback.getFragmentMyWords()));
+
+        tabs.add(new PagerFragmentTab(
+                ZeeguuActivity.ITEMIDGames,
+                getString(R.string.games_menu),
+                getResources().getColor(R.color.sliding_menu_line),
+                callback.getFragmentWebGames()));
+
+        adapter = new ZeeguuFragmentPagerAdapter(getFragmentManager());
         viewPager.setAdapter(adapter);
 
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
