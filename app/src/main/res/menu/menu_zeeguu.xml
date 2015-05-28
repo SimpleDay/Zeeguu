@@ -4,16 +4,16 @@
 
     <item
         android:id="@+id/action_log_in"
+        android:orderInCategory="1"
         android:title="@string/menu_login_button"
         android:visible="false"
-        app:showAsAction="ifRoom"
-        android:orderInCategory="1"/>
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_settings"
         android:icon="?attr/customIconSettings"
+        android:orderInCategory="100"
         android:title="@string/preference_title"
-        app:showAsAction="always"
-        android:orderInCategory="100"/>
+        app:showAsAction="always" />
 
 </menu>

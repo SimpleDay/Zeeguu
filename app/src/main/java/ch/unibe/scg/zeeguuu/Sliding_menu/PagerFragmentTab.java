@@ -16,7 +16,7 @@ public class PagerFragmentTab {
     private final Fragment fragment;
     private long itemId;
 
-    public PagerFragmentTab(long itemId,CharSequence title, int indicatorColor, Fragment fragment) {
+    public PagerFragmentTab(long itemId, CharSequence title, int indicatorColor, Fragment fragment) {
         this.itemId = itemId;
         this.title = title;
         this.indicatorColor = indicatorColor; //possible to give every indicator a separate color

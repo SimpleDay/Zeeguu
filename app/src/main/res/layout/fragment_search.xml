@@ -37,11 +37,11 @@
             <ImageView
                 android:id="@+id/ic_flag_translate_from"
                 style="@style/flagImageView"
-                android:src="@drawable/flag_uk"
                 android:layout_alignBottom="@+id/edit_text_language_from"
                 android:layout_alignEnd="@+id/edit_text_language_from"
                 android:layout_alignRight="@+id/edit_text_language_from"
-                android:contentDescription="@string/content_description_flag_from" />
+                android:contentDescription="@string/content_description_flag_from"
+                android:src="@drawable/flag_uk" />
 
             <ImageView
                 android:id="@+id/btn_microphone_search"
@@ -124,7 +124,7 @@
             <EditText
                 android:id="@+id/edit_text_language_to"
                 style="@style/searchInputEditFields.normal"
-                android:focusable="false"/>
+                android:focusable="false" />
 
             <ImageView
                 android:id="@+id/ic_edit_text_clear_to"
@@ -140,11 +140,11 @@
             <ImageView
                 android:id="@+id/ic_flag_translate_to"
                 style="@style/flagImageView"
-                android:src="@drawable/flag_german"
                 android:layout_alignBottom="@+id/edit_text_language_to"
                 android:layout_alignEnd="@+id/edit_text_language_to"
                 android:layout_alignRight="@+id/edit_text_language_to"
-                android:contentDescription="@string/content_description_flag_to" />
+                android:contentDescription="@string/content_description_flag_to"
+                android:src="@drawable/flag_german" />
 
             <ImageView
                 android:id="@+id/btn_bookmark"

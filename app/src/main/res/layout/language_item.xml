@@ -8,8 +8,8 @@
         android:id="@+id/item_flag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_gravity="center_vertical" />
+        android:layout_gravity="center_vertical"
+        android:padding="10dp" />
 
     <CheckedTextView
         android:id="@+id/item_language"

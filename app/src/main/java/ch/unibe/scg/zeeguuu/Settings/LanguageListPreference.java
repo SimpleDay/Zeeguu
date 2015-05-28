@@ -100,7 +100,7 @@ public class LanguageListPreference extends ListPreference {
 
 
     private int updateSelectedEntry(boolean isLanguageFrom) {
-        String selectedValue = isLanguageFrom? callback.getConnectionManager().getAccount().getLanguageNative()
+        String selectedValue = isLanguageFrom ? callback.getConnectionManager().getAccount().getLanguageNative()
                 : callback.getConnectionManager().getAccount().getLanguageLearning();
         for (int i = 0; i < entryValues.length; i++) {
             if (selectedValue.compareTo((String) entryValues[i]) == 0) {
