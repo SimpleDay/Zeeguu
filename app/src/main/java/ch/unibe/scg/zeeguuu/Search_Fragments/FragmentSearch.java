@@ -193,6 +193,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         if (resultCode == Activity.RESULT_OK && null != data) {
             ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             editTextLanguageFrom.setText(text.get(0));
+            translate(); // translate the text immediately
         }
     }
 
