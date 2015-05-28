@@ -73,6 +73,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     private ImageView btnClearTextTo;
 
     private ImageView btnBookmark;
+    private boolean bookmarkActionActive;
     private long bookmarkID;
 
 
@@ -114,6 +115,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
         btnBookmark = (ImageView) view.findViewById(R.id.btn_bookmark);
         btnBookmark.setOnClickListener(new BookmarkListener());
+        bookmarkActionActive = false;
 
         //Set done button to translate
         editTextLanguageFrom.setOnKeyListener(new KeyboardTranslationListener());
@@ -240,6 +242,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         this.bookmarkID = bookmarkID;
         this.btnBookmark.setImageResource(bookmarkID != 0 ?
                 R.drawable.btn_bookmark_filled : R.drawable.btn_bookmark);
+        this.bookmarkActionActive = false;
     }
 
     public void setTranslatedText(String text) {
@@ -495,16 +498,21 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     private class BookmarkListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if (bookmarkID == 0) {
-                String input = getEditTextTrimmed(editTextLanguageFrom);
-                String translation = getEditTextTrimmed(editTextLanguageTo);
+            if(!bookmarkActionActive) {
+                if (bookmarkID == 0) {
+                    bookmarkActionActive = true;
+                    String input = getEditTextTrimmed(editTextLanguageFrom);
+                    String translation = getEditTextTrimmed(editTextLanguageTo);
 
-                ZeeguuAccount account = connectionManager.getAccount();
-                connectionManager.bookmarkWithContext(input, account.getLanguageNative(), translation, account.getLanguageLearning(),
-                        getString(R.string.bookmark_title), getString(R.string.bookmark_url_code), "");
-            } else {
-                connectionManager.removeBookmarkFromServer(bookmarkID);
-            }
+                    ZeeguuAccount account = connectionManager.getAccount();
+                    connectionManager.bookmarkWithContext(input, account.getLanguageNative(), translation, account.getLanguageLearning(),
+                            getString(R.string.bookmark_title), getString(R.string.bookmark_url_code), "");
+                } else {
+                    bookmarkActionActive = true;
+                    connectionManager.removeBookmarkFromServer(bookmarkID);
+                }
+            } else
+                toast(getString(R.string.error_bookmark_already));
         }
     }
 
@@ -524,6 +532,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         public void afterTextChanged(Editable s) {
             //when language to textfield changes, it can be bookmarked again.
             bookmarkID = 0;
+            bookmarkActionActive = false;
             btnBookmark.setImageResource(R.drawable.btn_bookmark);
 
             updateButtons();
