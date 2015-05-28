@@ -3,8 +3,7 @@
 
 
     <!-- sliding menu colors -->
-    <color name="sliding_menu_line">@color/red</color>
-    <color name="sliding_menu_divider">@color/red</color>
+    <color name="sliding_menu_line">@color/white</color>
     <color name="sliding_menu_background">@color/primary_color_dark</color>
     <color name="sliding_menu_title_color">@color/white</color>
 
@@ -29,6 +28,6 @@
     <color name="blue">#0000FF</color>
     <color name="navy">#000080</color>
 
-    <color name="primary_color_dark">#4a4a4a</color>
+    <color name="primary_color_dark">#505A64</color>
 
 </resources>
