@@ -120,7 +120,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
         editTextLanguageFrom.addTextChangedListener(new EditTextListener());
         editTextLanguageTo.addTextChangedListener(new EditTextListener());
-        editTextLanguageTo.setOnFocusChangeListener(new LanguageSwitchListener());
+        editTextLanguageTo.setOnClickListener(new LanguageSwitchListener());
 
         //Clipboard button listeners
         btnPaste = (ImageView) view.findViewById(R.id.btn_paste);
@@ -212,14 +212,14 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     }
 
     public void refreshLanguages(boolean isLanguageFrom) {
-        setLanguagesTextFields();
+        updateTextFields();
         resetTextFields(isLanguageFrom);
     }
 
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
-            setLanguagesTextFields();
+            updateTextFields();
         } else {
             String error = getString(R.string.error_TTS_not_inititalized);
             toast(error);
@@ -265,7 +265,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
 
     //// private Methods ////
 
-    private void setLanguagesTextFields() {
+    private void updateTextFields() {
         ZeeguuAccount account = connectionManager.getAccount();
         ZeeguuActivity.setFlag(flagTranslateFrom, account.getLanguageNative());
         setTTS(textToSpeechLanguageFrom, account.getLanguageNative());
@@ -394,6 +394,14 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         }
     }
 
+    private void openKeyboard() {
+        if (isAdded()) {
+            InputMethodManager iMM = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (editTextLanguageFrom != null)
+                iMM.showSoftInput(editTextLanguageFrom, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
 
     ///// Listeners /////
 
@@ -415,26 +423,26 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         }
     }
 
-    private class LanguageSwitchListener implements View.OnFocusChangeListener {
+    private class LanguageSwitchListener implements View.OnClickListener {
+
         @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus) {
-                connectionManager.getAccount().switchLanguages();
+        public void onClick(View v) {
+            connectionManager.getAccount().switchLanguages();
 
-                String tmpLanguageFromWord = getEditTextTrimmed(editTextLanguageFrom);
-                String tmpLanguageToWord = getEditTextTrimmed(editTextLanguageTo);
-                if (tmpLanguageToWord.equals(""))
-                    editTextLanguageFrom.setText(switchedText);
-                else
-                    editTextLanguageFrom.setText(tmpLanguageToWord);
+            String tmpLanguageFromWord = getEditTextTrimmed(editTextLanguageFrom);
+            String tmpLanguageToWord = getEditTextTrimmed(editTextLanguageTo);
+            if (tmpLanguageToWord.equals(""))
+                editTextLanguageFrom.setText(switchedText);
+            else
+                editTextLanguageFrom.setText(tmpLanguageToWord);
 
-                switchedText = tmpLanguageFromWord;
-                editTextLanguageTo.setText("");
+            switchedText = tmpLanguageFromWord;
+            editTextLanguageTo.setText("");
 
-                //initialize back the view
-                updateButtons();
-                setLanguagesTextFields();
-            }
+            //initialize back the view
+            updateButtons();
+            updateTextFields();
+            openKeyboard();
         }
     }
 
