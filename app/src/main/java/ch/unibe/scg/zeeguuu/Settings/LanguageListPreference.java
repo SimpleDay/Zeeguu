@@ -2,7 +2,6 @@ package ch.unibe.scg.zeeguuu.Settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -43,7 +42,6 @@ public class LanguageListPreference extends ListPreference {
      */
     public interface ZeeguuLanguageListCallbacks {
         ZeeguuConnectionManager getConnectionManager();
-        void notifyLanguageChanged(boolean isLanguageFrom);
     }
 
 
@@ -74,11 +72,19 @@ public class LanguageListPreference extends ListPreference {
     }
 
     public void showDialog(Activity activity, boolean isLanguageFrom) {
+        // Make sure that the interface is implemented in the container activity
+        try {
+            callback = (ZeeguuLanguageListCallbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement ZeeguuLanguageListCallbacks");
+        }
+
+        //Load all variables
         entries = getEntries();
         entryValues = getEntryValues();
         mKey = isLanguageFrom ? activity.getString(R.string.preference_language_from_tag)
                 : activity.getString(R.string.preference_language_to_tag);
-        selectedEntry = updateSelectedEntry();
+        selectedEntry = updateSelectedEntry(isLanguageFrom);
 
         if (iconListPreferenceAdapter == null)
             iconListPreferenceAdapter = new IconListPreferenceAdapter();
@@ -90,35 +96,12 @@ public class LanguageListPreference extends ListPreference {
 
         this.isLanguageFrom = isLanguageFrom;
         this.mDialog = builder.show();
-
-        // Make sure that the interface is implemented in the container activity
-        try {
-            callback = (ZeeguuLanguageListCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement ZeeguuLanguageListCallbacks");
-        }
     }
 
-    @Override
-    protected void onPrepareDialogBuilder(Builder builder) {
-        super.onPrepareDialogBuilder(builder);
 
-        entries = getEntries();
-        entryValues = getEntryValues();
-        selectedEntry = updateSelectedEntry();
-
-        if (entries.length != entryValues.length) {
-            throw new IllegalStateException("ListPreference requires an entries array and an entryValues array which are both the same length");
-        }
-
-        if (iconListPreferenceAdapter == null)
-            iconListPreferenceAdapter = new IconListPreferenceAdapter();
-        builder.setAdapter(iconListPreferenceAdapter, null);
-
-    }
-
-    private int updateSelectedEntry() {
-        String selectedValue = prefs.getString(mKey, "");
+    private int updateSelectedEntry(boolean isLanguageFrom) {
+        String selectedValue = isLanguageFrom? callback.getConnectionManager().getAccount().getLanguageNative()
+                : callback.getConnectionManager().getAccount().getLanguageLearning();
         for (int i = 0; i < entryValues.length; i++) {
             if (selectedValue.compareTo((String) entryValues[i]) == 0) {
                 return i;
@@ -135,7 +118,6 @@ public class LanguageListPreference extends ListPreference {
 
         if (getDialog() != null)
             getDialog().dismiss();
-
     }
 
     /**
@@ -195,13 +177,7 @@ public class LanguageListPreference extends ListPreference {
                             callback.getConnectionManager().getAccount().setLanguageNative(entryValues[p].toString());
                         else
                             callback.getConnectionManager().getAccount().setLanguageLearning(entryValues[p].toString());
-                        callback.notifyLanguageChanged(isLanguageFrom);
                     }
-
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString(mKey, entryValues[p].toString());
-                    selectedEntry = p;
-                    editor.apply();
 
                     closeDialog();
                 }
