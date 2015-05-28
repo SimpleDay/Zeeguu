@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
@@ -21,24 +24,13 @@ import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
  * Fragment to display the zeeguu games webview
  */
 public class FragmentWebGames extends Fragment {
+    private WebView mWebView;
+    private TextView textViewMessage;
     private ZeeguuFragmentWebGamesCallback callback;
+
 
     public interface ZeeguuFragmentWebGamesCallback {
         ZeeguuConnectionManager getConnectionManager();
-    }
-
-
-    private WebView mWebView;
-    private TextView textViewMessage;
-
-    /**
-     * The system calls this when creating the fragment. Within your implementation, you should
-     * initialize essential components of the fragment that you want to retain when the fragment
-     * is paused or stopped, then resumed.
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     /**
@@ -51,18 +43,12 @@ public class FragmentWebGames extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_web_view, container, false);
-        callback = (ZeeguuFragmentWebGamesCallback) getActivity();
 
         textViewMessage = (TextView) mainView.findViewById(R.id.main_webview_error_message);
         mWebView = (WebView) mainView.findViewById(R.id.main_webview);
         // Enable Javascript
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        // Force links and redirects to open in the WebView instead of in a browser
-        mWebView.setWebViewClient(new WebViewClient());
-
-        //login to the website
-        reloginWebView();
 
         //as soon as logged in, always open recognize tab - allow no other
         mWebView.setWebViewClient(new WebViewClient() {
@@ -75,9 +61,30 @@ public class FragmentWebGames extends Fragment {
                 // return true; //Indicates WebView to NOT load the url;
                 return false; //Allow WebView to load url
             }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                mWebView.setVisibility(View.GONE);
+                textViewMessage.setVisibility(View.VISIBLE);
+
+                setEmptyViewText();
+            }
         });
 
+        //activate individual menu for this fragments
+        setHasOptionsMenu(true);
+
         return mainView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        callback = (ZeeguuFragmentWebGamesCallback) getActivity();
+
+        //login to the website
+        reloginWebView();
     }
 
     @Override
@@ -89,6 +96,23 @@ public class FragmentWebGames extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement ZeeguuFragmentWebGamesCallback");
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_webview, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+        MenuItem menuItemRefresh = menu.findItem(R.id.webview_refresh);
+        menuItemRefresh.setVisible(callback.getConnectionManager().getAccount().isUserInSession());
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.webview_refresh) {
+            reloginWebView();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -124,14 +148,16 @@ public class FragmentWebGames extends Fragment {
 
             setEmptyViewText();
         }
-
     }
 
     private void setEmptyViewText() {
-        if(callback.getConnectionManager().isNetworkAvailable())
-            textViewMessage.setText(getString(ch.unibe.R.string.login_zeeguu_sign_in_message));
-        else
-            textViewMessage.setText(getString(ch.unibe.R.string.error_no_internet_connection));
+        ZeeguuAccount account = callback.getConnectionManager().getAccount();
+        if (callback.getConnectionManager().isNetworkAvailable() && !account.isUserInSession())
+            textViewMessage.setText(getString(R.string.login_zeeguu_sign_in_message));
+        else if (callback.getConnectionManager().isNetworkAvailable()) {
+            textViewMessage.setText(getString(R.string.error_bad_internet_connection));
+        } else
+            textViewMessage.setText(getString(R.string.error_no_internet_connection));
     }
 
 }

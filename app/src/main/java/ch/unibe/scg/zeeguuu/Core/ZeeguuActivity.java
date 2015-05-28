@@ -126,7 +126,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
         getMenuInflater().inflate(R.menu.menu_zeeguu, menu);
         this.menu = menu;
 
-        showLoginButtonIfNotLoggedIn();
+        updateLoginButton();
         return true;
     }
 
@@ -245,9 +245,9 @@ public class ZeeguuActivity extends AppCompatActivity implements
     @Override
     public void notifyDataChanged(boolean myWordsChanged) {
         fragmentMyWords.notifyDataSetChanged(myWordsChanged);
-
         fragmentWebGames.reloginWebView();
-        showLoginButtonIfNotLoggedIn(); //when account info changes, check if
+
+        updateLoginButton(); //when account info changes, check if
     }
 
     //// user interaction interface ////
@@ -307,7 +307,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     //// Private Methods ////
 
-    private void showLoginButtonIfNotLoggedIn() {
+    private void updateLoginButton() {
         MenuItem item = menu.findItem(R.id.action_log_in);
         if (item != null && connectionManager != null)
             item.setVisible(!connectionManager.getAccount().isUserInSession());
@@ -356,7 +356,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     private void switchMainFragmentTo(String fragmentTag) {
         isInSettings = fragmentTag.equals(fragmentPreferenceTag);
         actionBar.setTitle(isInSettings ? getString(R.string.preference_title)
-                : getString(R.string.app_name_actionbar));
+                : getString(R.string.app_name));
         actionBar.setDisplayHomeAsUpEnabled(isInSettings);
         actionBar.setDisplayUseLogoEnabled(!isInSettings);
 
