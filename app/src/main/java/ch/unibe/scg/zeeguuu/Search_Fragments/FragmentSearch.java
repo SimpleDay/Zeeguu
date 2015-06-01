@@ -141,7 +141,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         btnttsLanguageFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speak(textToSpeechLanguageFrom, editTextLanguageFrom);
+                speak(textToSpeechLanguageFrom, editTextLanguageFrom, connectionManager.getAccount().getLanguageNative());
             }
         });
 
@@ -149,7 +149,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         btnttsLanguageTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speak(textToSpeechLanguageTo, editTextLanguageTo);
+                speak(textToSpeechLanguageTo, editTextLanguageTo, connectionManager.getAccount().getLanguageLearning());
             }
         });
 
@@ -272,10 +272,23 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     private void updateTextFields() {
         ZeeguuAccount account = connectionManager.getAccount();
         ZeeguuActivity.setFlag(flagTranslateFrom, account.getLanguageNative());
-        setTTS(textToSpeechLanguageFrom, account.getLanguageNative());
-
         ZeeguuActivity.setFlag(flagTranslateTo, account.getLanguageLearning());
-        setTTS(textToSpeechLanguageTo, account.getLanguageLearning());
+    }
+
+    private void speak(TextToSpeech tts, EditText edit_text, String language) {
+
+        if (isNotEmpty(edit_text)) {
+            if (activeTextToSpeech != null) {
+                activeTextToSpeech.stop();
+                activeTextToSpeech = null;
+            } else {
+                activeTextToSpeech = tts;
+                setTTS(activeTextToSpeech, language);
+                activeTextToSpeech.speak(edit_text.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+                activeTextToSpeech = null;
+            }
+        } else
+            toast(getString(R.string.error_no_text_to_read));
     }
 
     private void setTTS(TextToSpeech tts, String language) {
@@ -303,20 +316,6 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
             //toast(error); //TODO: why always get the error?
             logging(error);
         }
-    }
-
-    private void speak(TextToSpeech tts, EditText edit_text) {
-
-        if (isNotEmpty(edit_text)) {
-            if (activeTextToSpeech != null) {
-                activeTextToSpeech.stop();
-                activeTextToSpeech = null;
-            } else {
-                activeTextToSpeech = tts;
-                activeTextToSpeech.speak(edit_text.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
-            }
-        } else
-            toast(getString(R.string.error_no_text_to_read));
     }
 
     private void updateButtons() {
@@ -499,7 +498,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     private class BookmarkListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if(!bookmarkActionActive) {
+            if (!bookmarkActionActive) {
                 if (bookmarkID == 0) {
                     bookmarkActionActive = true;
                     String input = getEditTextTrimmed(editTextLanguageFrom);
@@ -541,8 +540,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
     }
 
 
-///// Listeners for copy and paste functions /////
-
+    ///// Listeners for copy and paste functions /////
     private class PasteListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
@@ -583,7 +581,7 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         }
     }
 
-
+    //// toast and loging functions ////
     private void toast(String text) {
         Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
     }

@@ -63,18 +63,21 @@ public class FragmentPreference extends PreferenceFragment {
     }
 
     private void updateView() {
-        if (callback.getConnectionManager().getAccount().isUserInSession()) {
-            String email = callback.getConnectionManager().getAccount().getEmail();
-            preference_loginInfo.addPreference(preference_email);
-            preference_email.setSummary(email);
-            preference_email.setEnabled(false);
+        if(preference_loginInfo != null && preference_email != null
+                && preference_logInOut_button != null) {
+            if (callback.getConnectionManager().getAccount().isUserInSession()) {
+                String email = callback.getConnectionManager().getAccount().getEmail();
+                preference_loginInfo.addPreference(preference_email);
+                preference_email.setSummary(email);
+                preference_email.setEnabled(false);
 
-            preference_logInOut_button.setTitle(getActivity().getString(R.string.preference_logout));
-            preference_logInOut_button.setSummary(getActivity().getString(R.string.preference_logout_message));
-        } else {
-            preference_loginInfo.removePreference(preference_email);
-            preference_logInOut_button.setTitle(getActivity().getString(R.string.preference_login));
-            preference_logInOut_button.setSummary(getActivity().getString(R.string.preference_login_message));
+                preference_logInOut_button.setTitle(getActivity().getString(R.string.preference_logout));
+                preference_logInOut_button.setSummary(getActivity().getString(R.string.preference_logout_message));
+            } else {
+                preference_loginInfo.removePreference(preference_email);
+                preference_logInOut_button.setTitle(getActivity().getString(R.string.preference_login));
+                preference_logInOut_button.setSummary(getActivity().getString(R.string.preference_login_message));
+            }
         }
     }
 
