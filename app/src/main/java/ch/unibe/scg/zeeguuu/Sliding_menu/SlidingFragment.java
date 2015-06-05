@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.unibe.scg.zeeguuu.Core.ZeeguuActivity;
-import ch.unibe.scg.zeeguuu.Games.FragmentWebGames;
+import ch.unibe.scg.zeeguuu.Games.ExerciseFragment;
 import ch.unibe.scg.zeeguuu.R;
-import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
-import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
+import ch.unibe.scg.zeeguuu.Search_Fragments.SearchFragment;
+import ch.unibe.zeeguulibrary.MyWords.MyWordsFragment;
 
 /**
  * Fragment that creates the sliding menu so that the user can switch pretty fast between the single fragments
@@ -36,11 +36,11 @@ public class SlidingFragment extends Fragment {
     public interface SlidingFragmentCallback {
         void focusFragment(int number);
 
-        FragmentSearch getFragmentSearch();
+        SearchFragment getSearchFragment();
 
-        FragmentMyWords getFragmentMyWords();
+        MyWordsFragment getMyWordsFragment();
 
-        FragmentWebGames getFragmentWebGames();
+        ExerciseFragment getExerciseFragment();
     }
 
     @Override
@@ -64,19 +64,19 @@ public class SlidingFragment extends Fragment {
                 ZeeguuActivity.ITEMIDSEARCH,
                 getString(R.string.search_menu),
                 getResources().getColor(R.color.sliding_menu_line),
-                callback.getFragmentSearch()));
+                callback.getSearchFragment()));
 
         tabs.add(new PagerFragmentTab(
                 ZeeguuActivity.ITEMIDMYWORDS,
                 getString(R.string.mywords_menu),
                 getResources().getColor(R.color.sliding_menu_line),
-                callback.getFragmentMyWords()));
+                callback.getMyWordsFragment()));
 
         tabs.add(new PagerFragmentTab(
                 ZeeguuActivity.ITEMIDGames,
                 getString(R.string.games_menu),
                 getResources().getColor(R.color.sliding_menu_line),
-                callback.getFragmentWebGames()));
+                callback.getExerciseFragment()));
 
         adapter = new ZeeguuFragmentPagerAdapter(getFragmentManager());
         viewPager.setOffscreenPageLimit(3);

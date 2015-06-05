@@ -23,7 +23,7 @@ import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 /**
  * Fragment to display the zeeguu games webview
  */
-public class FragmentWebGames extends Fragment {
+public class ExerciseFragment extends Fragment {
     private WebView mWebView;
     private TextView textViewMessage;
     private ZeeguuFragmentWebGamesCallback callback;

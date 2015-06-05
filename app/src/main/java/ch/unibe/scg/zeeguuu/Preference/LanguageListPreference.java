@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguuu.Settings;
+package ch.unibe.scg.zeeguuu.Preference;
 
 import android.app.Activity;
 import android.app.AlertDialog;

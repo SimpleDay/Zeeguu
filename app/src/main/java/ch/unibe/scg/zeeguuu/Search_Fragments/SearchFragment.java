@@ -30,7 +30,7 @@ import java.util.Locale;
 
 import ch.unibe.scg.zeeguuu.Core.ZeeguuActivity;
 import ch.unibe.scg.zeeguuu.R;
-import ch.unibe.scg.zeeguuu.Settings.LanguageListPreference;
+import ch.unibe.scg.zeeguuu.Preference.LanguageListPreference;
 import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 import ch.unibe.zeeguulibrary.MyWords.MyWordsItem;
@@ -38,7 +38,7 @@ import ch.unibe.zeeguulibrary.MyWords.MyWordsItem;
 /**
  * Fragment that handles all search request for new words
  */
-public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListener {
+public class SearchFragment extends Fragment implements TextToSpeech.OnInitListener {
     protected int RESULT_SPEECH = 1;
 
     private ZeeguuFragmentTextCallbacks callback;
@@ -106,9 +106,6 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
         //set listeners
         ImageView btn_mic = (ImageView) view.findViewById(R.id.btn_microphone_search);
         btn_mic.setOnClickListener(new VoiceRecognitionListener());
-
-        ImageView btn_cam = (ImageView) view.findViewById(R.id.btn_camera_search);
-        btn_cam.setOnClickListener(new CameraRecognitionListener());
 
         TextView btn_transl = (TextView) view.findViewById(R.id.btn_translate);
         btn_transl.setOnClickListener(new TranslationListener());
@@ -485,13 +482,6 @@ public class FragmentSearch extends Fragment implements TextToSpeech.OnInitListe
             } catch (ActivityNotFoundException a) {
                 toast(getString(R.string.error_mic_search_not_supported));
             }
-        }
-    }
-
-    private class CameraRecognitionListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            //ToDo: implement OCR
         }
     }
 

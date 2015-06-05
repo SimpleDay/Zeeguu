@@ -1,11 +1,10 @@
-package ch.unibe.scg.zeeguuu.Settings;
+package ch.unibe.scg.zeeguuu.Preference;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.view.View;
@@ -17,7 +16,7 @@ import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
  * Fragment that handles all preferences and settings that a user can change
  * Used a fragment to keep it as small and fast as possible
  */
-public class FragmentPreference extends PreferenceFragment {
+public class ZeeguuPreferenceFragment extends android.preference.PreferenceFragment {
     private ZeeguuPreferenceCallbacks callback;
     private PreferenceChangeListener listener; //Keep it here, otherwise Garbage Collection deletes it
 

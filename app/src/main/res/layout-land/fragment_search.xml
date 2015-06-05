@@ -60,19 +60,6 @@
             android:textColor="#fff" />
 
         <ImageView
-            android:id="@+id/btn_camera_search"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:layout_alignTop="@+id/btn_microphone_search"
-            android:layout_gravity="end"
-            android:layout_toEndOf="@+id/btn_microphone_search"
-            android:layout_toRightOf="@+id/btn_microphone_search"
-            android:clickable="true"
-            android:contentDescription="@string/content_description_camera"
-            android:src="?attr/customIconCamera"
-            android:textColor="#fff" />
-
-        <ImageView
             android:id="@+id/btn_tts_language_from"
             android:layout_width="40dp"
             android:layout_height="35dp"

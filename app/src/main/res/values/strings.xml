@@ -13,7 +13,7 @@
     <string name="language_from_dialog">Translate From</string>
 
     <!-- Games Fragment -->
-    <string name="games_menu">Web Games</string>
+    <string name="games_menu">Exercises</string>
 
     <!-- Preference strings -->
     <string name="preference_title">Settings</string>

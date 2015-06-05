@@ -20,11 +20,11 @@ import android.widget.Toast;
 
 import java.lang.reflect.Method;
 
-import ch.unibe.scg.zeeguuu.Games.FragmentWebGames;
+import ch.unibe.scg.zeeguuu.Games.ExerciseFragment;
 import ch.unibe.scg.zeeguuu.R;
-import ch.unibe.scg.zeeguuu.Search_Fragments.FragmentSearch;
-import ch.unibe.scg.zeeguuu.Settings.FragmentPreference;
-import ch.unibe.scg.zeeguuu.Settings.LanguageListPreference;
+import ch.unibe.scg.zeeguuu.Search_Fragments.SearchFragment;
+import ch.unibe.scg.zeeguuu.Preference.ZeeguuPreferenceFragment;
+import ch.unibe.scg.zeeguuu.Preference.LanguageListPreference;
 import ch.unibe.scg.zeeguuu.Sliding_menu.SlidingFragment;
 import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
@@ -32,7 +32,7 @@ import ch.unibe.zeeguulibrary.Dialogs.ZeeguuCreateAccountDialog;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuDialogCallbacks;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLoginDialog;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLogoutDialog;
-import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
+import ch.unibe.zeeguulibrary.MyWords.MyWordsFragment;
 
 /**
  * Main activity that handles all fragments and the interaction between them
@@ -41,10 +41,10 @@ import ch.unibe.zeeguulibrary.MyWords.FragmentMyWords;
 public class ZeeguuActivity extends AppCompatActivity implements
         ZeeguuConnectionManager.ZeeguuConnectionManagerCallbacks,
         ZeeguuAccount.ZeeguuAccountCallbacks,
-        FragmentSearch.ZeeguuFragmentTextCallbacks,
-        FragmentMyWords.ZeeguuFragmentMyWordsCallbacks,
-        FragmentPreference.ZeeguuPreferenceCallbacks,
-        FragmentWebGames.ZeeguuFragmentWebGamesCallback,
+        SearchFragment.ZeeguuFragmentTextCallbacks,
+        MyWordsFragment.ZeeguuFragmentMyWordsCallbacks,
+        ZeeguuPreferenceFragment.ZeeguuPreferenceCallbacks,
+        ExerciseFragment.ZeeguuFragmentWebGamesCallback,
         LanguageListPreference.ZeeguuLanguageListCallbacks,
         SlidingFragment.SlidingFragmentCallback,
         ZeeguuDialogCallbacks {
@@ -59,16 +59,16 @@ public class ZeeguuActivity extends AppCompatActivity implements
     //fragments
     private SlidingFragment fragmentSlidingMenu;
     private DataFragment dataFragment;
-    private FragmentSearch fragmentSearch;
-    private FragmentMyWords fragmentMyWords;
-    private FragmentWebGames fragmentWebGames;
+    private SearchFragment searchFragment;
+    private MyWordsFragment myWordsFragment;
+    private ExerciseFragment exerciseFragment;
 
     private FrameLayout slidingTabLayoutView;
     private FrameLayout preferenceView;
 
     //tags
-    private String fragmentSlidingMenuTag = "fragmentSlidingMenu";
-    private String fragmentPreferenceTag = "fragmentPreferenceTag";
+    private String SlidingMenuTag = "fragmentSlidingMenu";
+    private String PreferenceTag = "PreferenceTag";
 
     private ActionBar actionBar;
     private boolean isInSettings = false;
@@ -79,9 +79,10 @@ public class ZeeguuActivity extends AppCompatActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        restoreDataFragment();
-        //setTheme(false);
         setContentView(R.layout.activity_zeeguu);
+
+        //setTheme(false);
+        restoreDataFragment();
 
         //set default settings when app started, but don't overwrite active settings
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -93,28 +94,28 @@ public class ZeeguuActivity extends AppCompatActivity implements
         slidingTabLayoutView = (FrameLayout) findViewById(R.id.fragment_slidingmenu);
         preferenceView = (FrameLayout) findViewById(R.id.fragment_preferences);
 
-        fragmentSearch = (FragmentSearch) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDSEARCH));
-        if (fragmentSearch == null) fragmentSearch = new FragmentSearch();
+        searchFragment = (SearchFragment) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDSEARCH));
+        if (searchFragment == null) searchFragment = new SearchFragment();
 
-        fragmentMyWords = (FragmentMyWords) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDMYWORDS));
-        if (fragmentMyWords == null) fragmentMyWords = new FragmentMyWords();
+        myWordsFragment = (MyWordsFragment) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDMYWORDS));
+        if (myWordsFragment == null) myWordsFragment = new MyWordsFragment();
 
-        fragmentWebGames = (FragmentWebGames) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDGames));
-        if (fragmentWebGames == null) fragmentWebGames = new FragmentWebGames();
+        exerciseFragment = (ExerciseFragment) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDGames));
+        if (exerciseFragment == null) exerciseFragment = new ExerciseFragment();
 
-        fragmentSlidingMenu = (SlidingFragment) fragmentManager.findFragmentByTag(fragmentSlidingMenuTag);
+        fragmentSlidingMenu = (SlidingFragment) fragmentManager.findFragmentByTag(SlidingMenuTag);
         if (fragmentSlidingMenu == null) fragmentSlidingMenu = new SlidingFragment();
 
         //add the fragments to the layout when added the first time
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_slidingmenu, fragmentSlidingMenu, fragmentSlidingMenuTag);
-        transaction.replace(R.id.fragment_preferences, new FragmentPreference(), fragmentPreferenceTag);
+        transaction.replace(R.id.fragment_slidingmenu, fragmentSlidingMenu, SlidingMenuTag);
+        transaction.replace(R.id.fragment_preferences, new ZeeguuPreferenceFragment(), PreferenceTag);
         transaction.commit();
 
 
         //starts the settings task when entered in settings before rotation
-        if (savedInstanceState != null && savedInstanceState.getBoolean(fragmentPreferenceTag))
-            switchMainFragmentTo(fragmentPreferenceTag);
+        if (savedInstanceState != null && savedInstanceState.getBoolean(PreferenceTag))
+            switchMainFragmentTo(PreferenceTag);
 
         //TODO: Language change affects whole app
     }
@@ -156,7 +157,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
                 return true;
 
             case R.id.action_settings:
-                switchMainFragmentTo(fragmentPreferenceTag);
+                switchMainFragmentTo(PreferenceTag);
                 return true;
 
             default:
@@ -177,7 +178,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         if (isInSettings)
-            switchMainFragmentTo(fragmentSlidingMenuTag);
+            switchMainFragmentTo(SlidingMenuTag);
         else
             super.onBackPressed();
     }
@@ -223,7 +224,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public void setTranslation(String translation) {
-        fragmentSearch.setTranslatedText(translation);
+        searchFragment.setTranslatedText(translation);
     }
 
     @Override
@@ -234,7 +235,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     @Override
     public void bookmarkWord(String bookmarkID) {
         try {
-            fragmentSearch.setAsBookmarked(Long.parseLong(bookmarkID));
+            searchFragment.setAsBookmarked(Long.parseLong(bookmarkID));
         } catch (Exception e) {
             displayMessage(getString(R.string.error_bookmark));
         }
@@ -244,8 +245,8 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public void notifyDataChanged(boolean myWordsChanged) {
-        fragmentMyWords.notifyDataSetChanged(myWordsChanged);
-        fragmentWebGames.reloginWebView();
+        myWordsFragment.notifyDataSetChanged(myWordsChanged);
+        exerciseFragment.reloginWebView();
 
         updateLoginButton(); //when account info changes, check if
     }
@@ -253,18 +254,18 @@ public class ZeeguuActivity extends AppCompatActivity implements
     //// user interaction interface ////
 
     @Override
-    public FragmentSearch getFragmentSearch() {
-        return fragmentSearch;
+    public SearchFragment getSearchFragment() {
+        return searchFragment;
     }
 
     @Override
-    public FragmentMyWords getFragmentMyWords() {
-        return fragmentMyWords;
+    public MyWordsFragment getMyWordsFragment() {
+        return myWordsFragment;
     }
 
     @Override
-    public FragmentWebGames getFragmentWebGames() {
-        return fragmentWebGames;
+    public ExerciseFragment getExerciseFragment() {
+        return exerciseFragment;
     }
 
     //// display messages interface ////
@@ -283,7 +284,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public void notifyLanguageChanged(boolean isLanguageFrom) {
-        fragmentSearch.refreshLanguages(isLanguageFrom);
+        searchFragment.refreshLanguages(isLanguageFrom);
     }
 
     //// SlidingTabLayoutInterface ////
@@ -291,17 +292,17 @@ public class ZeeguuActivity extends AppCompatActivity implements
     public void focusFragment(int number) {
         switch (number) {
             case 0:
-                fragmentSearch.onResume();
-                fragmentMyWords.onPause();
+                searchFragment.onResume();
+                myWordsFragment.onPause();
                 break;
             case 1:
-                fragmentSearch.onPause();
-                fragmentMyWords.onResume();
-                fragmentWebGames.onPause();
+                searchFragment.onPause();
+                myWordsFragment.onResume();
+                exerciseFragment.onPause();
                 break;
             case 2:
-                fragmentMyWords.onPause();
-                fragmentWebGames.onResume();
+                myWordsFragment.onPause();
+                exerciseFragment.onResume();
         }
     }
 
@@ -354,7 +355,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     }
 
     private void switchMainFragmentTo(String fragmentTag) {
-        isInSettings = fragmentTag.equals(fragmentPreferenceTag);
+        isInSettings = fragmentTag.equals(PreferenceTag);
         actionBar.setTitle(isInSettings ? getString(R.string.preference_title)
                 : getString(R.string.app_name));
         actionBar.setDisplayHomeAsUpEnabled(isInSettings);
@@ -380,7 +381,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(fragmentPreferenceTag, isInSettings);
+        outState.putBoolean(PreferenceTag, isInSettings);
     }
 
     public static void setFlag(ImageView flag, String language) {
