@@ -24,7 +24,7 @@ import ch.unibe.zeeguulibrary.MyWords.MyWordsFragment;
 /**
  * Fragment that creates the sliding menu so that the user can switch pretty fast between the single fragments
  */
-public class SlidingFragment extends Fragment {
+public class SlidingTabFragment extends Fragment {
     private SlidingTabLayout slidingTabLayout;
     private ViewPager viewPager;
 
@@ -66,6 +66,9 @@ public class SlidingFragment extends Fragment {
                 getResources().getColor(R.color.sliding_menu_line),
                 callback.getSearchFragment()));
 
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD) 
+
+
         tabs.add(new PagerFragmentTab(
                 ZeeguuActivity.ITEMIDMYWORDS,
                 getString(R.string.mywords_menu),
@@ -77,6 +80,7 @@ public class SlidingFragment extends Fragment {
                 getString(R.string.games_menu),
                 getResources().getColor(R.color.sliding_menu_line),
                 callback.getExerciseFragment()));
+
 
         adapter = new ZeeguuFragmentPagerAdapter(getFragmentManager());
         viewPager.setOffscreenPageLimit(3);

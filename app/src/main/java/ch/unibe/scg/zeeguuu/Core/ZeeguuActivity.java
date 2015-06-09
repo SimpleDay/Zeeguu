@@ -25,7 +25,7 @@ import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.SearchFragment;
 import ch.unibe.scg.zeeguuu.Preference.ZeeguuPreferenceFragment;
 import ch.unibe.scg.zeeguuu.Preference.LanguageListPreference;
-import ch.unibe.scg.zeeguuu.Sliding_menu.SlidingFragment;
+import ch.unibe.scg.zeeguuu.Sliding_menu.SlidingTabFragment;
 import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuCreateAccountDialog;
@@ -46,7 +46,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
         ZeeguuPreferenceFragment.ZeeguuPreferenceCallbacks,
         ExerciseFragment.ZeeguuFragmentWebGamesCallback,
         LanguageListPreference.ZeeguuLanguageListCallbacks,
-        SlidingFragment.SlidingFragmentCallback,
+        SlidingTabFragment.SlidingFragmentCallback,
         ZeeguuDialogCallbacks {
 
     public static int ITEMIDSEARCH = 100;
@@ -57,7 +57,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     private ZeeguuConnectionManager connectionManager;
 
     //fragments
-    private SlidingFragment fragmentSlidingMenu;
+    private SlidingTabFragment fragmentSlidingMenu;
     private DataFragment dataFragment;
     private SearchFragment searchFragment;
     private MyWordsFragment myWordsFragment;
@@ -103,8 +103,8 @@ public class ZeeguuActivity extends AppCompatActivity implements
         exerciseFragment = (ExerciseFragment) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDGames));
         if (exerciseFragment == null) exerciseFragment = new ExerciseFragment();
 
-        fragmentSlidingMenu = (SlidingFragment) fragmentManager.findFragmentByTag(SlidingMenuTag);
-        if (fragmentSlidingMenu == null) fragmentSlidingMenu = new SlidingFragment();
+        fragmentSlidingMenu = (SlidingTabFragment) fragmentManager.findFragmentByTag(SlidingMenuTag);
+        if (fragmentSlidingMenu == null) fragmentSlidingMenu = new SlidingTabFragment();
 
         //add the fragments to the layout when added the first time
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -402,7 +402,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     }
 
     private String getFragmentTag(long id) {
-        return "android:switcher:" + SlidingFragment.getContainerID() + ":" + id;
+        return "android:switcher:" + SlidingTabFragment.getContainerID() + ":" + id;
     }
 
 }
