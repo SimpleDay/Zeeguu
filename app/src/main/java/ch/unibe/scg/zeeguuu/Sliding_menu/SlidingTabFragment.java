@@ -122,6 +122,14 @@ public class SlidingTabFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        for(PagerFragmentTab p : tabs)
+            p.getFragment().onPause();
+    }
+
     public boolean isBrowserActive() {
         return tabs.get(viewPager.getCurrentItem()).getItemId() == ZeeguuActivity.ITEMIDBROWSER;
     }

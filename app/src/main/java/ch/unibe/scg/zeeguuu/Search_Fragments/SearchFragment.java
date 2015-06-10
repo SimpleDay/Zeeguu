@@ -357,7 +357,7 @@ public class SearchFragment extends Fragment implements TextToSpeech.OnInitListe
         ZeeguuAccount account = connectionManager.getAccount();
 
         //search in MyWords if i already bookmarked that word
-        MyWordsItem myWordsSearch = connectionManager.getAccount().checkMyWordsForTranslation(input, account.getLanguageNative(), account.getLanguageLearning());
+        MyWordsItem myWordsSearch = account.checkMyWordsForTranslation(input, account.getLanguageNative(), account.getLanguageLearning());
 
         if (myWordsSearch != null) {
             if (myWordsSearch.getLanguageFrom().equals(account.getLanguageNative()))

@@ -272,7 +272,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public void setTranslation(String translation) {
-        if(browserFragment != null && slidingMenuFragment.isBrowserActive())
+        if (browserFragment != null && slidingMenuFragment.isBrowserActive())
             browserFragment.setTranslation(translation);
         else
             searchFragment.setTranslatedText(translation);
@@ -280,7 +280,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public void highlight(String word) {
-        if(browserFragment != null &&
+        if (browserFragment != null &&
                 connectionManager.getAccount().isHighlightOn())
             browserFragment.highlight(word);
     }
@@ -424,6 +424,9 @@ public class ZeeguuActivity extends AppCompatActivity implements
                 : getString(R.string.app_name));
         actionBar.setDisplayHomeAsUpEnabled(isInSettings);
         actionBar.setDisplayUseLogoEnabled(!isInSettings);
+
+        if (isInSettings)
+            slidingMenuFragment.onPause();
 
         preferenceView.setVisibility(isInSettings ? View.VISIBLE : View.GONE);
         slidingTabLayoutView.setVisibility(isInSettings ? View.GONE : View.VISIBLE);
