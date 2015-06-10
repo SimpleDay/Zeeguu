@@ -138,7 +138,7 @@ public class SearchFragment extends Fragment implements TextToSpeech.OnInitListe
         btnttsLanguageFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speak(textToSpeechLanguageFrom, editTextLanguageFrom, connectionManager.getAccount().getLanguageNative());
+                speak(textToSpeechLanguageFrom, editTextLanguageFrom, connectionManager.getAccount().getLanguageLearning());
             }
         });
 
@@ -146,7 +146,7 @@ public class SearchFragment extends Fragment implements TextToSpeech.OnInitListe
         btnttsLanguageTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speak(textToSpeechLanguageTo, editTextLanguageTo, connectionManager.getAccount().getLanguageLearning());
+                speak(textToSpeechLanguageTo, editTextLanguageTo, connectionManager.getAccount().getLanguageNative());
             }
         });
 
@@ -268,8 +268,8 @@ public class SearchFragment extends Fragment implements TextToSpeech.OnInitListe
 
     private void updateTextFields() {
         ZeeguuAccount account = connectionManager.getAccount();
-        ZeeguuActivity.setFlag(flagTranslateFrom, account.getLanguageNative());
-        ZeeguuActivity.setFlag(flagTranslateTo, account.getLanguageLearning());
+        ZeeguuActivity.setFlag(flagTranslateFrom, account.getLanguageLearning());
+        ZeeguuActivity.setFlag(flagTranslateTo, account.getLanguageNative());
     }
 
     private void speak(TextToSpeech tts, EditText edit_text, String language) {
@@ -357,16 +357,16 @@ public class SearchFragment extends Fragment implements TextToSpeech.OnInitListe
         ZeeguuAccount account = connectionManager.getAccount();
 
         //search in MyWords if i already bookmarked that word
-        MyWordsItem myWordsSearch = account.checkMyWordsForTranslation(input, account.getLanguageNative(), account.getLanguageLearning());
+        MyWordsItem myWordsSearch = account.checkMyWordsForTranslation(input, account.getLanguageLearning(), account.getLanguageNative());
 
         if (myWordsSearch != null) {
-            if (myWordsSearch.getLanguageFrom().equals(account.getLanguageNative()))
+            if (myWordsSearch.getLanguageFrom().equals(account.getLanguageLearning()))
                 setTranslatedText(myWordsSearch.getLanguageToWord());
             else
                 setTranslatedText(myWordsSearch.getLanguageFromWord());
             setAsBookmarked(myWordsSearch.getItemId());
         } else
-            connectionManager.translate(input, account.getLanguageNative(), account.getLanguageLearning());
+            connectionManager.translate(input, account.getLanguageLearning(), account.getLanguageNative());
 
         closeKeyboard();
     }
@@ -470,7 +470,7 @@ public class SearchFragment extends Fragment implements TextToSpeech.OnInitListe
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getAccount().getLanguageNative());
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, connectionManager.getAccount().getLanguageLearning());
 
             if (activeTextToSpeech != null) {
                 activeTextToSpeech.stop();
@@ -495,7 +495,7 @@ public class SearchFragment extends Fragment implements TextToSpeech.OnInitListe
                     String translation = getEditTextTrimmed(editTextLanguageTo);
 
                     ZeeguuAccount account = connectionManager.getAccount();
-                    connectionManager.bookmarkWithContext(input, account.getLanguageNative(), translation, account.getLanguageLearning(),
+                    connectionManager.bookmarkWithContext(input, account.getLanguageLearning(), translation, account.getLanguageNative(),
                             getString(R.string.bookmark_title), getString(R.string.bookmark_url_code), "");
                 } else {
                     bookmarkActionActive = true;
