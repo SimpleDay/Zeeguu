@@ -1,0 +1,3 @@
+[submodule "zeeguulibrary"]
+	path = zeeguulibrary
+	url = https://github.com/linusschwab/zeeguu-android-library.git
