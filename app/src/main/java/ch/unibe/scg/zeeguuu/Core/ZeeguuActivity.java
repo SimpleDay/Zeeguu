@@ -37,6 +37,7 @@ import ch.unibe.zeeguulibrary.Dialogs.ZeeguuDialogCallbacks;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLoginDialog;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLogoutDialog;
 import ch.unibe.zeeguulibrary.MyWords.MyWordsFragment;
+import ch.unibe.zeeguulibrary.MyWords.MyWordsItem;
 import ch.unibe.zeeguulibrary.WebView.BrowserFragment;
 import ch.unibe.zeeguulibrary.WebView.ZeeguuTranslationActionMode;
 import ch.unibe.zeeguulibrary.WebView.ZeeguuWebViewFragment;
@@ -452,20 +453,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     }
 
     public static void setFlag(ImageView flag, String language) {
-        switch (language) {
-            case "en":
-                flag.setImageResource(R.drawable.flag_uk);
-                break;
-            case "de":
-                flag.setImageResource(R.drawable.flag_german);
-                break;
-            case "fr":
-                flag.setImageResource(R.drawable.flag_france);
-                break;
-            case "it":
-                flag.setImageResource(R.drawable.flag_italy);
-                break;
-        }
+        MyWordsItem.setFlag(flag, language);
     }
 
     private String getFragmentTag(long id) {
