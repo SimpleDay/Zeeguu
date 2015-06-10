@@ -2,6 +2,7 @@ package ch.unibe.scg.zeeguuu.Preference;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -21,6 +22,8 @@ public class ZeeguuPreferenceFragment extends android.preference.PreferenceFragm
     private PreferenceChangeListener listener; //Keep it here, otherwise Garbage Collection deletes it
 
     //preferences
+    private PreferenceCategory preference_browser;
+
     private PreferenceCategory preference_loginInfo;
     private Preference preference_email;
     private Preference preference_logInOut_button;
@@ -28,7 +31,9 @@ public class ZeeguuPreferenceFragment extends android.preference.PreferenceFragm
 
     public interface ZeeguuPreferenceCallbacks {
         ZeeguuConnectionManager getConnectionManager();
+
         void showZeeguuLogoutDialog();
+
         void showZeeguuLoginDialog(String message, String email);
     }
 
@@ -42,6 +47,9 @@ public class ZeeguuPreferenceFragment extends android.preference.PreferenceFragm
                 getActivity().getString(R.string.preference_category_user_information_tag));
         preference_email = findPreference(getActivity().getString(R.string.preference_email_tag));
         preference_logInOut_button = findPreference(getActivity().getString(R.string.preference_logInOut_tag));
+
+        preference_browser = (PreferenceCategory) findPreference(
+                getActivity().getString(R.string.preference_category_browser_tag));
     }
 
     @Override
@@ -62,7 +70,7 @@ public class ZeeguuPreferenceFragment extends android.preference.PreferenceFragm
     }
 
     private void updateView() {
-        if(preference_loginInfo != null && preference_email != null
+        if (preference_loginInfo != null && preference_email != null
                 && preference_logInOut_button != null) {
             if (callback.getConnectionManager().getAccount().isUserInSession()) {
                 String email = callback.getConnectionManager().getAccount().getEmail();
@@ -78,6 +86,12 @@ public class ZeeguuPreferenceFragment extends android.preference.PreferenceFragm
                 preference_logInOut_button.setSummary(getActivity().getString(R.string.preference_login_message));
             }
         }
+
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            preference_browser.setTitle("Browser (usable on Android Version 4.4 +)");
+            preference_browser.setEnabled(false);
+        }
+
     }
 
     @Override
@@ -117,9 +131,9 @@ public class ZeeguuPreferenceFragment extends android.preference.PreferenceFragm
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(activity.getString(R.string.preference_user_session_id_tag)))
                 updateView();
-            else if (key.equals("APP_DESIGN"));
+            else if (key.equals("APP_DESIGN")) ;
                 //TODO: implement interface for theme change
-            else{ /* Do nothing yet */ }
+            else { /* Do nothing yet */ }
         }
     }
 

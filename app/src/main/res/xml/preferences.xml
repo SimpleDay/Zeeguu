@@ -18,6 +18,23 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:key="@string/preference_category_browser_tag"
+        android:title="@string/preference_browser_title">
+
+        <EditTextPreference
+            android:key="pref_browser_homepage"
+            android:title="@string/preference_browser_homepage_title"
+            android:summary="@string/preference_browser_homepage_summary"
+            android:defaultValue="@string/preference_browser_homepage_default"/>
+
+        <CheckBoxPreference
+            android:key="pref_browser_viewport"
+            android:title="@string/preference_browser_viewport_title"
+            android:summary="@string/preference_browser_viewport_summary"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
     <!--
     <PreferenceCategory
         android:key="category_app_settings"

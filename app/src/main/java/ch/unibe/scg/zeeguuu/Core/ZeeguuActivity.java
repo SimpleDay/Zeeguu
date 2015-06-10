@@ -3,17 +3,21 @@ package ch.unibe.scg.zeeguuu.Core;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -21,10 +25,10 @@ import android.widget.Toast;
 import java.lang.reflect.Method;
 
 import ch.unibe.scg.zeeguuu.Games.ExerciseFragment;
+import ch.unibe.scg.zeeguuu.Preference.LanguageListPreference;
+import ch.unibe.scg.zeeguuu.Preference.ZeeguuPreferenceFragment;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.SearchFragment;
-import ch.unibe.scg.zeeguuu.Preference.ZeeguuPreferenceFragment;
-import ch.unibe.scg.zeeguuu.Preference.LanguageListPreference;
 import ch.unibe.scg.zeeguuu.Sliding_menu.SlidingTabFragment;
 import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
@@ -33,6 +37,10 @@ import ch.unibe.zeeguulibrary.Dialogs.ZeeguuDialogCallbacks;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLoginDialog;
 import ch.unibe.zeeguulibrary.Dialogs.ZeeguuLogoutDialog;
 import ch.unibe.zeeguulibrary.MyWords.MyWordsFragment;
+import ch.unibe.zeeguulibrary.WebView.BrowserFragment;
+import ch.unibe.zeeguulibrary.WebView.ZeeguuTranslationActionMode;
+import ch.unibe.zeeguulibrary.WebView.ZeeguuWebViewFragment;
+import ch.unibe.zeeguulibrary.WebView.ZeeguuWebViewInterface;
 
 /**
  * Main activity that handles all fragments and the interaction between them
@@ -44,36 +52,44 @@ public class ZeeguuActivity extends AppCompatActivity implements
         SearchFragment.ZeeguuFragmentTextCallbacks,
         MyWordsFragment.ZeeguuFragmentMyWordsCallbacks,
         ZeeguuPreferenceFragment.ZeeguuPreferenceCallbacks,
-        ExerciseFragment.ZeeguuFragmentWebGamesCallback,
+        ExerciseFragment.ZeeguuFragmentExerciseCallback,
         LanguageListPreference.ZeeguuLanguageListCallbacks,
         SlidingTabFragment.SlidingFragmentCallback,
-        ZeeguuDialogCallbacks {
+        ZeeguuDialogCallbacks,
+        ZeeguuWebViewInterface.ZeeguuWebViewInterfaceCallbacks,
+        ZeeguuWebViewFragment.ZeeguuWebViewCallbacks,
+        BrowserFragment.BrowserCallbacks {
 
     public static int ITEMIDSEARCH = 100;
-    public static int ITEMIDMYWORDS = 101;
-    public static int ITEMIDGames = 102;
+    public static final long ITEMIDBROWSER = 101;
+    public static int ITEMIDMYWORDS = 102;
+    public static int ITEMIDEXERCISES = 103;
 
     private FragmentManager fragmentManager = getFragmentManager();
     private ZeeguuConnectionManager connectionManager;
 
     //fragments
-    private SlidingTabFragment fragmentSlidingMenu;
+    private SlidingTabFragment slidingMenuFragment;
     private DataFragment dataFragment;
     private SearchFragment searchFragment;
+    private BrowserFragment browserFragment;
     private MyWordsFragment myWordsFragment;
     private ExerciseFragment exerciseFragment;
 
     private FrameLayout slidingTabLayoutView;
     private FrameLayout preferenceView;
 
+    private ZeeguuTranslationActionMode translationActionMode;
+
     //tags
-    private String SlidingMenuTag = "fragmentSlidingMenu";
+    private String SlidingMenuTag = "slidingMenuFragment";
     private String PreferenceTag = "PreferenceTag";
 
     private ActionBar actionBar;
     private boolean isInSettings = false;
 
     private Menu menu;
+    private ActionMode actionMode;
 
 
     @Override
@@ -97,21 +113,26 @@ public class ZeeguuActivity extends AppCompatActivity implements
         searchFragment = (SearchFragment) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDSEARCH));
         if (searchFragment == null) searchFragment = new SearchFragment();
 
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            browserFragment = (BrowserFragment) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDBROWSER));
+            if (browserFragment == null) browserFragment = new BrowserFragment();
+            translationActionMode = new ZeeguuTranslationActionMode(browserFragment);
+        }
+
         myWordsFragment = (MyWordsFragment) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDMYWORDS));
         if (myWordsFragment == null) myWordsFragment = new MyWordsFragment();
 
-        exerciseFragment = (ExerciseFragment) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDGames));
+        exerciseFragment = (ExerciseFragment) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDEXERCISES));
         if (exerciseFragment == null) exerciseFragment = new ExerciseFragment();
 
-        fragmentSlidingMenu = (SlidingTabFragment) fragmentManager.findFragmentByTag(SlidingMenuTag);
-        if (fragmentSlidingMenu == null) fragmentSlidingMenu = new SlidingTabFragment();
+        slidingMenuFragment = (SlidingTabFragment) fragmentManager.findFragmentByTag(SlidingMenuTag);
+        if (slidingMenuFragment == null) slidingMenuFragment = new SlidingTabFragment();
 
         //add the fragments to the layout when added the first time
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_slidingmenu, fragmentSlidingMenu, SlidingMenuTag);
+        transaction.replace(R.id.fragment_slidingmenu, slidingMenuFragment, SlidingMenuTag);
         transaction.replace(R.id.fragment_preferences, new ZeeguuPreferenceFragment(), PreferenceTag);
         transaction.commit();
-
 
         //starts the settings task when entered in settings before rotation
         if (savedInstanceState != null && savedInstanceState.getBoolean(PreferenceTag))
@@ -168,8 +189,33 @@ public class ZeeguuActivity extends AppCompatActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
 
-        //fragmentSlidingMenu.getActiveFragment().onActivityResult(requestCode, resultCode, data);
+    //Methods that support the browser fragment
+    @Override
+    public void onSupportActionModeStarted(ActionMode mode) {
+        actionMode = mode;
+
+        if (slidingMenuFragment.isBrowserActive()) {
+            translationActionMode.onPrepareActionMode(mode, mode.getMenu());
+            translationActionMode.onCreateActionMode(mode, mode.getMenu());
+        }
+        super.onSupportActionModeStarted(mode);
+    }
+
+    @Override
+    public void onSupportActionModeFinished(ActionMode mode) {
+        actionMode = null;
+
+        if (slidingMenuFragment.isBrowserActive())
+            translationActionMode.onDestroyActionMode(mode);
+
+        super.onSupportActionModeFinished(mode);
+    }
+
+    public void onActionItemClicked(MenuItem item) {
+        if (actionMode != null && slidingMenuFragment.isBrowserActive())
+            translationActionMode.onActionItemClicked(actionMode, item);
     }
 
 
@@ -179,6 +225,8 @@ public class ZeeguuActivity extends AppCompatActivity implements
     public void onBackPressed() {
         if (isInSettings)
             switchMainFragmentTo(SlidingMenuTag);
+        else if (slidingMenuFragment.isBrowserActive())
+            browserFragment.goBack();
         else
             super.onBackPressed();
     }
@@ -224,12 +272,17 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     @Override
     public void setTranslation(String translation) {
-        searchFragment.setTranslatedText(translation);
+        if(browserFragment != null && slidingMenuFragment.isBrowserActive())
+            browserFragment.setTranslation(translation);
+        else
+            searchFragment.setTranslatedText(translation);
     }
 
     @Override
     public void highlight(String word) {
-        //not used in this application
+        if(browserFragment != null &&
+                connectionManager.getAccount().isHighlightOn())
+            browserFragment.highlight(word);
     }
 
     @Override
@@ -268,11 +321,19 @@ public class ZeeguuActivity extends AppCompatActivity implements
         return exerciseFragment;
     }
 
+    @Override
+    public BrowserFragment getBrowserFragment() {
+        return browserFragment;
+    }
+
     //// display messages interface ////
 
     @Override
     public void displayErrorMessage(String error, boolean isToast) {
-        displayMessage(error);
+        if (slidingMenuFragment.isBrowserActive() && !isToast)
+            browserFragment.setTranslation(error);
+        else
+            displayMessage(error);
     }
 
     @Override
@@ -290,20 +351,23 @@ public class ZeeguuActivity extends AppCompatActivity implements
     //// SlidingTabLayoutInterface ////
     @Override
     public void focusFragment(int number) {
-        switch (number) {
-            case 0:
-                searchFragment.onResume();
-                myWordsFragment.onPause();
-                break;
-            case 1:
-                searchFragment.onPause();
-                myWordsFragment.onResume();
-                exerciseFragment.onPause();
-                break;
-            case 2:
-                myWordsFragment.onPause();
-                exerciseFragment.onResume();
+        slidingMenuFragment.focusFragment(number);
+    }
+
+    //// Browser Methods ////
+
+    @Override
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    @Override
+    public ZeeguuWebViewFragment getWebViewFragment() {
+        return browserFragment;
     }
 
     //// Private Methods ////
@@ -404,6 +468,5 @@ public class ZeeguuActivity extends AppCompatActivity implements
     private String getFragmentTag(long id) {
         return "android:switcher:" + SlidingTabFragment.getContainerID() + ":" + id;
     }
-
 }
 

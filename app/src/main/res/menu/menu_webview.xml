@@ -6,6 +6,6 @@
         android:icon="@android:drawable/ic_popup_sync"
         android:orderInCategory="3"
         android:title="@string/mywords_refresh"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
 </menu>

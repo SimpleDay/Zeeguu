@@ -14,6 +14,6 @@
         android:icon="?attr/customIconSettings"
         android:orderInCategory="100"
         android:title="@string/preference_title"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 
 </menu>

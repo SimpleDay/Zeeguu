@@ -12,8 +12,8 @@
     <string name="language_to_dialog">Translate To</string>
     <string name="language_from_dialog">Translate From</string>
 
-    <!-- Games Fragment -->
-    <string name="games_menu">Exercises</string>
+    <!-- Exercise Fragment -->
+    <string name="exercise_menu">Exercises</string>
 
     <!-- Preference strings -->
     <string name="preference_title">Settings</string>
@@ -22,6 +22,13 @@
     <string name="preference_login_message">Press here to login into your Zeeguu account</string>
     <string name="preference_logout">Log out</string>
     <string name="preference_logout_message">Press here to logout from your Zeeguu account</string>
+
+    <string name="preference_browser_title">Browser</string>
+    <string name="preference_browser_homepage_title">Homepage</string>
+    <string name="preference_browser_homepage_summary">Set your home page</string>
+    <string name="preference_browser_homepage_default">google.com</string>
+    <string name="preference_browser_viewport_title">Viewport</string>
+    <string name="preference_browser_viewport_summary">Enable wide viewport</string>
 
     <string name="preference_category_app">App Settings</string>
     <string name="preference_app_language">App Language</string>
@@ -35,6 +42,7 @@
 
     <!-- preference tags // need to be the same as in the Zeeguu library! -->
     <string name="preference_category_user_information_tag">category_user_information</string>
+    <string name="preference_category_browser_tag">category_browser</string>
     <string name="preference_email_tag">pref_zeeguu_email</string>
     <string name="preference_password_tag">pref_zeeguu_password</string>
     <string name="preference_user_session_id_tag">pref_zeeguu_session_id</string>
@@ -109,6 +117,5 @@
     <string name="content_description_text_from">EditText field to enter your request word</string>
     <string name="content_description_text_to">d</string>
     <string name="content_description_edit_text_clear">Wipes the edit text field empty</string>
-
 
 </resources>

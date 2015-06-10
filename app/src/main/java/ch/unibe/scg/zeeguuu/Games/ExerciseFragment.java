@@ -26,10 +26,10 @@ import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 public class ExerciseFragment extends Fragment {
     private WebView mWebView;
     private TextView textViewMessage;
-    private ZeeguuFragmentWebGamesCallback callback;
+    private ZeeguuFragmentExerciseCallback callback;
 
 
-    public interface ZeeguuFragmentWebGamesCallback {
+    public interface ZeeguuFragmentExerciseCallback {
         ZeeguuConnectionManager getConnectionManager();
     }
 
@@ -81,7 +81,7 @@ public class ExerciseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        callback = (ZeeguuFragmentWebGamesCallback) getActivity();
+        callback = (ZeeguuFragmentExerciseCallback) getActivity();
 
         //login to the website
         reloginWebView();
@@ -92,7 +92,7 @@ public class ExerciseFragment extends Fragment {
         super.onAttach(activity);
         // Make sure that the interface is implemented in the container activity
         try {
-            callback = (ZeeguuFragmentWebGamesCallback) activity;
+            callback = (ZeeguuFragmentExerciseCallback) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement ZeeguuFragmentWebGamesCallback");
         }

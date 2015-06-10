@@ -20,6 +20,7 @@ import ch.unibe.scg.zeeguuu.Games.ExerciseFragment;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.SearchFragment;
 import ch.unibe.zeeguulibrary.MyWords.MyWordsFragment;
+import ch.unibe.zeeguulibrary.WebView.BrowserFragment;
 
 /**
  * Fragment that creates the sliding menu so that the user can switch pretty fast between the single fragments
@@ -41,6 +42,8 @@ public class SlidingTabFragment extends Fragment {
         MyWordsFragment getMyWordsFragment();
 
         ExerciseFragment getExerciseFragment();
+
+        BrowserFragment getBrowserFragment();
     }
 
     @Override
@@ -66,7 +69,14 @@ public class SlidingTabFragment extends Fragment {
                 getResources().getColor(R.color.sliding_menu_line),
                 callback.getSearchFragment()));
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD) 
+        //add webbrowser if version higher than kitkat (if lower, method will return null)
+        if (callback.getBrowserFragment() != null)
+            tabs.add(new PagerFragmentTab(
+                    ZeeguuActivity.ITEMIDBROWSER,
+                    "Browser",
+                    getResources().getColor(R.color.sliding_menu_line),
+                    callback.getBrowserFragment()
+            ));
 
 
         tabs.add(new PagerFragmentTab(
@@ -76,8 +86,8 @@ public class SlidingTabFragment extends Fragment {
                 callback.getMyWordsFragment()));
 
         tabs.add(new PagerFragmentTab(
-                ZeeguuActivity.ITEMIDGames,
-                getString(R.string.games_menu),
+                ZeeguuActivity.ITEMIDEXERCISES,
+                getString(R.string.exercise_menu),
                 getResources().getColor(R.color.sliding_menu_line),
                 callback.getExerciseFragment()));
 
@@ -110,6 +120,19 @@ public class SlidingTabFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement SlidingFragmentCallback");
         }
+    }
+
+    public boolean isBrowserActive() {
+        return tabs.get(viewPager.getCurrentItem()).getItemId() == ZeeguuActivity.ITEMIDBROWSER;
+    }
+
+    public void focusFragment(int number) {
+        tabs.get(number).getFragment().onResume();
+
+        if(number + 1 < tabs.size())
+            tabs.get(number + 1).getFragment().onPause();
+        if(number - 1 >= 0)
+            tabs.get(number - 1).getFragment().onPause();
     }
 
     public static int getContainerID() {
