@@ -1,4 +1,4 @@
-package ch.unibe.scg.zeeguuu.Games;
+package ch.unibe.scg.zeeguuu.Exercises;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -21,7 +21,7 @@ import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
 import ch.unibe.zeeguulibrary.Core.ZeeguuConnectionManager;
 
 /**
- * Fragment to display the zeeguu games webview
+ * Fragment to display the zeeguu exercise webview
  */
 public class ExerciseFragment extends Fragment {
     private WebView mWebView;
@@ -94,13 +94,13 @@ public class ExerciseFragment extends Fragment {
         try {
             callback = (ZeeguuFragmentExerciseCallback) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement ZeeguuFragmentWebGamesCallback");
+            throw new ClassCastException("Activity must implement ZeeguuFragmentExerciseCallback");
         }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_webview, menu);
+        inflater.inflate(R.menu.menu_exercises, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
         MenuItem menuItemRefresh = menu.findItem(R.id.webview_refresh);

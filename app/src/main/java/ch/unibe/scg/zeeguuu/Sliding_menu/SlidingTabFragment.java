@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.unibe.scg.zeeguuu.Core.ZeeguuActivity;
-import ch.unibe.scg.zeeguuu.Games.ExerciseFragment;
+import ch.unibe.scg.zeeguuu.Exercises.ExerciseFragment;
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.scg.zeeguuu.Search_Fragments.SearchFragment;
 import ch.unibe.zeeguulibrary.MyWords.MyWordsFragment;

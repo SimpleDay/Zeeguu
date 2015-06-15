@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/webview_refresh"
-        android:icon="@android:drawable/ic_popup_sync"
+        android:icon="@drawable/ic_action_refresh_holo_light"
         android:orderInCategory="3"
         android:title="@string/mywords_refresh"
         app:showAsAction="never" />

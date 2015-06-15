@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Method;
 
-import ch.unibe.scg.zeeguuu.Games.ExerciseFragment;
+import ch.unibe.scg.zeeguuu.Exercises.ExerciseFragment;
 import ch.unibe.scg.zeeguuu.Preference.LanguageListPreference;
 import ch.unibe.scg.zeeguuu.Preference.ZeeguuPreferenceFragment;
 import ch.unibe.scg.zeeguuu.R;

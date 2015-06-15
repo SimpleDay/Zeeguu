@@ -26,7 +26,7 @@
     <string name="preference_browser_title">Browser</string>
     <string name="preference_browser_homepage_title">Homepage</string>
     <string name="preference_browser_homepage_summary">Set your home page</string>
-    <string name="preference_browser_homepage_default">google.com</string>
+    <string name="preference_browser_homepage_default">https://www.zeeguu.unibe.ch/browser_home</string>
     <string name="preference_browser_viewport_title">Viewport</string>
     <string name="preference_browser_viewport_summary">Enable wide viewport</string>
 

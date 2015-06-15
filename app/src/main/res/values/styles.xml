@@ -14,8 +14,7 @@
     <!-- Individualized themes -->
     <style name="AppThemeLightActionbarDark" parent="AppTheme">
         <item name="customIconVoice">@drawable/btn_mic_holo_light</item>
-        <item name="customIconCamera">@drawable/btn_camera_holo_light</item>
-        <item name="customIconSettings">@drawable/ab_settings_holo_dark</item>
+        <item name="customIconSettings">@drawable/btn_settings_holo_dark</item>
         <item name="customIconSound">@drawable/btn_tts_holo_light</item>
         <item name="customIconPaste">@drawable/btn_paste_holo_light</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_light</item>
@@ -23,8 +22,7 @@
 
     <style name="AppThemeLight" parent="AppTheme">
         <item name="customIconVoice">@drawable/btn_mic_holo_light</item>
-        <item name="customIconCamera">@drawable/btn_camera_holo_light</item>
-        <item name="customIconSettings">@drawable/ab_settings_holo_dark</item>
+        <item name="customIconSettings">@drawable/btn_settings_holo_light</item>
         <item name="customIconSound">@drawable/btn_tts_holo_light</item>
         <item name="customIconPaste">@drawable/btn_paste_holo_light</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_light</item>
@@ -32,8 +30,7 @@
 
     <style name="AppThemeDark" parent="AppTheme">
         <item name="customIconVoice">@drawable/btn_mic_holo_dark</item>
-        <item name="customIconCamera">@drawable/btn_camera_holo_dark</item>
-        <item name="customIconSettings">@drawable/ab_settings_holo_dark</item>
+        <item name="customIconSettings">@drawable/btn_settings_holo_dark</item>
         <item name="customIconSound">@drawable/btn_tts_holo_dark</item>
         <item name="customIconPaste">@drawable/btn_paste_halo_dark</item>
         <item name="customIconCopy">@drawable/btn_copy_holo_dark</item>
