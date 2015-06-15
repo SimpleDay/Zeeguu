@@ -133,12 +133,9 @@ public class SlidingTabFragment extends Fragment {
     }
 
     public void focusFragment(int number) {
-        tabs.get(number).getFragment().onResume();
+        onPause();
 
-        if(number + 1 < tabs.size())
-            tabs.get(number + 1).getFragment().onPause();
-        if(number - 1 >= 0)
-            tabs.get(number - 1).getFragment().onPause();
+        tabs.get(number).getFragment().onResume();
     }
 
     public void focusBrowserFragment() {
