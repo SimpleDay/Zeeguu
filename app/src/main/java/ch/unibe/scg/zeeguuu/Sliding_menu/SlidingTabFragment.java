@@ -35,8 +35,6 @@ public class SlidingTabFragment extends Fragment {
     private static int containerID;
 
     public interface SlidingFragmentCallback {
-        void focusFragment(int number);
-
         SearchFragment getSearchFragment();
 
         MyWordsFragment getMyWordsFragment();
@@ -143,6 +141,14 @@ public class SlidingTabFragment extends Fragment {
             tabs.get(number - 1).getFragment().onPause();
     }
 
+    public void focusBrowserFragment() {
+        for(int i = 0; i < tabs.size(); i++)
+            if(tabs.get(i).getItemId() == ZeeguuActivity.ITEMIDBROWSER) {
+                viewPager.setCurrentItem(i);
+            }
+
+    }
+
     public static int getContainerID() {
         return containerID;
     }
@@ -156,8 +162,7 @@ public class SlidingTabFragment extends Fragment {
 
         @Override
         public void onPageSelected(int position) {
-            if (callback != null)
-                callback.focusFragment(position);
+            focusFragment(position);
         }
 
         @Override

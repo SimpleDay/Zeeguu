@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -62,7 +63,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
         BrowserFragment.BrowserCallbacks {
 
     public static int ITEMIDSEARCH = 100;
-    public static final long ITEMIDBROWSER = 101;
+    public static int ITEMIDBROWSER = 101;
     public static int ITEMIDMYWORDS = 102;
     public static int ITEMIDEXERCISES = 103;
 
@@ -295,6 +296,14 @@ public class ZeeguuActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public boolean urlValid(String url) {
+        if (url.equals(getString(R.string.bookmark_url_code)))
+            return false;
+        else
+            return true;
+    }
+
     //// ZeeguuAccount interface ////
 
     @Override
@@ -349,12 +358,6 @@ public class ZeeguuActivity extends AppCompatActivity implements
         searchFragment.refreshLanguages(isLanguageFrom);
     }
 
-    //// SlidingTabLayoutInterface ////
-    @Override
-    public void focusFragment(int number) {
-        slidingMenuFragment.focusFragment(number);
-    }
-
     //// Browser Methods ////
 
     @Override
@@ -371,13 +374,25 @@ public class ZeeguuActivity extends AppCompatActivity implements
         return browserFragment;
     }
 
+    @Override
+    public void openUrlInBrowser(String url) {
+        if (browserFragment != null) {
+            slidingMenuFragment.focusBrowserFragment();
+            browserFragment.loadUrl(url);
+        } else {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        }
+    }
+
     //// Private Methods ////
 
     private void updateLoginButton() {
-        MenuItem item = menu.findItem(R.id.action_log_in);
-        if (item != null && connectionManager != null)
-            item.setVisible(!connectionManager.getAccount().isUserInSession());
-
+        if(menu != null) {
+            MenuItem item = menu.findItem(R.id.action_log_in);
+            if (item != null && connectionManager != null)
+                item.setVisible(!connectionManager.getAccount().isUserInSession());
+        }
     }
 
     private void setTheme(boolean actualizeView) {
