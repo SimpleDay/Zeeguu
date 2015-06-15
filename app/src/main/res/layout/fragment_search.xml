@@ -16,7 +16,8 @@
             android:id="@+id/relativeLayout_text_from"
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:layout_weight="61">
+            android:layout_weight="61"
+            android:padding="10dp">
 
 
             <EditText
@@ -47,13 +48,13 @@
                 android:id="@+id/btn_microphone_search"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
+                android:layout_alignTop="@+id/btn_paste"
                 android:layout_gravity="start"
+                android:layout_toEndOf="@+id/btn_paste"
+                android:layout_toRightOf="@+id/btn_paste"
                 android:clickable="true"
                 android:contentDescription="@string/content_description_microphone"
-                android:src="?attr/customIconVoice"
-                android:layout_alignTop="@+id/btn_paste"
-                android:layout_toRightOf="@+id/btn_paste"
-                android:layout_toEndOf="@+id/btn_paste" />
+                android:src="?attr/customIconVoice" />
 
             <ImageView
                 android:id="@+id/btn_tts_language_from"
@@ -69,12 +70,12 @@
                 android:id="@+id/btn_paste"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
-                android:contentDescription="@string/content_description_paste"
-                android:src="?attr/customIconPaste"
-                android:layout_alignTop="@+id/btn_tts_language_from"
                 android:layout_alignLeft="@+id/edit_text_language_from"
                 android:layout_alignStart="@+id/edit_text_language_from"
-                android:layout_marginLeft="10dp"/>
+                android:layout_alignTop="@+id/btn_tts_language_from"
+                android:layout_marginLeft="10dp"
+                android:contentDescription="@string/content_description_paste"
+                android:src="?attr/customIconPaste" />
 
         </RelativeLayout>
 
@@ -106,7 +107,8 @@
             android:id="@+id/relativeLayout_text_to"
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:layout_weight="61">
+            android:layout_weight="61"
+            android:padding="10dp">
 
             <EditText
                 android:id="@+id/edit_text_language_to"

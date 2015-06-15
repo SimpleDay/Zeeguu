@@ -421,13 +421,13 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     private void switchMainFragmentTo(String fragmentTag) {
         isInSettings = fragmentTag.equals(PreferenceTag);
+        if (isInSettings)
+            slidingMenuFragment.onPause();
+
         actionBar.setTitle(isInSettings ? getString(R.string.preference_title)
                 : getString(R.string.app_name));
         actionBar.setDisplayHomeAsUpEnabled(isInSettings);
         actionBar.setDisplayUseLogoEnabled(!isInSettings);
-
-        if (isInSettings)
-            slidingMenuFragment.onPause();
 
         preferenceView.setVisibility(isInSettings ? View.VISIBLE : View.GONE);
         slidingTabLayoutView.setVisibility(isInSettings ? View.GONE : View.VISIBLE);

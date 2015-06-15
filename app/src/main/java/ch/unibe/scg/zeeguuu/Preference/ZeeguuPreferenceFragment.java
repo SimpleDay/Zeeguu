@@ -97,7 +97,6 @@ public class ZeeguuPreferenceFragment extends android.preference.PreferenceFragm
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         // Make sure that the interface is implemented in the container activity
         try {
             callback = (ZeeguuPreferenceCallbacks) activity;
