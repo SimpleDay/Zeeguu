@@ -29,6 +29,8 @@
     <string name="preference_browser_homepage_default">https://www.zeeguu.unibe.ch/browser_home</string>
     <string name="preference_browser_viewport_title">Viewport</string>
     <string name="preference_browser_viewport_summary">Enable wide viewport</string>
+    <string name="settings_zeguu_highlight_title">Highlight words</string>
+    <string name="settings_zeguu_highlight_summary">Highlight the words you are currently learning in the text.</string>
 
     <string name="preference_category_app">App Settings</string>
     <string name="preference_app_language">App Language</string>

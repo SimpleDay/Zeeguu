@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -77,14 +76,12 @@ public class ZeeguuActivity extends AppCompatActivity implements
     private BrowserFragment browserFragment;
     private MyWordsFragment myWordsFragment;
     private ExerciseFragment exerciseFragment;
-
-    private FrameLayout slidingTabLayoutView;
-    private FrameLayout preferenceView;
+    private ZeeguuPreferenceFragment preferenceFragment;
 
     private ZeeguuTranslationActionMode translationActionMode;
 
     //tags
-    private String SlidingMenuTag = "slidingMenuFragment";
+    private String SlidingMenuTag = "SlidingMenuFragment";
     private String PreferenceTag = "PreferenceTag";
 
     private ActionBar actionBar;
@@ -109,9 +106,6 @@ public class ZeeguuActivity extends AppCompatActivity implements
         actionBar = getSupportActionBar();
         actionBar.setElevation(0);
 
-        slidingTabLayoutView = (FrameLayout) findViewById(R.id.fragment_slidingmenu);
-        preferenceView = (FrameLayout) findViewById(R.id.fragment_preferences);
-
         searchFragment = (SearchFragment) fragmentManager.findFragmentByTag(getFragmentTag(ITEMIDSEARCH));
         if (searchFragment == null) searchFragment = new SearchFragment();
 
@@ -130,10 +124,12 @@ public class ZeeguuActivity extends AppCompatActivity implements
         slidingMenuFragment = (SlidingTabFragment) fragmentManager.findFragmentByTag(SlidingMenuTag);
         if (slidingMenuFragment == null) slidingMenuFragment = new SlidingTabFragment();
 
+        preferenceFragment = (ZeeguuPreferenceFragment) fragmentManager.findFragmentByTag(PreferenceTag);
+        if (preferenceFragment == null) preferenceFragment = new ZeeguuPreferenceFragment();
+
         //add the fragments to the layout when added the first time
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_slidingmenu, slidingMenuFragment, SlidingMenuTag);
-        transaction.replace(R.id.fragment_preferences, new ZeeguuPreferenceFragment(), PreferenceTag);
+        transaction.replace(R.id.fragment, slidingMenuFragment, SlidingMenuTag);
         transaction.commit();
 
         //starts the settings task when entered in settings before rotation
@@ -388,7 +384,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
     //// Private Methods ////
 
     private void updateLoginButton() {
-        if(menu != null) {
+        if (menu != null) {
             MenuItem item = menu.findItem(R.id.action_log_in);
             if (item != null && connectionManager != null)
                 item.setVisible(!connectionManager.getAccount().isUserInSession());
@@ -436,21 +432,22 @@ public class ZeeguuActivity extends AppCompatActivity implements
 
     private void switchMainFragmentTo(String fragmentTag) {
         isInSettings = fragmentTag.equals(PreferenceTag);
-        if (isInSettings)
+
+        if (isInSettings) {
             slidingMenuFragment.onPause();
+
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment, new ZeeguuPreferenceFragment(), PreferenceTag);
+            transaction.addToBackStack(PreferenceTag);
+            transaction.commit();
+        } else {
+            getFragmentManager().popBackStackImmediate();
+        }
 
         actionBar.setTitle(isInSettings ? getString(R.string.preference_title)
                 : getString(R.string.app_name));
         actionBar.setDisplayHomeAsUpEnabled(isInSettings);
         actionBar.setDisplayUseLogoEnabled(!isInSettings);
-
-        preferenceView.setVisibility(isInSettings ? View.VISIBLE : View.GONE);
-        slidingTabLayoutView.setVisibility(isInSettings ? View.GONE : View.VISIBLE);
-
-        if (isInSettings && menu != null)
-            menu.clear();
-        else
-            invalidateOptionsMenu();
     }
 
 

@@ -5,14 +5,9 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/fragment_slidingmenu"
+        android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <FrameLayout
-        android:id="@+id/fragment_preferences"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
 </LinearLayout>

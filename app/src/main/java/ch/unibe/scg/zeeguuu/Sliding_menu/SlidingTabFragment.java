@@ -61,6 +61,7 @@ public class SlidingTabFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         callback = (SlidingFragmentCallback) getActivity();
 
+        tabs.clear();
         tabs.add(new PagerFragmentTab(
                 ZeeguuActivity.ITEMIDSEARCH,
                 getString(R.string.search_menu),
@@ -91,7 +92,7 @@ public class SlidingTabFragment extends Fragment {
 
 
         adapter = new ZeeguuFragmentPagerAdapter(getFragmentManager());
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
 
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
@@ -124,7 +125,7 @@ public class SlidingTabFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        for(PagerFragmentTab p : tabs)
+        for (PagerFragmentTab p : tabs)
             p.getFragment().onPause();
     }
 
@@ -139,8 +140,8 @@ public class SlidingTabFragment extends Fragment {
     }
 
     public void focusBrowserFragment() {
-        for(int i = 0; i < tabs.size(); i++)
-            if(tabs.get(i).getItemId() == ZeeguuActivity.ITEMIDBROWSER) {
+        for (int i = 0; i < tabs.size(); i++)
+            if (tabs.get(i).getItemId() == ZeeguuActivity.ITEMIDBROWSER) {
                 viewPager.setCurrentItem(i);
             }
 

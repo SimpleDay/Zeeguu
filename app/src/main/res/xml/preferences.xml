@@ -30,6 +30,12 @@
             android:defaultValue="@string/preference_browser_homepage_default"/>
 
         <CheckBoxPreference
+            android:key="pref_zeeguu_highlight_words"
+            android:title="@string/settings_zeguu_highlight_title"
+            android:summary="@string/settings_zeguu_highlight_summary"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
             android:key="pref_browser_viewport"
             android:title="@string/preference_browser_viewport_title"
             android:summary="@string/preference_browser_viewport_summary"
