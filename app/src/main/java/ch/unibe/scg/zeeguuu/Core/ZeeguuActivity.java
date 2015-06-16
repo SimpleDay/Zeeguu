@@ -296,14 +296,6 @@ public class ZeeguuActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public boolean urlValid(String url) {
-        if (url.equals(getString(R.string.bookmark_url_code)))
-            return false;
-        else
-            return true;
-    }
-
     //// ZeeguuAccount interface ////
 
     @Override
