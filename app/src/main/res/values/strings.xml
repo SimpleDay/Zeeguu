@@ -2,7 +2,7 @@
 <resources>
 
     <!-- app strings -->
-    <string name="app_name">Zeeguu Translate</string>
+    <string name="app_name">Zeeguu</string>
     <string name="app_name_actionbar">Zeeguu</string>
     <string name="menu_login_button">Login</string>
 
