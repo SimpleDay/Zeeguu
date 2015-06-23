@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.preference.ListPreference;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +26,6 @@ public class LanguageListPreference extends ListPreference {
     private LayoutInflater mInflater;
     private CharSequence[] entries;
     private CharSequence[] entryValues;
-    private SharedPreferences prefs;
-    private String mKey;
     private int selectedEntry = -1;
 
     //variables for showDialog
@@ -53,8 +49,6 @@ public class LanguageListPreference extends ListPreference {
         super(context, attrs);
 
         mInflater = LayoutInflater.from(context);
-        mKey = getKey();
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
@@ -82,8 +76,6 @@ public class LanguageListPreference extends ListPreference {
         //Load all variables
         entries = getEntries();
         entryValues = getEntryValues();
-        mKey = isLanguageFrom ? activity.getString(R.string.preference_language_from_tag)
-                : activity.getString(R.string.preference_language_to_tag);
         selectedEntry = updateSelectedEntry(isLanguageFrom);
 
         if (iconListPreferenceAdapter == null)

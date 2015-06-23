@@ -133,20 +133,22 @@ public class ExerciseFragment extends Fragment {
     }
 
     public void reloginWebView() {
-        mWebView.clearCache(true);
+        if(mWebView != null) {
+            mWebView.clearCache(true);
 
-        ZeeguuAccount account = callback.getConnectionManager().getAccount();
-        if (account.isUserInSession()) {
-            mWebView.setVisibility(View.VISIBLE);
-            textViewMessage.setVisibility(View.GONE);
+            ZeeguuAccount account = callback.getConnectionManager().getAccount();
+            if (account.isUserInSession()) {
+                mWebView.setVisibility(View.VISIBLE);
+                textViewMessage.setVisibility(View.GONE);
 
-            String postData = "email=" + account.getEmail() + "&password=" + account.getPassword() + "&login=1";
-            mWebView.postUrl("https://www.zeeguu.unibe.ch/login", EncodingUtils.getBytes(postData, "BASE64"));
-        } else {
-            mWebView.setVisibility(View.GONE);
-            textViewMessage.setVisibility(View.VISIBLE);
+                String postData = "email=" + account.getEmail() + "&password=" + account.getPassword() + "&login=1";
+                mWebView.postUrl("https://www.zeeguu.unibe.ch/login", EncodingUtils.getBytes(postData, "BASE64"));
+            } else {
+                mWebView.setVisibility(View.GONE);
+                textViewMessage.setVisibility(View.VISIBLE);
 
-            setEmptyViewText();
+                setEmptyViewText();
+            }
         }
     }
 
