@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import ch.unibe.scg.zeeguuu.Exercises.ExerciseFragment;
 import ch.unibe.scg.zeeguuu.Preference.LanguageListPreference;
@@ -193,33 +195,22 @@ public class ZeeguuActivity extends AppCompatActivity implements
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    //Methods that support the browser fragment
     @Override
-    public void onSupportActionModeStarted(ActionMode mode) {
-        actionMode = mode;
-
-        if (slidingMenuFragment.isBrowserActive()) {
-            translationActionMode.onPrepareActionMode(mode, mode.getMenu());
-            translationActionMode.onCreateActionMode(mode, mode.getMenu());
-        }
-        super.onSupportActionModeStarted(mode);
+    public void onPause() {
+        super.onPause();
+        if (connectionManager != null)
+            connectionManager.getAccount().saveLanguages();
     }
 
     @Override
-    public void onSupportActionModeFinished(ActionMode mode) {
-        actionMode = null;
-
-        if (slidingMenuFragment.isBrowserActive())
-            translationActionMode.onDestroyActionMode(mode);
-
-        super.onSupportActionModeFinished(mode);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(PreferenceTag, isInSettings);
     }
 
-    public void onActionItemClicked(MenuItem item) {
-        if (actionMode != null && slidingMenuFragment.isBrowserActive())
-            translationActionMode.onActionItemClicked(actionMode, item);
+    public static void setFlag(ImageView flag, String language) {
+        MyWordsItem.setFlag(flag, language);
     }
-
 
     //// INTERFACE METHODS ////
 
@@ -239,14 +230,14 @@ public class ZeeguuActivity extends AppCompatActivity implements
         return true;
     }
 
-    //// ZeeguuLoginDialog interface ////
+    // ZeeguuLoginDialog interface //
 
     @Override
     public ZeeguuConnectionManager getConnectionManager() {
         return dataFragment.getConnectionManager();
     }
 
-    //// ConnectionManager interface methods ////
+    // ConnectionManager interface methods //
 
     @Override
     public void showZeeguuLoginDialog(String message, String email) {
@@ -296,7 +287,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
         }
     }
 
-    //// ZeeguuAccount interface ////
+    // ZeeguuAccount interface //
 
     @Override
     public void notifyDataChanged(boolean myWordsChanged) {
@@ -306,7 +297,35 @@ public class ZeeguuActivity extends AppCompatActivity implements
         updateLoginButton(); //when account info changes, check if
     }
 
-    //// user interaction interface ////
+    // Browser Interface //
+    @Override
+    public void onSupportActionModeStarted(ActionMode mode) {
+        actionMode = mode;
+
+        if (slidingMenuFragment.isBrowserActive()) {
+            translationActionMode.onPrepareActionMode(mode, mode.getMenu());
+            translationActionMode.onCreateActionMode(mode, mode.getMenu());
+        }
+        super.onSupportActionModeStarted(mode);
+    }
+
+    @Override
+    public void onSupportActionModeFinished(ActionMode mode) {
+        actionMode = null;
+
+        if (slidingMenuFragment.isBrowserActive())
+            translationActionMode.onDestroyActionMode(mode);
+
+        super.onSupportActionModeFinished(mode);
+    }
+
+    public void onActionItemClicked(MenuItem item) {
+        if (actionMode != null && slidingMenuFragment.isBrowserActive())
+            translationActionMode.onActionItemClicked(actionMode, item);
+    }
+
+
+    // SlidingTabFragment interface //
 
     @Override
     public SearchFragment getSearchFragment() {
@@ -328,7 +347,7 @@ public class ZeeguuActivity extends AppCompatActivity implements
         return browserFragment;
     }
 
-    //// display messages interface ////
+    // display messages interface //
 
     @Override
     public void displayErrorMessage(String error, boolean isToast) {
@@ -343,14 +362,14 @@ public class ZeeguuActivity extends AppCompatActivity implements
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    //// Preference interface ////
+    // Preference interface //
 
     @Override
     public void notifyLanguageChanged(boolean isLanguageFrom) {
         searchFragment.refreshLanguages(isLanguageFrom);
     }
 
-    //// Browser Methods ////
+    // Browser Methods //
 
     @Override
     public void hideKeyboard() {
@@ -375,6 +394,40 @@ public class ZeeguuActivity extends AppCompatActivity implements
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(browserIntent);
         }
+    }
+
+    // Wordlist //
+
+    @Override
+    public ZeeguuConnectionManager getZeeguuConnectionManager() {
+        return connectionManager;
+    }
+
+    // Interfaces not used in this application //
+
+    @Override
+    public ZeeguuAccount getZeeguuAccount() {
+        return connectionManager.getAccount();
+    }
+
+    @Override
+    public void onZeeguuLoginSuccessful() {
+        // Do nothing
+    }
+
+    @Override
+    public void setDifficulties(ArrayList<HashMap<String, String>> difficulties) {
+        // Do nothing
+    }
+
+    @Override
+    public void setLearnabilities(ArrayList<HashMap<String, String>> learnabilities) {
+        // Do nothing
+    }
+
+    @Override
+    public void setContents(ArrayList<HashMap<String, String>> contents) {
+        // Do nothing
     }
 
     //// Private Methods ////
@@ -417,9 +470,9 @@ public class ZeeguuActivity extends AppCompatActivity implements
         }
 
         // Data fragment so that the instance of the ConnectionManager is never destroyed
-
     }
 
+    //// Fragment management ////
     private void addFragment(Fragment fragment, String title) {
         fragmentManager.beginTransaction()
                 .add(fragment, title)
@@ -443,24 +496,6 @@ public class ZeeguuActivity extends AppCompatActivity implements
             menu.clear();
         else
             invalidateOptionsMenu();
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (connectionManager != null)
-            connectionManager.getAccount().saveLanguages();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(PreferenceTag, isInSettings);
-    }
-
-    public static void setFlag(ImageView flag, String language) {
-        MyWordsItem.setFlag(flag, language);
     }
 
     private String getFragmentTag(long id) {

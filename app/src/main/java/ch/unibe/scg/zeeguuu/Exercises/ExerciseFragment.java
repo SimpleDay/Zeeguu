@@ -14,7 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import org.apache.http.util.EncodingUtils;
+import java.io.UnsupportedEncodingException;
 
 import ch.unibe.scg.zeeguuu.R;
 import ch.unibe.zeeguulibrary.Core.ZeeguuAccount;
@@ -141,8 +141,14 @@ public class ExerciseFragment extends Fragment {
                 mWebView.setVisibility(View.VISIBLE);
                 textViewMessage.setVisibility(View.GONE);
 
-                String postData = "email=" + account.getEmail() + "&password=" + account.getPassword() + "&login=1";
-                mWebView.postUrl("https://www.zeeguu.unibe.ch/login", EncodingUtils.getBytes(postData, "BASE64"));
+                try {
+                    String postData = "email=" + account.getEmail() + "&password=" + account.getPassword() + "&login=1";
+                    byte[] data = postData.getBytes("UTF-8");
+                    mWebView.postUrl("https://www.zeeguu.unibe.ch/login", data);
+                } catch (UnsupportedEncodingException e1) {
+                    e1.printStackTrace();
+                }
+
             } else {
                 mWebView.setVisibility(View.GONE);
                 textViewMessage.setVisibility(View.VISIBLE);

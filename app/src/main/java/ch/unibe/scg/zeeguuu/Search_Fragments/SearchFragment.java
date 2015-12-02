@@ -47,6 +47,7 @@ public class SearchFragment extends Fragment implements TextToSpeech.OnInitListe
 
     //layouts
     RelativeLayout tutorial;
+    RelativeLayout relativeLayout_text_to;
 
     //text fields
     private EditText editTextLanguageFrom;
@@ -90,6 +91,7 @@ public class SearchFragment extends Fragment implements TextToSpeech.OnInitListe
 
         //initialize the layout variables
         tutorial = (RelativeLayout) view.findViewById(R.id.fragment_text_tutorial);
+        relativeLayout_text_to = (RelativeLayout) view.findViewById(R.id.relativeLayout_text_to);
 
         //initialize class variables
         editTextLanguageFrom = (EditText) view.findViewById(R.id.edit_text_language_from);
@@ -209,6 +211,12 @@ public class SearchFragment extends Fragment implements TextToSpeech.OnInitListe
     public void onPause() {
         super.onPause();
         closeKeyboard();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        relativeLayout_text_to.setVisibility(RelativeLayout.VISIBLE);
     }
 
     public void refreshLanguages(boolean isLanguageFrom) {
@@ -348,6 +356,8 @@ public class SearchFragment extends Fragment implements TextToSpeech.OnInitListe
     }
 
     private void translate() {
+        relativeLayout_text_to.setVisibility(RelativeLayout.VISIBLE);
+
         if (!isNotEmpty(editTextLanguageFrom)) {
             setTranslatedText("");
             return;
