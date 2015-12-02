@@ -154,12 +154,13 @@ public class ExerciseFragment extends Fragment {
 
     private void setEmptyViewText() {
         ZeeguuAccount account = callback.getConnectionManager().getAccount();
-        if (callback.getConnectionManager().isNetworkAvailable() && !account.isUserInSession())
-            textViewMessage.setText(getString(R.string.login_zeeguu_sign_in_message));
-        else if (callback.getConnectionManager().isNetworkAvailable()) {
-            textViewMessage.setText(getString(R.string.error_bad_internet_connection));
-        } else
+        if (!callback.getConnectionManager().isNetworkAvailable())
             textViewMessage.setText(getString(R.string.error_no_internet_connection));
+        else if (!account.isUserInSession())
+            textViewMessage.setText(getString(R.string.login_zeeguu_sign_in_message));
+        else {
+            textViewMessage.setText(getString(R.string.error_bad_internet_connection));
+        }
     }
 
 }

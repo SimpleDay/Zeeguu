@@ -95,7 +95,7 @@
     <!-- error messages  -->
     <string name="error_mic_search_not_supported">Your device does not support Speech to Text</string>
     <string name="error_no_internet_connection">Your device is not connected to the internet</string>
-    <string name="error_bad_internet_connection">Bad connection, Please try later again</string>
+    <string name="error_bad_internet_connection">Cannot connect to server. Please try later again</string>
     <string name="error_language_speaking_not_supported">The language you choose cannot be read</string>
     <string name="error_TTS_not_inititalized">There occurred a problem with the text to speech software </string>
     <string name="error_no_text_to_read">There is nothing that could be read. Please enter something</string>
